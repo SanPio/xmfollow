@@ -117,36 +117,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
-.clearfix::after {
-  content: ".";
-  clear: both;
-  display: block;
-  overflow: hidden;
-  font-size: 0;
-  height: 0;
-}
-.clearfix {
-  zoom: 1;
-}
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 
-}
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-a {
-  color: #42b983;
-}
 #title{
   padding:0 .24rem;
   height: 38px;

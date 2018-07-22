@@ -35,9 +35,22 @@
           </div>
         </mt-loadmore>
       </div>
-     
+      <ul class="footer">
+        <li class="foot-left">
+          <dl>
+            <dt><img src="../../assets/Navigate-click.jpg" alt=""></dt>
+            <dd class="foot-click">投资领航</dd>
+          </dl>
+        </li>
+        <li class="foot-right">
+           <dl>
+            <dt><img src="../../assets/Myhomepage-Unclicked@2x.png" alt=""></dt>
+            <dd @click="jumpToMine">我的</dd>
+          </dl>
+        </li>
+      </ul>
         
-      </div>
+    </div>
     
 </template>
 <script>
@@ -125,26 +138,18 @@ export default {
     jump(){
       window.location.href="text.html";
       // window.location.href="https://www.baidu.com";
-      console.log("你好")
+     
+    },
+    jumpToMine(){
+      window.location.href="mine.html";
     }
+    
     
   }
 }
 </script>
 
 <style lang="scss" scoped>
-*{
-  margin: 0;
-  padding: 0;
-  
-}
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
 
 .clearfix::after {
   content: ".";
@@ -269,5 +274,27 @@ a {
     }
   }
 }
-
+.footer{
+  width: 100%;
+  height:50px;
+  background-color:#ffffff;
+  position: fixed;
+  bottom:0;
+  display: flex;
+  justify-content: space-around;
+  font-size: 10px;
+  dl{
+    width: 1rem;
+    text-align: center;
+    color:#999999;
+    .foot-click{
+      color:#4fa2fe;
+    }
+  }
+  img{
+    width: .44rem;
+    height: .44rem;
+    margin-bottom: 2px;
+  }
+}
 </style>
