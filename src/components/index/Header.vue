@@ -48,7 +48,7 @@ export default {
       time : "近一周有交易",
       ability : '交易员能力由高到低',
       leftList : ["最近一周有交易","最近两周有交易","最近一月有交易"],
-      rightList : ['交易员能力值','交易单数/日','近一周盈亏点数','交易周期','平均持仓时间','粉丝人数'],
+      rightList : ['操盘经验','收益率','近一周盈亏点数','余额','起始资金','跟随人数'],
       btnnormal : true,
       btnblueleft : false,
       btnblueright :false,
