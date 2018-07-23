@@ -18,7 +18,7 @@
               </div>
               <div class="tit-right">
                 <button class="flow-set">跟随设置</button>
-                <button class="flow-btn">跟随下单</button>
+                <button class="flow-btn">跟随</button>
               </div>
             </div>
             <div class="content">
@@ -136,7 +136,7 @@ export default {
 
     },
     jump(){
-      window.location.href="text.html";
+      window.location.href="info.html";
       // window.location.href="https://www.baidu.com";
      
     },
