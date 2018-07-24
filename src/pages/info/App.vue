@@ -19,8 +19,7 @@
                 <span class="h-f-right">任由任由任由任由任由任由任由</span>
             </p>   
         </div>
-       
-        <mt-swipe :auto="0" style="width:100%;height:332px;background:pink;border-bottom:1px solid #c9c9c9">
+        <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9">
             <mt-swipe-item>
                 <p class="swip-title">
                     持仓信息
@@ -206,7 +205,6 @@
                         </li>
                     </ul>
                 </div>
-
             </mt-swipe-item>
             <mt-swipe-item>
                 <p class="swip-title">
@@ -246,6 +244,12 @@
                 <p class="swip-title">
                     周期变化表
                 </p>
+                <div class="swip-content">
+                    <p class="table-title"><img :src="tableTitleSrc" alt=""></p>
+                    <div id="cycle">
+                        
+                    </div>
+                </div>
             </mt-swipe-item>
         </mt-swipe> 
         <div id="footer">
@@ -260,11 +264,14 @@
     </div>
 </template>
 <script>
-
+var echarts = require('echarts/lib/echarts');
+// 引入线形图
+require('echarts/lib/chart/line');
 export default {
     name: 'App',
     data(){
         return {
+            tableTitleSrc : require('../../assets/table-title.png'),
             portraitSrc : require('../../assets/Navigate-click.jpg'),
             holdBtnShow : [true,false,true,false,true,false],
             historyBtnShow : [true,false,true,false,true,false],
@@ -279,7 +286,64 @@ export default {
         }
     },
     mounted(){
-
+        let myChart = echarts.init(document.getElementById('cycle'));
+        myChart.setOption({
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['充值','消费']
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    axisLabel:{
+                        //x轴字体倾斜
+                        // rotate: 30,
+                        interval:0
+                    },
+                    axisLine:{
+                        lineStyle :{
+                            color: '#000000'
+                        }
+                    },
+                    type : 'category',
+                    boundaryGap : false,
+                    data :["2.1","2.2","2.3","2.4","2.5","2.6","2.7"]
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLine:{
+                        lineStyle :{
+                            color: '#000000'
+                        }
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:'充值',
+                    type:'line',
+                    symbol:'none',
+                    smooth: 0.2,
+                    color:['#44abfa'],
+                    data:[20,10,30,50,500]
+                },
+                {
+                    name:'消费',
+                    type:'line',
+                    symbol:'none',
+                    smooth: 0.2,
+                    color:['#ff7c2b'],
+                    data:[5,9,80,60,42]
+                }
+            ],
+            grid : {
+                top : '20px'
+            }
+        })
     },
     methods: {
         ellIfShow(){
@@ -309,19 +373,15 @@ export default {
                     width: 1.2rem;
                     height: 1.2rem;
                     border-radius: 50%;
-                    border:1px solid red;
                 }
-
             }
             .h-right{
                 padding: 6px 0 0 .2rem;
                 dt{
                     font-size: 18px;
                     font-weight: 900;
-                    
                     margin-bottom: 6px;
-                }
-                
+                } 
             }
         }
         .h-center .h-c-left,.h-footer .h-f-left{
@@ -410,6 +470,23 @@ export default {
                 justify-content: space-between;
                 height: 34px;
                 line-height: 34px;
+            }
+        }
+        //周期变化表
+        #cycle{
+            width: 7rem;
+            height:240px;
+            font-size: 13px;
+            // background-color: yellow;
+
+        }
+        .table-title{
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 14px;
+            img{
+                width: 2.2rem;
+                height:0.2rem;
             }
         }
         

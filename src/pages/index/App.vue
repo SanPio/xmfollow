@@ -58,7 +58,7 @@
 import Header from '@/components/index/Header'
 // 引入 ECharts 主模块
 var echarts = require('echarts/lib/echarts');
-// 引入柱状图
+// 引入线形图
 require('echarts/lib/chart/line');
 // // 引入提示框和标题组件
 // require('echarts/lib/component/tooltip');
@@ -91,7 +91,7 @@ export default {
    mounted(){
       // 基于准备好的dom，初始化echarts实例
       for(let i = 0; i < this.boxItem; i++ ){
-        let myChart = echarts.init(document.getElementById(''+ i))
+        let myChart = echarts.init(document.getElementById(''+ i));
       // 绘制图表
         myChart.setOption({
           animation: false,
