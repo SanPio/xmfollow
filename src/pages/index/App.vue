@@ -43,12 +43,14 @@
           </dl>
         </li>
         <li class="foot-right">
-           <dl>
+           <dl @click="toMine">
             <dt><img src="../../assets/Myhomepage-Unclicked@2x.png" alt=""></dt>
-            <dd @click="jumpToMine">我的</dd>
+            <dd >我的</dd>
           </dl>
         </li>
       </ul>
+      <!-- 次div为空，做占位用，返回按钮占56px高度 -->
+      <div style="height:56px"></div>
         
     </div>
     
@@ -140,7 +142,8 @@ export default {
       // window.location.href="https://www.baidu.com";
      
     },
-    jumpToMine(){
+    //跳转到mine（我的）页面
+    toMine(){
       window.location.href="mine.html";
     }
     
@@ -277,6 +280,7 @@ a {
 .footer{
   width: 100%;
   height:50px;
+  padding-top: 6px;
   background-color:#ffffff;
   position: fixed;
   bottom:0;

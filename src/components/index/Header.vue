@@ -61,17 +61,17 @@ export default {
   
     }
   },
-  created(){
-    //初始化数据请求
-    this.$http.post('',{    
-        name:"virus"  
-    }).then(function(res){
-        // console.log(res)
-    }).catch(function(err){
+  // created(){
+  //   //初始化数据请求
+  //   this.$http.post('',{    
+  //       name:"virus"  
+  //   }).then(function(res){
+  //       // console.log(res)
+  //   }).catch(function(err){
     
-        // console.log(err)
-    })
-  },
+  //       // console.log(err)
+  //   })
+  // },
   methods:{
     timeshow(){
       this.timebln = !this.timebln;
