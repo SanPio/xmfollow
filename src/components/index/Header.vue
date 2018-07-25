@@ -61,6 +61,19 @@ export default {
   
     }
   },
+  created(){
+    //初始化数据请求
+    this.$http.get('',{
+      params:{
+        name:"virus"  
+      }
+    }).then(function(res){
+          // console.log(res)
+    }).catch(function(err){
+    
+          // console.log(err)
+    })
+  },
   methods:{
     timeshow(){
       this.timebln = !this.timebln;
@@ -90,7 +103,8 @@ export default {
       }else if(ind==5){
         this.ability = "粉丝人数由高到低";
       }
-      this.abilitybln = false
+      this.abilitybln = false;
+     
     },
     btnClickRight(ind){
       this.actRight =ind;

@@ -350,7 +350,8 @@ export default {
             this.ellShow = !this.ellShow
         },
         jumpToSet(){
-            console.log("跟随设置")
+            console.log("跟随设置");
+            
         },
         returnBtn(){
             window.location.href="index.html";
