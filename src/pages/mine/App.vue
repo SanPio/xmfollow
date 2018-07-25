@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div id="header">
+        <div :id="headerOnOff ? headerOn : headerOff" class="hahaa">
+        
             <div class="head-left">
                 <div>
                     <img :src="userImgSrc" alt="">
@@ -19,7 +20,7 @@
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
-        <div id="title">
+        <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
                 <dd>${{titleInfo[ind]}}k</dd>
@@ -135,25 +136,27 @@
             </li>
         </ul>
 
-
-        <ul class="footer">
-            <li class="foot-left">
-                <dl @click="toIndex">
-                    <dt>
-                        <img src="./assets/Navigate-Unclicked.jpg" alt="">
-                    </dt>
-                    <dd >投资领航</dd>
-                </dl>
-            </li>
-        <li class="foot-right">
-            <dl>
-                <dt>
-                    <img src="./assets/Myhomepage-clicked@2x.png" alt="">
-                </dt>
-                <dd class="foot-click">我的</dd>
-            </dl>
-        </li>
-      </ul>
+      
+            <ul class="footer">
+                    <li class="foot-left">
+                        <dl @click="toIndex">
+                            <dt>
+                                <img src="./assets/Navigate-Unclicked.jpg" alt="">
+                            </dt>
+                            <dd >投资领航</dd>
+                        </dl>
+                    </li>
+                <li class="foot-right">
+                    <dl>
+                        <dt>
+                            <img src="./assets/Myhomepage-clicked@2x.png" alt="">
+                        </dt>
+                        <dd class="foot-click">我的</dd>
+                    </dl>
+                </li>
+            </ul>
+        
+        
     <!-- 次div为空，做占位用，返回按钮占56px高度 -->
     <div style="height:56px"></div>
     </div>
@@ -170,6 +173,10 @@ export default {
             numberImgSrc : require('./assets/Account-number.jpg') ,
             orderImgSrc :　require('./assets/Order.jpg'),
             followImgSrc : require('./assets/follow.jpg') ,
+            //header滚动
+            headerOnOff :true,
+            headerOn : "header",
+            headerOff : "header-scroll",
             //上下按钮图标
             upSrc : require('../../assets/Myhomepage-Arrow@2x.png'),
             downSrc :  require('../../assets/transaction-Arrow@2x.png'),
@@ -193,6 +200,31 @@ export default {
     //     })
     // },
     mounted(){
+                 
+    // window.addEventListener('scroll',this.handleScroll)
+
+        var _this =this
+        window.addEventListener('scroll',function(){
+    //         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    //         if(scrollTop>14){//滚动条的高度，可以动态获取也可以写死
+    //                         //这里写要执行的操作
+    //                         // _this.headerOnOff = false
+    //                     if(document.getElementById("title").offsetTop == 65){
+    //                         // _this.headerOnOff = !_this.headerOnOff
+    //                         console.log(213)
+    //                     }
+    //         }
+        //  console.log(document.getElementById("title").offsetTop)
+            //  console.log(document.getElementById("title").clientHeight)
+            console.log( document.documentElement.clientHeight)
+            // if(document.documentElement.scrollTop >12){
+            //     _this.headerOnOff = !_this.headerOnOff
+            // }
+            
+       })
+        
+           
+
 
     },
     methods: {
@@ -204,50 +236,74 @@ export default {
         //返回到index主页（交易领航）
         toIndex(){
             window.location.href="index.html";
-        }
+        },
+        // handleScroll(e){
+        //     console.log(e)
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+        // }
     }
 }
 </script>
 <style lang="scss" scoped>
     //上拉后效果
-    // #header{
-    //     font-size: 13px;
-    //     height: 44px;
-    //     background-color: #4fa2fe;
-    //     color: #ffffff;
-    //     padding: 0 .22rem;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     .head-left{
-    //         display: flex;
-    //         img{
-    //             width: 36px;
-    //             height: 36px;
-    //             border: 1px solid red;
-    //             border-radius: 50%;
-    //             margin: 4px .2rem 0 0;
-    //         }
-    //         dt{
-    //             font-weight: 900;
-    //             font-size: 14px;
-    //             line-height: 24px;
-    //         }
-    //         dd{
-    //             font-size: 10px;
-    //             line-height: 10px;
-    //         }
-    //     }
-    //     .head-right{
-    //         width: 2rem;
-    //         display: flex;
-    //         justify-content: space-between;
-    //         img{
-    //             margin-top: 12px;
-    //             width: 18px;
-    //             height:18px;
-    //         }
-    //     } 
-    // }
+    #header-scroll{
+        position: fixed;
+        top:0;
+        width: 7.1rem;
+        font-size: 13px;
+        height: 44px;
+        background-color: #4fa2fe;
+        color: #ffffff;
+        padding: 0 .22rem;
+        display: flex;
+        justify-content: space-between;
+        .head-left{
+            display: flex;
+            img{
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                margin: 4px .2rem 0 0;
+                background-color: red;
+            }
+            dt{
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 24px;
+            }
+            dd{
+                font-size: 10px;
+                line-height: 10px;
+            }
+        }
+        .head-right{
+            width: 2rem;
+            display: flex;
+            justify-content: space-between;
+            img{
+                margin-top: 12px;
+                width: 18px;
+                height:18px;
+            }
+        } 
+    }
     //上拉前
     
     
