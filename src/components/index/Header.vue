@@ -63,15 +63,13 @@ export default {
   },
   created(){
     //初始化数据请求
-    this.$http.get('',{
-      params:{
+    this.$http.post('',{    
         name:"virus"  
-      }
     }).then(function(res){
-          // console.log(res)
+        // console.log(res)
     }).catch(function(err){
     
-          // console.log(err)
+        // console.log(err)
     })
   },
   methods:{
