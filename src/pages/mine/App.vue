@@ -1,7 +1,8 @@
 <template>
     <div>
+        <!-- Header 部分 -->
         <div :id="headerOnOff ? headerOn : headerOff" class="hahaa">
-        
+            <!-- 账号名称 -->
             <div class="head-left">
                 <div>
                     <img :src="userImgSrc" alt="">
@@ -14,18 +15,21 @@
                     </dd>
                 </dl>
             </div>
+            <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="">
                 <img :src="memberImgSrc" alt="">
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
+        <!-- Title部分，收益总览 -->
         <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
                 <dd>${{titleInfo[ind]}}k</dd>
             </dl>
         </div>
+        <!--Center 跳转部分 -->
         <div id="center">
             <dl >
                 <dt>
@@ -47,9 +51,10 @@
             </dl>
         </div>
 
-
+        <!-- Content各账号详细内容 -->
         <ul id="content" v-if="contentShow">
             <li v-for="(item,ind) in accNumArr" :key="ind">
+                <!-- 账号标题 -->
                 <div class="con-tit"  @click="conboxOpenClose(ind)">
                     <p class="con-tit-left">
                         <span>001002003</span>
@@ -59,7 +64,9 @@
                         <img :src="item ? upSrc : downSrc" alt="">
                     </p>
                 </div>
+                <!-- 详细内容 -->
                 <ul v-if="item" class="con-box">
+                    <!-- 账号资产 -->
                     <li class="con-box-account">
                         <p class="con-box-head" >账号资产</p>
                         <div class="con-box-bot clearfix">
@@ -88,7 +95,8 @@
                             </dl>
                         </div>
                     </li>
-                     <li class="con-box-order">
+                    <!-- 订单信息 -->
+                    <li class="con-box-order">
                         <p class="con-box-head">订单信息</p>
                         <div class="con-box-bot clearfix">
                             <dl>
@@ -116,6 +124,7 @@
                             </dl>
                         </div>
                     </li>
+                    <!-- 跟随播报 -->
                     <li class="con-box-follow">
                         <p class="con-box-head">跟随播报</p>
                         <div class="con-box-bot clearfix">
@@ -135,30 +144,27 @@
                 </ul>
             </li>
         </ul>
-
-      
-            <ul class="footer">
-                    <li class="foot-left">
-                        <dl @click="toIndex">
-                            <dt>
-                                <img src="./assets/Navigate-Unclicked.jpg" alt="">
-                            </dt>
-                            <dd >投资领航</dd>
-                        </dl>
-                    </li>
-                <li class="foot-right">
-                    <dl>
+        <!-- Footer组件 底部返回按钮 -->
+        <ul class="footer">
+                <li class="foot-left">
+                    <dl @click="toIndex">
                         <dt>
-                            <img src="./assets/Myhomepage-clicked@2x.png" alt="">
+                            <img src="./assets/Navigate-Unclicked.jpg" alt="">
                         </dt>
-                        <dd class="foot-click">我的</dd>
+                        <dd >投资领航</dd>
                     </dl>
                 </li>
-            </ul>
-        
-        
-    <!-- 次div为空，做占位用，返回按钮占56px高度 -->
-    <div style="height:56px"></div>
+            <li class="foot-right">
+                <dl>
+                    <dt>
+                        <img src="./assets/Myhomepage-clicked@2x.png" alt="">
+                    </dt>
+                    <dd class="foot-click">我的</dd>
+                </dl>
+            </li>
+        </ul>
+        <!-- 次div为空，做占位用，返回按钮占56px高度 -->
+        <div style="height:56px"></div>
     </div>
 </template>
 <script>
@@ -200,32 +206,17 @@ export default {
     //     })
     // },
     mounted(){
-                 
-    // window.addEventListener('scroll',this.handleScroll)
-
-        var _this =this
+        //Header组件缩放
+        var _this =this; //改变指针，将Vue实例传到闭包
         window.addEventListener('scroll',function(){
-    //         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    //         if(scrollTop>14){//滚动条的高度，可以动态获取也可以写死
-    //                         //这里写要执行的操作
-    //                         // _this.headerOnOff = false
-    //                     if(document.getElementById("title").offsetTop == 65){
-    //                         // _this.headerOnOff = !_this.headerOnOff
-    //                         console.log(213)
-    //                     }
-    //         }
-        //  console.log(document.getElementById("title").offsetTop)
-            //  console.log(document.getElementById("title").clientHeight)
-            console.log( document.documentElement.clientHeight)
-            // if(document.documentElement.scrollTop >12){
-            //     _this.headerOnOff = !_this.headerOnOff
-            // }
-            
+            var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//监听滚动高度
+            if(scrollTop>14){
+                _this.headerOnOff = false; //Header收缩
+            }else{
+                _this.headerOnOff = true; //Header展开
+            }
        })
         
-           
-
-
     },
     methods: {
         //账号列表内容展开收缩控制
@@ -236,33 +227,12 @@ export default {
         //返回到index主页（交易领航）
         toIndex(){
             window.location.href="index.html";
-        },
-        // handleScroll(e){
-        //     console.log(e)
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-        // }
+        }
     }
 }
 </script>
 <style lang="scss" scoped>
-    //上拉后效果
+    //Header上拉后效果
     #header-scroll{
         position: fixed;
         top:0;
@@ -304,19 +274,7 @@ export default {
             }
         } 
     }
-    //上拉前
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
+    //Header上拉前效果
     #header{
         font-size: 13px;
         height: 78px;
@@ -356,6 +314,7 @@ export default {
             }
         } 
     }
+    // 收益总览
     #title{
         padding: 0 .22rem;
         display: flex;
@@ -376,6 +335,7 @@ export default {
             line-height: 18px;
         }
     }
+    //导航按钮
     #center{
         font-size: 12px;
         display: flex;
@@ -394,11 +354,13 @@ export default {
             }
         }
     }
+    //账号信息展示
     #content{
         margin-top: 28px;
         padding: 0 .22rem;
         color: #ffffff;
         li{
+            //账号标题
             .con-tit{
                 height:34px;
                 line-height: 34px;
@@ -412,7 +374,7 @@ export default {
                     width: 13px;
                 }
             }
-            
+            //账号内容 展示
             .con-box{
                 font-size: 13px;
                 text-align: center;
@@ -458,13 +420,12 @@ export default {
                             }
                         }
                     }
-
-
                 }
                 
             }
         }
     }
+    //底部导航按钮
     .footer{
         width: 100%;
         height:50px;
