@@ -5,10 +5,12 @@
             <!-- 账号名称 -->
             <div class="head-left">
                 <div>
-                    <img :src="userImgSrc" alt="">
+                    <img :src="userImgSrc" alt="" @click="toPersonInfo">
                 </div>
                 <dl>
-                    <dt>我的猫</dt>
+                    <dt >
+                        <span @click="toPersonInfo">我的猫</span>
+                    </dt>
                     <dd>
                         <span>金牌会员</span>
                         <span>（剩余360天）</span>
@@ -18,7 +20,7 @@
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="">
-                <img :src="memberImgSrc" alt="">
+                <img :src="memberImgSrc" alt="" @click="toVIPBuy">
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
@@ -75,19 +77,19 @@
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>收益率</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>当前余额</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>已用保证金</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>可用保证金</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
@@ -100,27 +102,27 @@
                         <p class="con-box-head">订单信息</p>
                         <div class="con-box-bot clearfix">
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>持仓单量</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>持仓手数</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>获利</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>上周获利点数</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>上月获利点数</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">账号管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -129,15 +131,15 @@
                         <p class="con-box-head">跟随播报</p>
                         <div class="con-box-bot clearfix">
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>累计跟随</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt>历史收益</dt>
+                                <dt>盈利点数</dt>
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">账号管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn">跟随管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -227,6 +229,14 @@ export default {
         //返回到index主页（交易领航）
         toIndex(){
             window.location.href="index.html";
+        },
+        //跳转到个人信息页
+        toPersonInfo(){
+            window.location.href="personInfo.html";
+        },
+        //跳转到会员购买页
+        toVIPBuy(){
+            window.location.href="vipbuy.html";
         }
     }
 }

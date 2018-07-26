@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VIP购买</title>
+    <style>
+        *{
+          padding: 0;
+          margin: 0;
+        }
+        .clearfix::after {
+          content: ".";
+          clear: both;
+          display: block;
+          overflow: hidden;
+          font-size: 0;
+          height: 0;
+        }
+        .clearfix {
+          zoom: 1;
+        }
+        h1, h2 {
+          font-weight: normal;
+        }
+        ul {
+          list-style-type: none;
+          padding: 0;
+        }
+  
+        a {
+          color: #42b983;
+        }
+        li{
+          list-style: none;
+        }
+      </style>
+</head>
+<body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script>
+      fnResize()
+      window.onresize = function () {
+      fnResize()
+      }
+      function fnResize() {
+      var deviceWidth = document.documentElement.clientWidth || window.innerWidth
+      if (deviceWidth >= 750) {
+      deviceWidth = 750
+      }
+      if (deviceWidth <= 320) {
+      deviceWidth = 320
+      }
+      document.documentElement.style.fontSize = (deviceWidth / 7.5) + 'px'
+      }
+      </script>
+  </body>
+</html>
