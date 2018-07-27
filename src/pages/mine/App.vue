@@ -397,6 +397,7 @@ export default {
                 }
                 .con-box-follow{
                     background-color: #ff884e;
+                    margin-bottom: 20px;
                 }
                 li{
                     border-radius: 10px; 
