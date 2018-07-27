@@ -93,7 +93,7 @@
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">账号管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>

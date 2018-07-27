@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="box">
         <dl id="header">
             <dt><img :src="userImgSrc" alt=""></dt>
             <dd>{{ userName }}</dd>
@@ -11,7 +11,8 @@
                 </p>
                 <p class="info-top-content" @click="toPhoneNum(ind)">
                     <span :class="{'grayColor':userInfoTop[ind]=='无'}"> {{ userInfoTop[ind] }} </span>
-                    <img src="./assets/Personalinformation-icon@3x.png" alt="" v-if="ind==1">
+                    <!-- 手机号绑定更改业务先不做 -->
+                    <!-- <img src="./assets/Personalinformation-icon@3x.png" alt="" v-if="ind==1"> -->
                 </p>
             </li>
         </ul>
@@ -22,7 +23,7 @@
                     {{ item }} 
                 </p>
                 <p class="info-bot-content">
-                    <span :class="{'grayColor':userInfoBot[ind]=='无'}"> {{ userInfoBot[ind] }} </span>
+                    <span :class="{'grayColor':userInfoBot[ind]=='无'}" @click="clickfunction(ind)"> {{ userInfoBot[ind] }} </span>
                     <button v-if="ind==5&&invitBtnType==0" class="invit">邀请</button>
                     <button v-if="ind==5&&invitBtnType==1" class="receive">领取</button>
                     <button v-if="ind==5&&invitBtnType==2" class="received">已领取</button>
@@ -30,6 +31,13 @@
                
             </li>
         </ul>
+        <!-- 生日选择组件 -->
+        <mt-datetime-picker
+            ref="picker"
+            type="date"
+            v-model="pickerValue"
+            @confirm="handleConfirm">
+        </mt-datetime-picker>
 
 
 
@@ -46,10 +54,11 @@ export default {
             userImgSrc : require('./assets/img2.jpg'),
             userName : '个人信息',
             userInfoTopTit : ['昵称','手机号','个人简介','交易策略'],
-            userInfoTop : ['信息员001号','信息员001号','信息员001号','信息员001号'],
+            userInfoTop : ['信息员001号','12345678987','信息员001号','信息员001号'],
             userInfoTopBot : ['性别','生日','血型','星座','推荐我的','我推荐的'],
             userInfoBot : ['男','1990-01-01','A型','金牛座','无','每推荐X个人就可获得VIP月卡'],
             invitBtnType : 2,// 0为邀请，1为领取，2为已领取
+            pickerValue : ''
         }
     },
     // created(){
@@ -75,8 +84,19 @@ export default {
                 }else {
                     window.location.href="bindphone.html";//手机号为空，跳转到绑定页
                 }
+            }  
+        },
+        clickfunction(ind){
+            if(ind == 1){
+                this.openPicker()
             }
-            
+        },
+        //选择生日
+        openPicker() {
+            this.$refs.picker.open();
+        },
+        handleConfirm(){
+            console.log(this.pickerValue)
         }
     }
 }
@@ -149,7 +169,7 @@ export default {
         } 
     }
     
-
+    
 
 
 </style>
