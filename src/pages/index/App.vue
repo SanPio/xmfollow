@@ -214,8 +214,8 @@ a {
       }
     }
     img{
-      width: .74rem;
-      height: .74rem;
+      width: 37px;
+      height: 37px;
       border:1px solid red;
       border-radius: 50%;
 

@@ -5,7 +5,10 @@ import App from './App'
 // import router from './router'
 import axios from 'axios'
 import { DatetimePicker } from 'mint-ui'
+import { Actionsheet } from 'mint-ui'
+import { Toast } from 'mint-ui'
 
+Vue.component(Actionsheet.name, Actionsheet);
 Vue.component(DatetimePicker.name, DatetimePicker)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
