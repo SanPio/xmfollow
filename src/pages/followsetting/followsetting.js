@@ -5,6 +5,7 @@ import App from './App'
 // import router from './router'
 import axios from 'axios'
 import { Switch } from 'mint-ui'
+import { MessageBox } from 'mint-ui';
 
 Vue.component(Switch.name, Switch)
 

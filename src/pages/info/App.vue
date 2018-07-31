@@ -253,7 +253,7 @@
             </mt-swipe-item>
         </mt-swipe> 
         <div id="footer">
-            <span @click="jumpToSet">跟随设置</span>
+            <span @click="toFollowSetting">跟随设置</span>
         </div>
         <div id="bottom">
             <div id="bot-center">
@@ -351,13 +351,14 @@ export default {
         ellIfShow(){
             this.ellShow = !this.ellShow
         },
-        jumpToSet(){
-            console.log("跟随设置");
-            
+        //到跟随设置页面
+        toFollowSetting(){
+            window.location.href="followsetting.html";
         },
         returnBtn(){
             window.location.href="index.html";
         }
+        //
     }
 }
 </script>

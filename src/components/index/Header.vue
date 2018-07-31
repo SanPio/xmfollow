@@ -15,12 +15,6 @@
         <ul id="tran-time" v-if="timebln">
           <li v-for="(item,ind) in leftList" :key="ind" @click="timeChoose(ind)">{{item}}</li>
         </ul>
-
-
-
-
-
-
         <ul id="sort" v-if="abilitybln">
           <li v-for="(item,ind) in rightList" :key="ind" class="sort-list">
             <ul>
@@ -136,7 +130,7 @@ export default {
   line-height: 38px;
   border-bottom: 1px solid#e5e5e5;
   display: flex;
-  justify-content:space-around;
+  justify-content:space-between;
   li{
    
     font-size: 14px;

@@ -12,12 +12,12 @@
                   <img src="../../assets/Myhomepage-Arrow@2x.png" alt="">
                 </div>
                 <dl>
-                  <dt>司金校尉</dt>
+                  <dt>司金校尉<span>三星</span></dt>
                   <dd>精准计算公司</dd>
                 </dl>
               </div>
               <div class="tit-right">
-                <button class="flow-set">跟随设置</button>
+                <button class="flow-set" @click.stop="toFollowSetting">跟随设置</button>
                 <button class="flow-btn">跟随</button>
               </div>
             </div>
@@ -145,6 +145,10 @@ export default {
     //跳转到mine（我的）页面
     toMine(){
       window.location.href="mine.html";
+    },
+    //到跟随设置页面
+    toFollowSetting(){
+      window.location.href="followsetting.html";
     }
     
     
@@ -206,6 +210,12 @@ a {
       dt{
         font-weight: 900;
         margin-top: 2px;
+        span{
+          font-size: 10px;
+          line-height: 10px;
+          color:#ff7c2b;
+          margin-left: .2rem;
+        }
       }
       dd{
         margin-top: 2px;
@@ -288,7 +298,7 @@ a {
   justify-content: space-around;
   font-size: 10px;
   dl{
-    width: 1rem;
+    width: 1.6rem;
     text-align: center;
     color:#999999;
     .foot-click{
