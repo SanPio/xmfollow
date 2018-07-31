@@ -33,12 +33,12 @@
         </p>
         <p class="content padding clearfix follow-type">
             <span class="con-title left">跟单方式</span>
-            <button class="con-btn right fixedbtn" :class="{'clickbtn':!clickBtn}" @click="btnClick">固定跟随</button>
-            <button class="con-btn right " :class="{'clickbtn':clickBtn}" @click="btnClick">比例跟随</button>
+            <button class="con-btn right fixedbtn" :class="{'clickbtn':!clickBtn}" :disabled="!clickBtn"   @click="btnClick">固定跟随</button>
+            <button class="con-btn right " :class="{'clickbtn':clickBtn}"  :disabled="clickBtn"   @click="btnClick">比例跟随</button>
         </p>
         <p class="proportions">
-            <span v-if="clickBtn">比例跟随：您下单的手数=交易员下单的手数*跟随比例</span>
-            <span v-if="!clickBtn">固定跟随：您下单的</span>
+            <span v-if="clickBtn">比例跟随：下单的手数=交易员下单的手数*跟随比例</span>
+            <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与交易员手数无关</span>
         </p>
         <div class="clearfix follow-num" style="border-bottom:1px solid #e5e5e5">
             <p class="left">跟随数值</p>
@@ -55,13 +55,12 @@
                 <mt-switch v-model="reverseOnOff" class="right"></mt-switch>
         </div>
         <p class="proportions">
-            <span v-if="reverseOnOff">开启后将执行与交易员信号相反的交易</span>
-            <span v-if="!reverseOnOff">固定跟随：您下单的</span>
+            <span >开启后将执行与交易员信号相反的交易</span>
         </p>
         <p class="content padding clearfix target-profit ">
             <span class="left con-title">止盈</span>
             <span class="right" style="font-size:10px;color:#999;">点</span>
-            <input type="number" class="right">
+            <input type="number" class="right" >
         </p>
         <p class="proportions">
             <span >当盈利达到止盈点数时自动平仓</span>
@@ -92,11 +91,21 @@
         <p class="abandon padding clearfix">
             <span class="left">开仓手数精度大于最小手数</span>
             
-            <button class="right" :class="{'btn-chose':!abandonShow}" @click="abandonBtn">四舍五入</button>
-            <button class="right" :class="{'btn-chose':abandonShow}" @click="abandonBtn">舍弃尾数</button>
+            <button class="right" :class="{'btn-chose':!abandonShow}" :disabled="!abandonShow"  @click="abandonBtn">四舍五入</button>
+            <button class="right" :class="{'btn-chose':abandonShow}" :disabled="abandonShow" @click="abandonBtn">舍弃尾数</button>
         </p>
-
-
+        <div class="bottom">
+            <img :src="showImgSrc" alt="">
+        </div>
+        <p class="preservation">
+            <button>保存</button>
+        </p>
+        <div id="footer">
+            <div id="foot-center">
+                <img :src="returnleftSrc" alt="" >
+                <img :src="returnRightSrc" alt="">
+            </div>
+        </div>
 
 
 
@@ -120,6 +129,7 @@ export default {
     data(){
         return {
           userImgSrc: require('./assets/img2.jpg'),
+          showImgSrc: require('./assets/setting-img.jpg'),
           proportion: 0.50,
           income: 34.02,
           followNum : 0.05,
@@ -128,7 +138,9 @@ export default {
           reverseOnOff :true,
           handsNumArr:["1","0.1","0.01"],
           handsNum:0,
-          abandonShow:true
+          abandonShow:true,
+          returnleftSrc : require('./assets/btn-left@2x.png'),
+          returnRightSrc : require('./assets/btn-right@2x.png'),
         }
     },
     // created(){
@@ -307,6 +319,7 @@ export default {
             margin-top: 14px;
             outline: none;
             margin-right: .3rem;
+            text-align: center;
         }
     }
     .title{
@@ -364,6 +377,43 @@ export default {
         .btn-chose{
             background-color: #4fa2fe;
             color: #fff;
+        }
+    }
+    .bottom{
+        img{
+            width: 100%;
+        }
+    }
+    .preservation{
+        border-bottom: 1px solid #dbdbdb;
+        button{
+            width: 6.5rem;
+            height: 50px;
+            border: none;
+            outline: none;
+            font-weight: 900;
+            background-color: #4fa2fe;
+            color: #fff;
+            font-size: 22px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+    }
+    #footer{
+        width: 100%;
+        
+        display: flex;
+        justify-content: center;
+        #foot-center{
+            width: 2rem;
+            height: 45px;
+            display: flex;
+            justify-content: space-between;
+            img{
+                // width: .3rem;
+                margin-top: 12px;
+                height:28px;
+            }
         }
     }
 </style>

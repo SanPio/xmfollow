@@ -257,8 +257,8 @@
         </div>
         <div id="bottom">
             <div id="bot-center">
-                <img src="../../assets/btn-left@2x.png" alt="" @click="returnBtn">
-                <img src="../../assets/btn-right@2x.png" alt="">
+                <img :src="returnleftSrc" alt="" @click="returnBtn">
+                <img :src="returnRightSrc" alt="">
             </div>
         </div>     
     </div>
@@ -273,6 +273,8 @@ export default {
         return {
             tableTitleSrc : require('../../assets/table-title.png'),
             portraitSrc : require('../../assets/Navigate-click.jpg'),
+            returnleftSrc : require('./assets/btn-left@2x.png'),
+            returnRightSrc : require('./assets/btn-right@2x.png'),
             holdBtnShow : [true,false,true,false,true,false],
             historyBtnShow : [true,false,true,false,true,false],
             buyShow : true,
