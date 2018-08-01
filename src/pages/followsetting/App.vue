@@ -57,7 +57,7 @@
                 <span v-if="!clickBtn">手</span>
             </p>
         </div>
-        <!-- 方向跟随 -->
+        <!-- 反向跟随 -->
         <div class="content padding clearfix follow-on">
             <span class="con-title left ">反向跟随</span>
                 <mt-switch v-model="reverseOnOff" class="right"></mt-switch>

@@ -14,14 +14,16 @@
                 <div class="clearfix nowtitle">
                         <p class="left">全局控制</p>
                         <p class="right">
-                            <button>一键平仓</button>
-                            <button>暂停平仓</button>
+                            <button @click="allClose">一键平仓</button>
+                            <button v-if="stopOn" @click="stopClick">暂停开仓</button>
+                            <button class="openbtn" v-if="!stopOn" @click="goOn">继续开仓</button>
                         </p>
                 </div>
                 <!-- 正在跟随列表 -->
-                <div style="overflow-y: scroll;margin-top:122px">
+                <div style="overflow-y: scroll;margin-top:122px;">
                     <mt-loadmore 
-                    :bottom-method="loadBottom" :autoFill="false" ref="loadmore">
+                    :bottom-method="loadBottom" 
+                    :autoFill="false" ref="loadmores">
                         <div class="nowlist" v-for="(item, ind) in nowArr" :key="ind">
 
                             <div class="litop clearfix" @click="listShow(ind)">
@@ -33,7 +35,6 @@
                                     <p class="flownum">
                                         <span>按比例&nbsp;{{num}}倍</span>
                                     </p>
-                                
                                 </div>
                                 <div class="right liright">
                                     <p >
@@ -47,63 +48,112 @@
                                 </div>
                             </div>
                             <p class="libot" v-if="nowOpen[ind]">
-                                <button>一键平仓</button>
+                                <button @click="closeThis(ind)">一键平仓</button>
                                 <button>订单管理</button>
-                                <button>跟随设置</button>
-                            </p>
-                            
+                                <button @click="toFollowSetting(ind)">跟随设置</button>
+                            </p>  
                         </div>
-
-
-
-
-
-
-
-
                     </mt-loadmore>
                 </div>
-
-   <!-- 底部返回 -->
-                <!-- <div id="footer">
-                    <div id="foot-center">
-                        <img :src="returnleftSrc" alt="" >
-                        <img :src="returnRightSrc" alt="">
-                    </div>
-                </div> -->
-
-
-             
-                
-                <!-- <mt-cell v-for="n in 10" :title="'内容 ' + n" :key="n"/> -->
             </mt-tab-container-item>
+            <!-- 跟随记录 -->
             <mt-tab-container-item id="record">
-                <!-- <mt-cell v-for="n in 4" :title="'测试 ' + n" :key="n" /> -->
-                22222
+                <!-- 此div用于占位 -->
+                <div style="height:46px"></div>
+                 <div style="overflow-y: scroll;">
+                    <mt-loadmore 
+                    :bottom-method="hisloadBottom" 
+                    :autoFill="false" ref="loadmore">
+
+
+                    <!-- 记录列表 -->
+                    <div class="recordlist" v-for="(item, ind) in recordList" :key="ind">
+
+
+                        <!-- 记录标题 -->
+                        <div class="listtop" @click="recordListShow(ind)">
+                            <div class="left listleft">
+                                <img :src="userImgSrc" alt="">
+                            </div>
+                            <div class="left listcenter">
+                                <p class="name">哈哈哈</p>
+                                <p class="flownum">
+                                    <span>按比例&nbsp;{{num}}倍</span>
+                                </p>
+                            </div>
+                            <div class="right listright">
+                                <p>
+                                    <span>累计获利</span>
+                                    <span :class="hisProfit ? 'profit-blue' : 'profit-red'">$17.85</span>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- 记录内容 -->
+                        <div class="listbot clearfix" v-if="recordOpen[ind]">
+                            <div class="listbot-left left">
+                                <p>
+                                    <span>当前跟单数量</span>
+                                    <span>13</span>
+                                </p>
+                                <p>
+                                    <span>当前获利</span>
+                                    <span>$17.85</span>
+                                </p>
+                                <p>
+                                    <span>开始跟随时间</span>
+                                    <span>2018-01-13</span>
+                                </p>
+                            </div>
+                            <div class="listbot-right right">
+                                <p>
+                                    <span>累计跟单数量</span>
+                                    <span>263</span>
+                                </p>
+                                <p>
+                                    <span>累计获利</span>
+                                    <span>$17.853</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    </mt-loadmore>
+                </div>    
             </mt-tab-container-item>
         </mt-tab-container>
 
-
-
+        <!-- 底部返回 -->
+        <!-- <div id="footer">
+            <div id="foot-center">
+                <img :src="returnleftSrc" alt="" >
+                <img :src="returnRightSrc" alt="">
+            </div>
+        </div>        -->
     </div>
 </template>
 <script>
+import { MessageBox } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
         return {
             selected: 'now',
+            fixed:true,
             nowTotal: 18,
             recordTotal: 30,
             num : 0.05,
             userImgSrc: require('./assets/img2.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
             returnRightSrc : require('./assets/btn-right@2x.png'),
-            //获利为正
+            stopOn: true,
+            //正在跟随获利为正
             profit: true,
             nowArr:["a", "b"],
             nowOpen: [false,false],
-            fixed:true
+            // 跟随记录
+            hisProfit: false,
+            recordList:["a", "b"],
+            recordOpen: [false,false],
+            
         }
     },
     // created(){
@@ -119,7 +169,7 @@ export default {
     // },
     methods: {
      
-        //上拉加载
+        //正在跟随上拉加载
         loadBottom(){
             for(let i = 0; i < 4; i ++){
                 this.nowArr.push("x");
@@ -129,10 +179,74 @@ export default {
             // console.log('上拉加载')
 
         },
-        //点击展开
+        //跟随记录上拉加载
+        hisloadBottom(){
+            for(let i = 0; i < 4; i ++){
+                this.recordList.push("tt")
+                this.recordOpen.push(false)
+            }
+            
+            // console.log('上拉加载')
+
+        },
+        //正在跟随点击展开
         listShow(ind){
             this.$set(this.nowOpen,ind,!this.nowOpen[ind])
 
+        },
+         //一键平仓(平掉所有)
+        allClose(){
+            MessageBox({
+                cancelButtonText:'确定',
+                confirmButtonText:'取消',
+                title: '平仓管理',
+                message: '您是否确定平掉所有正在持仓？',
+                showConfirmButton:true,
+                showCancelButton:true
+            }).then(action => { 
+                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                if (action == 'cancel') {     //确认的回调
+                console.log(1); 
+                }
+                if (action == 'confirm') {     //确认的回调
+                console.log(2); 
+                }
+            })
+        },
+        //暂停开仓
+        stopClick(){
+            this.stopOn = !this.stopOn;
+        },
+        //继续开仓
+        goOn(){
+            this.stopOn = !this.stopOn;
+        },
+         //平仓(平掉单个)
+        closeThis(){
+            MessageBox({
+                cancelButtonText:'确定',
+                confirmButtonText:'取消',
+                title: '清空',
+                message: '您是否确定平掉此信号员的持仓？',
+                showConfirmButton:true,
+                showCancelButton:true
+            }).then(action => { 
+                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                if (action == 'cancel') {     //确认的回调
+                console.log(1); 
+                }
+                if (action == 'confirm') {     //确认的回调
+                console.log(2); 
+                }
+            })
+        },
+        toFollowSetting(ind){
+            window.location.href="followsetting.html";
+        },
+
+        //跟随记录
+        recordListShow(ind){
+            this.$set(this.recordOpen,ind,!this.recordOpen[ind])
         }
     }
 }
@@ -146,7 +260,7 @@ export default {
         position: fixed;
         width: 7.02rem;
         top: 46px;
-        z-index: 3000;
+        z-index: 2;
         .left{
             line-height: 27px;
             font-size: 14px;
@@ -165,6 +279,10 @@ export default {
             }
             button:nth-of-type(1){
                 margin-right: .4rem;
+            }
+            .openbtn{
+                color:#fff;
+                background: #4fa2fe;
             }
         }
     }
@@ -225,6 +343,7 @@ export default {
             }
         }
         .libot{
+            background-color: #f9f9f9;
             padding: 9px .6rem;
             display: flex;
             justify-content: space-between;
@@ -239,6 +358,80 @@ export default {
             }
         }
         
+    }
+
+
+    // 跟随记录
+    .recordlist{
+        .listtop{
+            height: 60px;
+            padding: 0 .24rem;
+            border-bottom: 1px solid #e5e5e5;
+            background-color: #fff;
+            .listleft{
+                margin-right:.16rem;
+                margin-top: 10px;
+                img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                }
+            }
+            .listcenter{
+                text-align: left;
+                .name{
+                    font-size: 12px;
+                    font-weight: 900;
+                    line-height: 14px;
+                    margin-top: 16px;
+                }
+                .flownum{
+                    font-size: 10px;
+                    margin-top: 4px;
+                    line-height: 10px;
+                }
+            }
+            .listright{
+                p{
+                    text-align: left;
+                    font-size: 10px;
+                    line-height: 16px;
+                    margin-top: 22px;
+                    span:nth-of-type(1){
+                        color: #999;  
+                        margin-right: .1rem;  
+                    }
+                    
+                    .profit-blue{
+                        color: #007aff;
+                        font-weight: 900;
+                    }
+                    .profit-red{
+                        color: #fe0000;
+                        font-weight: 900;
+                    }
+                }
+               
+            }
+        }
+        .listbot{
+            text-align: left;
+            padding: 8px .4rem;
+            background-color: #f9f9f9;
+            p{
+                height: 26px;
+                line-height: 26px;
+                span:nth-of-type(1){
+                    color: #999;
+                    margin-right: .1rem;
+                }
+                span:nth-of-type(2){
+                    color: #666;
+                    font-weight: 900;
+                }
+            }
+        }
+
     }
 
 

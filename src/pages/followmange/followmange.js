@@ -7,7 +7,7 @@ import axios from 'axios'
 import { Navbar, TabItem } from 'mint-ui'
 import { TabContainer, TabContainerItem } from 'mint-ui'
 import { Loadmore } from 'mint-ui'
-
+import { MessageBox } from 'mint-ui';
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(TabContainer.name, TabContainer)
