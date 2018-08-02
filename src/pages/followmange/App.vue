@@ -20,7 +20,7 @@
                         </p>
                 </div>
                 <!-- 正在跟随列表 -->
-                <div style="overflow-y: scroll;margin-top:122px;">
+                <div style="overflow-y: scroll;margin-top:125px;">
                     <mt-loadmore 
                     :bottom-method="loadBottom" 
                     :autoFill="false" ref="loadmores">
@@ -259,7 +259,7 @@ export default {
         background-color: #f9f9f9;
         position: fixed;
         width: 7.02rem;
-        top: 46px;
+        top: 49px;
         z-index: 2;
         .left{
             line-height: 27px;

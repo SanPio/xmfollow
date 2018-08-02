@@ -47,9 +47,9 @@
             </dl>
              <dl>
                 <dt>
-                    <img :src="followImgSrc" alt="">
+                    <img :src="followImgSrc" alt="" @click="toFollowmange">
                 </dt>
-                <dd>跟随管理</dd>
+                <dd  @click="toFollowmange">跟随管理</dd>
             </dl>
         </div>
 
@@ -139,7 +139,7 @@
                                 <dd>$17.43k</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">跟随管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -151,7 +151,7 @@
                 <li class="foot-left">
                     <dl @click="toIndex">
                         <dt>
-                            <img src="./assets/Navigate-Unclicked.jpg" alt="">
+                            <img :src="leftBtnSrc" alt="">
                         </dt>
                         <dd >投资领航</dd>
                     </dl>
@@ -159,7 +159,7 @@
             <li class="foot-right">
                 <dl>
                     <dt>
-                        <img src="./assets/Myhomepage-clicked@2x.png" alt="">
+                        <img :src="rightBtnSrc" alt="">
                     </dt>
                     <dd class="foot-click">我的</dd>
                 </dl>
@@ -181,6 +181,8 @@ export default {
             numberImgSrc : require('./assets/Account-number.jpg') ,
             orderImgSrc :　require('./assets/Order.jpg'),
             followImgSrc : require('./assets/follow.jpg') ,
+            leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
+            rightBtnSrc : require('./assets/Myhomepage-clicked@2x.png') ,
             //header滚动
             headerOnOff :true,
             headerOn : "header",
@@ -237,6 +239,10 @@ export default {
         //跳转到会员购买页
         toVIPBuy(){
             window.location.href="vipbuy.html";
+        },
+        //跳转到跟随管理
+        toFollowmange(ind){
+            window.location.href="followmange.html";
         }
     }
 }

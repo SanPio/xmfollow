@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>交易领航</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>账号管理</title>
     <style>
-      @media screen and (max-width: 350px){
-          #title .division{display: none;}
+        @media screen and (max-width: 350px){
+         #box .acclist .right button{margin:0;padding:4px}
       }
-     body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0}
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0}
         html{color:#000;overflow-y:scroll;overflow:-moz-scrollbars-vertical}
         body,button,input,select,textarea{font-size:12px;font-family:arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',\5b8b\4f53,Tahoma,Arial,Helvetica,STHeiti}
         h1,h2,h3,h4,h5,h6{font-size:100%}
@@ -41,16 +42,35 @@
         img{border:0}
         label, button{
           cursor:none;
-          outline: none;
+          outline:none;
         }
-        
-          
+         /*placeholder颜色修改  */
+        input::-webkit-input-placeholder{ /* WebKit browsers */ color: #c9c9c9;}  
+        input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */  color: #c9c9c9 } 
+        input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #c9c9c9 } 
+        input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10+ */  color: #c9c9c9}
 
 
+
+
+
+  
+
+
+
+ 
+ 
+
+
+
+
+
+
+
         
-    </style>
-  </head>
-  <body>
+      </style>
+</head>
+<body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
