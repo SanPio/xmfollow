@@ -164,10 +164,10 @@
                                     </ul>
                                 </div>
                                 <p class="infobot" v-if="infoBotShow[ind]">
-                                    <button>
+                                    <button @click="stopLoss(ind)">
                                         止损
                                     </button>
-                                    <button>
+                                    <button @click="targetProfit(ind)">
                                         止盈
                                     </button>
                                 </p>
@@ -186,7 +186,7 @@
                     <mt-loadmore 
                     :bottom-method="hisloadBottom" 
                     :autoFill="false" ref="loadmore">
-                        <div ref="mybox">
+                        <div ref="myboxes">
                             <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
                                 <div class="infotop clearfix" @click="hisBotOnOff(ind)">
                                     <div class="left">
@@ -330,6 +330,49 @@
                 </div>
             </mt-tab-container-item>
         </mt-tab-container>
+
+
+        <!-- 弹窗 -->
+        <div ref="back" class="back" ></div>
+        <div class="popup" v-if="popUpShow">
+            <ul class="poptop">
+                <li>
+                    <span>登录平台</span>
+                    <input type="text" placeholder="请输入账号" >
+                   
+                    <ul></ul>
+                </li>
+                <li>
+                    <span>登录账号</span>
+                    <input type="text" placeholder="请输入账号">
+                    
+                </li>
+                <li>
+                    <span>登录密码</span>
+                    <input type="password" placeholder="请输入密码">
+                
+                </li>
+                <li>
+                    <span>账号备注</span>
+                    <input type="text" placeholder="请输入备注名称">
+            
+                </li>
+            </ul>
+            <div class="popbot">
+                <!-- 止损 -->
+                <button class="confirm" v-if="stopLossShow" @click="confirmStop">确认</button>
+                <!-- 止盈 -->
+                <button class="confirm" v-if="!stopLossShow" @click="confirmProfit">确认</button>
+                <button @click="cancelBtn">取消</button>
+            </div>
+        </div>
+
+
+
+
+
+
+
     </div>
 </template>
 <script>
@@ -394,8 +437,9 @@ export default {
             hisBotShow:[ false,false,false,false,false],
 
 
-
-
+            //弹窗
+            popUpShow:false,//弹窗是否显示
+            stopLossShow:true,//止损按钮是否显示
 
 
 
@@ -418,7 +462,8 @@ export default {
     // },
     mounted(){
         
-        this.calculationHeight()
+        this.calculationHeight();
+        this.calculation();
     },
     methods: {
 
@@ -442,7 +487,26 @@ export default {
             })
         },
 
-
+        //计算窗口
+        calculation(){
+            let winWidth = 0;
+            let winHeight =0;
+            //获取窗口宽度
+            if (window.innerWidth){
+                winWidth = window.innerWidth;
+            }else if ((document.body) && (document.body.clientWidth)){
+                winWidth = document.body.clientWidth;
+            }
+            
+            //获取窗口高度
+            if (window.innerHeight){
+                winHeight = window.innerHeight;
+            }else if ((document.body) && (document.body.clientHeight)){
+                winHeight = document.body.clientHeight;
+            }
+            this.$refs.back.style.width=`${winWidth}px`;
+            this.$refs.back.style.height=`${winHeight}px`;
+        },
 
 
 
@@ -456,7 +520,8 @@ export default {
             }else if((document.body) && (document.body.clientHeight)){
                 winHeight = document.body.clientHeight-80; 
             }
-            this.$refs.mybox.style.minHeight=`${winHeight}px`
+            this.$refs.mybox.style.minHeight=`${winHeight}px`;
+            this.$refs.myboxes.style.minHeight=`${winHeight}px`
         },
             //点击标题显示内容收缩
         infoBotOnOff(ind){
@@ -482,8 +547,36 @@ export default {
                 }
             })
         },
-
-
+            //止损按钮
+        stopLoss(ind){
+            //显示遮罩
+            this.$refs.back.style.zIndex=2;
+            this.popUpShow = true;
+          
+        },
+        //止损按钮
+        targetProfit(ind){
+            this.$refs.back.style.zIndex=2;
+            this.popUpShow = true;
+        },
+        //止损确定按钮
+        confirmStop(){
+            this.$refs.back.style.zIndex=-10;
+            this.popUpShow = false;
+            console.log("止损确定")
+        },
+        //止盈利确定按钮
+        confirmStop(){
+            this.$refs.back.style.zIndex=-10;
+            this.popUpShow = false;
+            console.log("止赢确定")
+        },
+        //弹窗取消
+        cancelBtn(){
+            this.$refs.back.style.zIndex=-10;
+            this.popUpShow = false;
+            console.log("取消")
+        },
 
             //上拉加载
         loadBottom(){
@@ -531,6 +624,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    #box{
+        background-color: #fff;
+    }
     //Header交易员信息
     #header{
         position: fixed;
@@ -706,6 +802,77 @@ export default {
                 border-radius: 6px;
                 font-size: 14px;
                 font-weight: 900;
+            }
+        }
+    }
+
+
+
+
+    //弹窗
+    .back{
+        background-color:gray;
+        opacity: .5;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -10;
+        
+    }
+
+    .popup{
+        position: absolute;
+        left: .8rem;
+        top: 80px;
+        z-index: 3;
+        opacity: 1;
+        padding: 14px .3rem;
+        background-color: #fff;
+        border-radius: 14px;
+        .poptop{
+            li{
+                text-align: left;
+                width: 5.1rem;
+                height: 32px;
+                padding: 8px .2rem;
+                border-bottom: 1px solid #c9c9c9;
+                span{
+                    font-weight: 900;
+                    font-size: 13px;
+                    line-height: 32px;
+                    margin-right: .2rem;
+                }
+                input{
+                    width: 3rem;
+                    height:17px;
+                    padding-left: .2rem;
+                    border: none;
+                    outline: none;
+                    border-left: 1px solid #e5e5e5;
+                }
+                img{
+                    width: 16px;
+                }
+            }
+        }
+        .popbot{
+            display: flex;
+            justify-content: space-around;
+            button{
+                width: 1.8rem;
+                height: 32px;
+                font-size: 13px;
+                font-weight: 900;
+                border: 1px solid #4fa2fe;
+                border-radius: 6px;
+                color: #4fa2fe;
+                margin-top: 20px;
+                margin-bottom: 6px;
+                background: #fff;
+            }
+            .confirm{
+                background: #4fa2fe;
+                color: #fff;
             }
         }
     }

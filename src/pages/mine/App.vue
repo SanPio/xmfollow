@@ -198,17 +198,17 @@ export default {
             accNumArr : [true,false,false,false]
         }
     },
-    // created(){
-    //     //初始化数据请求
-    //     this.$http.post('',{    
-    //         name:"virus"  
-    //     }).then(function(res){
-    //         // console.log(res)
-    //     }).catch(function(err){
+    created(){
+        //初始化数据请求
+        this.$http.post('/wx/member/manager',{    
+            userid:"1"  
+        }).then(function(res){
+            console.log(res)
+        }).catch(function(err){
         
-    //         // console.log(err)
-    //     })
-    // },
+            console.log(err)
+        })
+    },
     mounted(){
         //Header组件缩放
         var _this =this; //改变指针，将Vue实例传到闭包
