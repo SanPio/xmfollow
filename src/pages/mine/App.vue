@@ -35,9 +35,9 @@
         <div id="center">
             <dl >
                 <dt>
-                    <img :src="numberImgSrc" alt="">
+                    <img :src="numberImgSrc" alt="" @click="toAccount">
                 </dt>
-                <dd>账号管理</dd>
+                <dd @click="toAccount">账号管理</dd>
             </dl>
              <dl style="border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;">
                 <dt>
@@ -239,6 +239,10 @@ export default {
         //跳转到会员购买页
         toVIPBuy(){
             window.location.href="vipbuy.html";
+        },
+        //跳转到账号管理
+        toAccount(){
+            window.location.href="accountmanage.html";
         },
         //跳转到跟随管理
         toFollowmange(ind){
