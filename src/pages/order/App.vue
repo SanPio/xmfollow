@@ -13,7 +13,7 @@
                 </dd>
             </dl>
             <div class="right">
-                <button>
+                <button @click="allClose">
                     一键平仓
                 </button>
             </div>
@@ -91,7 +91,7 @@
                                             </p>
                                         </div>
                                         <div class="right">
-                                            <button>
+                                            <button @click.stop="closeThis(ind)">
                                                 X
                                             </button>
                                         </div>
@@ -333,6 +333,7 @@
     </div>
 </template>
 <script>
+import { MessageBox } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
@@ -420,6 +421,32 @@ export default {
         this.calculationHeight()
     },
     methods: {
+
+         //一键平仓(平掉所有)
+        allClose(){
+            MessageBox({
+                cancelButtonText:'确定',
+                confirmButtonText:'取消',
+                title: '平仓管理',
+                message: '您是否确定平掉所有正在持仓？',
+                showConfirmButton:true,
+                showCancelButton:true
+            }).then(action => { 
+                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                if (action == 'cancel') {     //确认的回调
+                console.log(1); 
+                }
+                if (action == 'confirm') {     //确认的回调
+                console.log(2); 
+                }
+            })
+        },
+
+
+
+
+
+
         //订单信息页
             //设定上拉下拉区域为窗口高度
         calculationHeight(){
@@ -435,6 +462,28 @@ export default {
         infoBotOnOff(ind){
             this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
         },
+
+        //关闭单个
+        closeThis(ind){
+            MessageBox({
+                cancelButtonText:'确定',
+                confirmButtonText:'取消',
+                title: '清空',
+                message: '您是否确定平掉此张订单？',
+                showConfirmButton:true,
+                showCancelButton:true
+            }).then(action => { 
+                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                if (action == 'cancel') {     //确认的回调
+                console.log(ind); 
+                }
+                if (action == 'confirm') {     //确认的回调
+                console.log(2); 
+                }
+            })
+        },
+
+
 
             //上拉加载
         loadBottom(){
