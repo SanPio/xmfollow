@@ -6,17 +6,16 @@
                     <img :src="portraitSrc" alt="">
                 </div>
                 <dl class="h-right">
-                    <dt>信号员001</dt>
-                    <dd>杭州信号事业有限公司</dd>
+                    <dt>{{info.signalName}}</dt>
                 </dl>
             </div> 
             <p class="h-center" :class="{'ellipsis':ellShow}">
                 <span class="h-c-left">交易策略：</span>
-                <span class="h-c-right" @click="ellIfShow">品种品种品种品种品种品种品种品种品种品种品种品种种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品种品品种品种</span>
+                <span class="h-c-right" @click="ellIfShow">{{info.signalTactics}}</span>
             </p>
             <p class="h-footer">
                 <span class="h-f-left">个人简介：</span>
-                <span class="h-f-right">任由任由任由任由任由任由任由</span>
+                <span class="h-f-right">{{info.signalIntroduce}}</span>
             </p>   
         </div>
         <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9">
@@ -27,84 +26,22 @@
                 <div class="swip-content">
                     <ul class="hold-info">
                
-                        <li>
+                        <li v-for="(item,ind) in holdArr" :key="ind">
                             <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
+                                <span class="tit">{{item.symbol}}</span>
+                                <button class="buybtn" v-if="item.type==1">买</button>
+                                <button class="cellbtn" v-if="item.type==2">卖</button>
+                                <button class="hangbtn" v-if="item.type==6">挂</button>
+                                <span class="num" >{{ item.lots }}</span>
                                 <span class="standard">标准手</span>
                             </p>
                             <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
+                                <span class="money">${{ item.profit }}</span>
+                                <span class="spot">spreads{{ item.spreads }}</span>
                             </p>
                         </li>
-                         <li>
-                            <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[1]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[1]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
-                            </p>
-                        </li>
-                         <li>
-                            <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[2]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[2]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
-                            </p>
-                        </li>
-                         <li>
-                            <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[3]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[3]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
-                            </p>
-                        </li>
-                         <li>
-                            <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[4]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[4]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
-                            </p>
-                        </li>
-                         <li>
-                            <p class="hold-info-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="holdBtnShow[5]">买</button>
-                                <button class="cellbtn" v-if="!holdBtnShow[5]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money">$70.00</span>
-                                <span class="spot">1.40点</span>
-                            </p>
-                        </li>    
+                        
+     
                     </ul>
                 </div>
             </mt-swipe-item>
@@ -114,76 +51,16 @@
                 </p>
                 <div class="swip-content">
                     <ul class="history">
-                        <li>
+                        <li v-for="(item,ind) in hisArr" :key="ind">
                             <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
+                                <span class="tit"> {{ item.symbol }} </span>
+                                <button class="buybtn" v-if="item.type==1">买</button>
+                                <button class="cellbtn" v-if="item.type==2">卖</button>
+                                <span class="num" >{{ item.lots }}</span>
                                 <span class="standard">标准手</span>
                             </p>
                             <p class="history-right">
-                                <span class="money">$70.00</span>
-                            </p>
-                        </li>
-                       <li>
-                            <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money">$70.00</span>
-                            </p>
-                        </li>
-                        <li>
-                            <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money">$70.00</span>
-                            </p>
-                        </li>
-                        <li>
-                            <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money">$70.00</span>
-                            </p>
-                        </li>
-                        <li>
-                            <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money">$70.00</span>
-                            </p>
-                        </li>
-                        <li>
-                            <p class="history-left">
-                                <span class="tit">USD/CHF</span>
-                                <button class="buybtn" v-if="historyBtnShow[0]">买</button>
-                                <button class="cellbtn" v-if="!historyBtnShow[0]">卖</button>
-                                <span class="num" >0.5</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money">$70.00</span>
+                                <span class="money">${{ item.profit }}点</span>
                             </p>
                         </li>
                     </ul>
@@ -271,6 +148,7 @@ export default {
     name: 'App',
     data(){
         return {
+            optionId:0,
             tableTitleSrc : require('../../assets/table-title.png'),
             portraitSrc : require('../../assets/Navigate-click.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
@@ -280,12 +158,82 @@ export default {
             buyShow : true,
             ellShow : true,
             mianInfoTitle : ["操盘经验","余额","收益率","起始资金","盈亏点数","跟随人数","第一单"],
-            mianInfo : ["3年6月","$511.4","30%","$5644","140.5","384人","2018-5-15"],
+            mianInfo : [],
             secInfoTitle : ["平均持仓时间","最大盈利点数","最大亏损点数","最大手数","最小手数"],
-            secInfo : ["40小时","55.32","15.32","5.05标准手","0.05标准手"],
+            secInfo : [],
             principleTitle : ["杠杆比例","预期回报","最大回撤","平均点差"],
-            principle : ["1:300","120%","-37.91","1515.44"]
+            principle : [],
+            info : {},
+            hisArr : [],
+            holdArr:[],
+            userId : 1
         }
+    },
+    created(){
+        var v = this.parseUrl();//解析所有参数
+        //初始化数据请求
+        this.$http.post('/wx/index/'+ v['optionId']+'/info',{    
+          
+        }).then((res) => {
+            this.info = res.data.data;
+            console.log(this.info.signalTactics)
+            //主要信息
+            this.mianInfo.push(res.data.data.experience);
+            this.mianInfo.push('$' + res.data.data.money);
+            this.mianInfo.push(res.data.data.yield);
+            this.mianInfo.push( '$' + res.data.data.initFunds);
+            this.mianInfo.push(res.data.data.profitNo);
+            this.mianInfo.push(res.data.data.followerNumber);
+            this.mianInfo.push(res.data.data.firstOrder);
+            //次要信息
+            this.secInfo.push(res.data.data.avgHandleTime);
+            this.secInfo.push(res.data.data.maxWinNo);
+            this.secInfo.push(res.data.data.maxFailNo);
+            this.secInfo.push(res.data.data.maxLots + '标准手');
+            this.secInfo.push(res.data.data.minLots + '标准手');
+            //交易原则
+            this.principle.push(res.data.data.signalLeverage);
+            this.principle.push(res.data.data.signalExpects);
+            this.principle.push(res.data.data.signalDrawDown);
+            this.principle.push(res.data.data.signalSpread);
+        }).catch((err) => {
+            console.log(err)
+        });
+
+
+        this.$http.get('/wx/order/trader/'+ v['optionId'] +'/history',{  
+            params : { 
+                pageNum  : 1,
+                pageSize : 6,
+                userId : this.userId 
+            }      
+        }).then((res) => {
+            console.log(res.data.data.list);
+            // for(let i=0; i<res.data.data.list;i++){
+            //     this.hisArr.push(res.data.data.list[i])
+            // }
+            this.hisArr = res.data.data.list;
+            this.holdArr = res.data.data.list;
+            // console.log(this.hisArr[0].symbol)
+            
+        }).catch((err) => {
+            console.log(err)
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     },
     mounted(){
         let myChart = echarts.init(document.getElementById('cycle'));
@@ -348,6 +296,26 @@ export default {
         })
     },
     methods: {
+        //接受交易领航跳转参数
+        parseUrl(){
+            var url=location.href;
+            var i=url.indexOf('?');
+            if(i==-1)return;
+            var querystr=url.substr(i+1);
+            var arr1=querystr.split('&');
+            var arr2=new Object();
+            for  (i in arr1){
+                var ta=arr1[i].split('=');
+                arr2[ta[0]]=ta[1];
+            }
+            return arr2;
+        },
+ 
+
+
+
+
+        //
         ellIfShow(){
             this.ellShow = !this.ellShow
         },
@@ -384,17 +352,22 @@ export default {
                 dt{
                     font-size: 18px;
                     font-weight: 900;
-                    margin-bottom: 6px;
+                    margin-top: 10px;
                 } 
             }
         }
         .h-center .h-c-left,.h-footer .h-f-left{
+      
             font-size: 14px;
             font-weight: 700;
         }
         .h-center .h-c-right,.h-footer .h-f-right{
+          
             font-size: 13px;
             font-weight: normal;
+        }
+        .h-footer,.h-center{
+            text-align: left;
         }
         .ellipsis{
             overflow:hidden;
@@ -439,6 +412,13 @@ export default {
                     padding: 1px;
                     color: #ffffff;
                     background-color: #fe0000;
+                    border: none;
+                    outline: none;
+                }
+                .hangbtn{
+                    padding: 1px;
+                    color: #ffffff;
+                    background-color: #ff7c2b;
                     border: none;
                     outline: none;
                 }

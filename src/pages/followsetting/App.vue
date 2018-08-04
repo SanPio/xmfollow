@@ -160,17 +160,23 @@ export default {
           holdState:true //持仓状态，点击取消跟随时查询
         }
     },
-    // created(){
-    //     //初始化数据请求
-    //     this.$http.post('',{    
-    //         name:"virus"  
-    //     }).then(function(res){
-    //         // console.log(res)
-    //     }).catch(function(err){
+    created(){
+        //初始化数据请求
+        this.$http.get('/wx/order/member/followSettingInfo',{ 
+            params : {
+                accountId : 1, 
+                optionId : 2,
+                userId : 1
+            }
+
+           
+        }).then(function(res){
+            console.log(res)
+        }).catch(function(err){
         
-    //         // console.log(err)
-    //     })
-    // },
+            console.log(err)
+        })
+    },
     mounted(){
        
         

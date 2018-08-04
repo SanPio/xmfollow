@@ -34,30 +34,52 @@
     </div>
       
       <div style="overflow-y: scroll;">
-         <mt-loadmore :top-method="loadTop"
+         <mt-loadmore 
           :bottom-method="loadBottom" :autoFill="false" ref="loadmore">
-          <div v-for = "(item,ind) in boxItem" :key="ind" @click="jump">
+          <div v-for = "(item,ind) in boxItem" :key="ind" @click="jump(ind)">
             <div class="title">
               <div class="tlt-left">
                 <div class="logo">
                   <img :src="imgSrc2" alt="">
                 </div>
                 <dl>
-                  <dt>司金校尉<span>三星</span></dt>
-                  <dd>精准计算公司</dd>
+                  <dt> {{item.signalName}} <span> {{ item.star }}</span></dt>
+                  <dd>{{item.signalIntroduce}}</dd>
                 </dl>
               </div>
               <div class="tit-right">
-                <button class="flow-set" @click.stop="toFollowSetting">跟随设置</button>
-                <button class="flow-btn">跟随</button>
+                <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting">跟随设置</button>
+                <button class="flow-btn" v-if="!item.followed">跟随</button>
               </div>
             </div>
             <div class="content">
               <div class="con-left" :id="ind" ></div>
               <div class="con-right">
-                <dl v-for="(item,ind) in dlArr" :key="item.dd + ind" :class="{'balance':ind == 0||3,'pro-loss':ind==2}">
-                  <dt> {{item.dt}}</dt>
-                  <dd> {{item.dd}} </dd>
+               
+          
+                <dl class="balance">
+                  <dt> 操盘经验 </dt>
+                  <dd> {{item.experience}} </dd>
+                </dl>
+                <dl>
+                  <dt> 交易收益率</dt>
+                  <dd> {{item.yield}} </dd>
+                </dl>
+                <dl class="pro-loss">
+                  <dt> 近一周盈亏点数 </dt>
+                  <dd> {{item.profitNo}} </dd>
+                </dl>
+                <dl class="balance">
+                  <dt> 余额 </dt>
+                  <dd> {{item.money}} </dd>
+                </dl>
+                <dl>
+                  <dt> 起始资金 </dt>
+                  <dd> {{item.initFunds}} </dd>
+                </dl>
+                <dl>
+                  <dt> 跟随人数 </dt>
+                  <dd> {{item.followerNumber}} </dd>
                 </dl>
               </div>
 
@@ -101,10 +123,10 @@ export default {
   
   data () {
     return {
-       time : "近一周有交易",
-      ability : '交易员能力由高到低',
+      time : "近一周有交易",
+      ability : '操盘经验由高到低',
       leftList : ["最近一周有交易","最近两周有交易","最近一月有交易"],
-      rightList : ['操盘经验','收益率','近一周盈亏点数','余额','起始资金','跟随人数'],
+      rightList : ['操盘经验','收益率','盈亏点数','余额','起始资金','跟随人数'],
       btnnormal : true,
       btnblueleft : false,
       btnblueright :false,
@@ -119,122 +141,302 @@ export default {
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
      
-      boxItem:4,
+      boxItem:[],
       bottomDistance:2,
       autoFill:false,
-      dlArr : [
-        {"dt":"操盘经验","dd":"84"},
-        {"dt":"交易收益率","dd":"84"},
-        {"dt":"近一周盈亏点数","dd":"84"},
-        {"dt":"余额","dd":"84"},
-        {"dt":"起始资金","dd":"84"},
-        {"dt":"跟随人数","dd":"84"},
-      ],
-      option:{
-
-      }
-    
+      echartArr:[],
+      nearTime:7,
+      pageNum:1,
+      pageSize:4,
+      sortField:'',
+      sortType:1,
+      userId:1,
+      optionId: [],
+      len:8
     }
   },
+  created(){
+    //初始化数据请求
+   
+    this.clickrequest(7,1,4,'',1,1)
+       
+       
+    },
    mounted(){
-      // 基于准备好的dom，初始化echarts实例
-      for(let i = 0; i < this.boxItem; i++ ){
-        let myChart = echarts.init(document.getElementById(''+ i));
-      // 绘制图表
-        myChart.setOption({
-          animation: false,
-          xAxis: {
-              type: 'category',
-              show:false
-              // boundaryGap: false,
-              // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          },
-          yAxis: {  
-              show:false
-          },
-          grid : {
-            left:0,
-            right:0,
-            top : 0,
-            bottom : 0
-          },
-          series: [{
-              data: [20,16,30],
-              type: 'line',
-              areaStyle: {},
-              symbol:'none',  //这句就是去掉点的    
-              smooth:true,  //这句就是让曲线变平滑的 
-          }]
-        });
+     
+        
+        // 基于准备好的dom，初始化echarts实例
+      for(let i = 0; i < this.len; i++ ){
+          let myChart = echarts.init(document.getElementById('' +i));
+        // 绘制图表
+          console.log(656445665)
+          console.log(this.echartArr[i])
+          myChart.setOption({
+            animation: false,
+            xAxis: {
+                type: 'category',
+                show:false
+                // boundaryGap: false,
+                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {  
+                show:false
+            },
+            grid : {
+              left:0,
+              right:0,
+              top : 0,
+              bottom : 0
+            },
+            series: [{
+                data: [10,20],
+                type: 'line',
+                areaStyle: {},
+                symbol:'none',  //这句就是去掉点的    
+                smooth:true,  //这句就是让曲线变平滑的 
+            }]
+          });
       }
-      
+      // this.forFuntion()
   },
   methods:{
+    //加载请求
+
+    request(nearTime,pageNum,pageSize,sortField,sortType,userId){
+      let postData = this.$qs.stringify({
+        nearTime: nearTime,
+        pageNum: pageNum ,
+        pageSize: pageSize,
+        sortField: sortField,
+        sortType: sortType,
+        userId: userId
+      });
+      console.log(postData)
+      this.$http({
+          method: 'post',
+          url:'/wx/index/list',
+          data:postData
+      }).then((res)=>{
+          this.len  = res.data.data.list.length
+          for(let j=0; j<res.data.data.list.length; j++){
+            this.boxItem.push(res.data.data.list[j]);
+            this.optionId.push(res.data.data.list[j].optionId) ;
+          }
+          
+          for(let i = 0; i < res.data.data.list.length; i++){
+            
+            var arr = [];
+            for(let j = 0; j < res.data.data.list[i].profit.length; j++){
+              arr.push(res.data.data.list[i].profit[j].profitNo)
+            }
+            this.echartArr.push(arr)
+            
+          }
+          console.log(this.boxItem)
+          console.log(this.optionId)
+          //结束加载图
+          this.$refs.loadmore.onBottomLoaded();
+          
+      }).catch((err)=>{  
+          //结束加载图
+          this.$refs.loadmore.onBottomLoaded();
+      })
+    },
+
+
+      //点击请求
+     clickrequest(nearTime,pageNum,pageSize,sortField,sortType,userId){
+      let postData = this.$qs.stringify({
+        nearTime: nearTime,
+        pageNum: pageNum ,
+        pageSize: pageSize,
+        sortField: sortField,
+        sortType: sortType,
+        userId: userId
+      });
+      console.log(postData)
+      this.$http({
+          method: 'post',
+          url:'/wx/index/list',
+          data:postData
+      }).then((res)=>{
+          
+          this.boxItem = res.data.data.list;
+          this.echartArr = [];
+          this.optionId = [];
+          for(let i = 0; i < res.data.data.list.length; i++){
+            
+            this.optionId.push(res.data.data.list[i].optionId)
+            var arr = [];
+            for(let j = 0; j < res.data.data.list[i].profit.length; j++){
+              arr.push(res.data.data.list[i].profit[j].profitNo)
+            }
+            // this.echartArr.push(arr)
+            this.$set(this.echartArr,i,arr)
+          
+          }
+          console.log(this.echartArr)
+          //结束加载图
+          this.$refs.loadmore.onBottomLoaded();
+          
+      }).catch((err)=>{  
+          //结束加载图
+          this.$refs.loadmore.onBottomLoaded();
+      })
+    },
+
+
+
+
+
+
+
+  //echarts会表
+
+  forFuntion(){
+        // 基于准备好的dom，初始化echarts实例
+      for(let i = 0; i < this.echartArr.length; i++ ){
+          let myChart = echarts.init(document.getElementById('' +i));
+        // 绘制图表
+          console.log(656445665)
+          myChart.setOption({
+            animation: false,
+            xAxis: {
+                type: 'category',
+                show:false
+                // boundaryGap: false,
+                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {  
+                show:false
+            },
+            grid : {
+              left:0,
+              right:0,
+              top : 0,
+              bottom : 0
+            },
+            series: [{
+                data: this.echartArr[i],
+                type: 'line',
+                areaStyle: {},
+                symbol:'none',  //这句就是去掉点的    
+                smooth:true,  //这句就是让曲线变平滑的 
+            }]
+          });
+      }
+
+  },
+
+
+
+
+
+
+
+
+
     timeshow(){
       this.timebln = !this.timebln;
       this.abilitybln = false;
+      
     },
     abilityshow(){
       this.abilitybln = !this.abilitybln;
       this.timebln = false
     },
+    //选择时间
     timeChoose(ind){
       this.time = this.leftList[ind];
-      this.timebln = false
+      this.timebln = false;
+      if( ind==0){
+        this.nearTime=7;
+      }else if(ind == 1){
+        this.nearTime=14;
+      }else if(ind == 2){
+        this.nearTime=30;
+      }
+    
+
+
+      //按时间请求
+      this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
+
     },
+  
     btnClickLeft(ind){
       this.actLeft =ind;
       this.actRight = -1;
       if(ind==0){
-        this.ability = "交易员能力由高到低";
+        this.ability = "操盘经验由高到低";
+        this.sortField = 'experience';
+        this.sortType = 1;
       }else if(ind==1){
-        this.ability = "交易单数由高到低";
+        this.ability = "收益率由高到低";
+        this.sortField = 'yield';
+        this.sortType = 1;
       }else if(ind==2){
-        this.ability = "近一周盈亏点数由高到低";
+        this.ability = "盈亏点数由高到低";
+        this.sortField = 'profitNo';
+        this.sortType = 1;
       }else if(ind==3){
-        this.ability = "交易周期由高到低";
+        this.ability = "余额由高到低";
+        this.sortField = 'money';
+        this.sortType = 1;
       }else if(ind==4){
-        this.ability = "平均持仓时间由高到低";
+        this.ability = "起始资金由高到低";
+        this.sortField = 'initFunds';
+        this.sortType = 1;
       }else if(ind==5){
-        this.ability = "粉丝人数由高到低";
+        this.ability = "跟随人数由高到低";
+        this.sortField = 'followerNumber';
+        this.sortType = 1;
       }
       this.abilitybln = false;
-     
+      this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
     },
     btnClickRight(ind){
       this.actRight =ind;
       this.actLeft = -1;
       if(ind==0){
-        this.ability = "交易员能力由低到高";
+        this.ability = "操盘经验由低到高";
+        this.sortField = 'experience';
+        this.sortType = 2;
       }else if(ind==1){
-        this.ability = "交易单数由低到高";
+        this.ability = "收益率由低到高";
+        this.sortField = 'yield';
+        this.sortType = 2;
       }else if(ind==2){
-        this.ability = "近一周盈亏点数由低到高";
+        this.ability = "盈亏点数由低到高";
+        this.sortField = 'profitNo';
+        this.sortType = 2;
       }else if(ind==3){
-        this.ability = "交易周期由低到高";
+        this.ability = "余额由低到高";
+        this.sortField = 'money';
+        this.sortType = 2;
       }else if(ind==4){
-        this.ability = "平均持仓时间由低到高";
+        this.ability = "起始资金由低到高";
+        this.sortField = 'initFunds';
+        this.sortType = 2;
       }else if(ind==5){
-        this.ability = "粉丝人数由低到高";
+        this.ability = "跟随人数由低到高";
+        this.sortField = 'followerNumber';
+        this.sortType = 2;
       }
-      this.abilitybln = false
+      this.abilitybln = false;
+      this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
     },
-    //下拉刷新
-    loadTop() {
-      // 加载更多数据
-      console.log("下拉刷新")
 
-    },
     //上拉加载
     loadBottom(){
-    
-      console.log("上拉加载");
-      this.boxItem = this.boxItem + 4
+      this.pageNum = this.pageNum +1
+      
+      this.request(this.nearTime,this.pageNum,4,this.sortField,this.sortType,this.userId)
 
     },
-    jump(){
-      window.location.href="info.html";
-      // window.location.href="https://www.baidu.com";
+    jump(ind){
+       
+      window.location.href=`info.html?optionId=${this.optionId[ind]}`;
      
     },
     //跳转到mine（我的）页面
@@ -243,7 +445,7 @@ export default {
     },
     //到跟随设置页面
     toFollowSetting(){
-      window.location.href="followsetting.html";
+      window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
     }
     
     
@@ -359,6 +561,7 @@ export default {
       text-align: left;
       dt{
         font-weight: 900;
+        line-height: 18px;
         margin-top: 2px;
         span{
           font-size: 10px;
@@ -416,7 +619,8 @@ export default {
       float: left;
       width: 1.7rem;
       text-align: left;
-      margin:0 .24rem 8px 0;
+      margin:0 .1rem 8px 0;
+
       dt{
         color: #999999;
         margin-bottom: 8px;
@@ -427,6 +631,7 @@ export default {
     }
     .balance{
       width: 1.3rem;
+      margin-right: 0;
 
     }
     .pro-loss{
