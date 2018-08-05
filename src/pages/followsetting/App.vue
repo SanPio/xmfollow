@@ -113,7 +113,7 @@
         </div>
         <!-- 底部保存按钮 -->
         <p class="preservation">
-            <button>保存</button>
+            <button @click="preserv">保存</button>
         </p>
         <!-- 底部返回 -->
         <!-- <div id="footer">
@@ -124,27 +124,18 @@
         </div> -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
 </template>
 <script>
 import { MessageBox } from 'mint-ui';
+import { Toast } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
         return {
+            optionId:1,
+            userId: 1,
+            accountId: 1,
             userImgSrc: require('./assets/img2.jpg'),
             showImgSrc: require('./assets/setting-img.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
@@ -166,20 +157,23 @@ export default {
             lotsType: '',
             stopLoss:0,//止损点
             takeProfits: 0,//止盈点
+            urlTitle:"http://192.168.1.11:8080/"
         }
     },
     created(){
+        this.userId = Number(JSON.parse(sessionStorage.getItem('userId')))   ;
+        this.accountId = Number( JSON.parse(sessionStorage.getItem('accountId')));
+        var v = this.parseUrl();//解析所有参数
+        this.optionId = v['optionId'];
         //初始化数据请求
-        this.$http.get('/wx/order/member/followSettingInfo',{ 
+        this.$http.get(this.urlTitle+'wx/order/member/followSettingInfo',{ 
             params : {
-                accountId : 2, 
-                optionId : 1,
-                userId : 1
-            }
-
-           
-        }).then((res) => {
-            
+                accountId : this.accountId, 
+                optionId : this.optionId,
+                userId : this.userId
+                
+            }   
+        }).then((res) => { 
             console.log(res.data.data);
             this.followInfo  = res.data.data;
             this.signalName = res.data.data.signalName;
@@ -206,13 +200,12 @@ export default {
                 this.followOnOff = false;
             }
             //反向跟随
-
             if( res.data.data.opposite == 0 ){
                 this.reverseOnOff = false;
             }else if(res.data.data.opposite == 1){
                 this.reverseOnOff = true;
             }
-            
+            //最小手数
             if( res.data.data.minLotsCount == 1){
                 this.handsNum = 0
             }else if(res.data.data.minLotsCount == 0.1){
@@ -221,50 +214,33 @@ export default {
                 this.handsNum = 2;
             }
 
-
+            //精密设置去大小
             if( res.data.data.broundoff == 0){
                 this.abandonShow = true;
             }else if(res.data.data.broundoff == 1){
                 this.abandonShow = false;
             }
-            // this.lotsType = res.data.data.lotsType
-            console.log(this.signalName )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }).catch((err) => {
-        
-            console.log(err)
-        })
+        }).catch((err) => {console.log(err) })
+       
     },
     mounted(){
-       
-        
+         
     },
     methods: {
+        ////接受跳转参数
+        parseUrl(){
+            var url=location.href;
+            var i=url.indexOf('?');
+            if(i==-1)return;
+            var querystr=url.substr(i+1);
+            var arr1=querystr.split('&');
+            var arr2=new Object();
+            for  (i in arr1){
+                var ta=arr1[i].split('=');
+                arr2[ta[0]]=ta[1];
+            }
+            return arr2;
+        },
         //取消跟随
         cancelFollo(){
             MessageBox({
@@ -279,23 +255,27 @@ export default {
                 if (action == 'cancel') {     //确认的回调
                     console.log(1); 
                     let postData = this.$qs.stringify({
-                        accountId : 2, 
-                        optionId : 1,
-                        userId : 1
+                        accountId : this.accountId, 
+                        optionId : this.optionId,
+                        userId : this.userId
                     });
-                    console.log(postData)
                     this.$http({
                         method: 'post',
-                        url: '/wx/order/member/cancelFollowing',
+                        url: this.urlTitle+'wx/order/member/cancelFollowing',
                         data:postData
                     }).then((res)=>{
-                        console.log(res)
+                        if(res.data.data.success == true){
+                            Toast({
+                                message: '操作成功',
+                                duration: 2000
+                            });
+                        }
                     }).catch((err) => {
-                        console.log(err)
+                        
                     });
                 }
                 if (action == 'confirm') {     //确认的回调
-                console.log(2); 
+                   
                 }
             })
         },
@@ -310,54 +290,38 @@ export default {
                 showCancelButton:true
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
-                if (action == 'cancel') {     //确认的回调
-                    
+                if (action == 'cancel') {     //确认的回调     
                      let postData = this.$qs.stringify({
-                        // integer: ,
-                        // optionId: ,
-                        // type : ,
-                        // userId : ,
+                        accountId: this.accountId,
+                        optionId: this.optionId,
+                        type : 0,
+                        userId : this.userId,
                     });
                     console.log(postData)
                     this.$http({
                         method: 'post',
-                        url: '/wx/order/member/followStop',
+                        url: this.urlTitle+'wx/order/member/followStop',
                         data:postData
                     }).then((res)=>{
-                        console.log(res)
+                        if(res.data.data.success == true){
+                            Toast({
+                                message: '操作成功',
+                                duration: 2000
+                            });
+                        }
                     }).catch((err) => {
-                        console.log(err)
+                    
                     });
-
-
-
-
-
-
-
 
                 }
                 if (action == 'confirm') {     //确认的回调
-                console.log(2); 
+      
                 }
             })
         },
-
-
-
-
-
-
-
-
-
-
-
-
         //比例跟随和固定跟随切换
         btnClick(){
             this.clickBtn = !this.clickBtn;
-    
         },
         // 比例跟随数值填写失焦 取两位小数
         decimal(){
@@ -394,6 +358,73 @@ export default {
         //四舍五入
         abandonBtn(){
             this.abandonShow = !this.abandonShow;
+        },
+        //保存
+        preserv(){
+            //精密设置
+            var broundoff = 0;
+            if( this.abandonShow == true ){
+                broundoff = 0;
+            }else if( this.abandonShow == false ){
+                broundoff = 1;
+            }
+            //跟随数值
+            var lots = this.followNum;
+            //跟随方式
+            var lotsType = 1;
+            if( this.clickBtn == true){
+                lotsType =1
+            }else if(this.clickBtn == false){
+                lotsType = 0
+            }
+            //最小手数
+            var minLotsCount = 0.01;
+            if( this.handsNum == 0){
+                minLotsCount = 1
+            }else if(this.handsNum == 1 ){
+                minLotsCount = 0.1
+            }else if(this.handsNum == 2 ){
+                minLotsCount = 0.01
+            }
+            //跟单开关
+            var nullity = 0;
+            if(this.followOnOff == true){
+                nullity = 0
+            }else if(this.followOnOff == false){
+                nullity = 1
+            }
+            //反向跟随
+            var opposite = 0;
+            if( this.reverseOnOff ==false ){
+                opposite = 0;
+            }else if(  this.reverseOnOff = true ){
+                opposite = 1;
+            }
+            let postData = this.$qs.stringify({
+                accountId: 1 ,
+                optionId : 1,
+                userId : 1,
+                broundoff: broundoff,
+                lots : lots,
+                lotsType : lotsType,
+                minLotsCount: minLotsCount,
+                nullity : nullity,
+                opposite: opposite,
+                stopLoss: this.stopLoss,
+                takeProfits : this.takeProfits,
+            });
+            console.log(postData)
+            this.$http({
+                method: 'post',
+                url: this.urlTitle+'wx/order/member/followSetting',
+                data:postData
+            }).then((res)=>{
+                if(res.data.data.success == true){
+                    window.location.href=`followsetting.html?optionId=${this.optionId}`;
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
         }
         
     }
@@ -405,17 +436,17 @@ export default {
         border-bottom: 1px solid #e5e5e5;
     }
     #header{
-        height: 60px;
+        height: 1.2rem;
         img{
-            margin-top: 10px;
+            margin-top: .2rem;
             margin-right: .2rem;
-            width: 40px;
-            height: 40px;
+            width: .8rem;
+            height: .8rem;
             border-radius: 50%;
         }
         dl{
-            font-size: 10px;
-            margin-top: 14px;
+            font-size: .2rem;
+            margin-top: .28rem;
             text-align: left;
             dt{
                 font-weight: 900;
@@ -431,52 +462,51 @@ export default {
             }
         }
         .cancel{
-            padding: 5px .2rem;
+            padding: .1rem .2rem;
             color: #4fa2fe;
             border: 1px solid #4fa2fe;
-            border-radius: 6px;
+            border-radius: .12rem;
             background: none;
-            margin-top: 16px;
+            margin-top: .32rem;
             outline: none;
         }
         
     }
     .content{
         .con-title{
-            font-size: 13px;
+            font-size: .26rem;
             font-weight: 900;
             color: #666666;
         }
         
     }
     .follow-on{
-        height: 37px;
-        line-height: 37px;
+        height: .74rem;
+        line-height: .74rem;
     }
     .close-position,.order-mange{
-        height: 56px;
-        line-height: 56px;
+        height: 1.12rem;
+        line-height: 1.12rem;
         button{
-            padding: 5px .2rem;
+            padding: .1rem .2rem;
             color: #4fa2fe;
             border: 1px solid #4fa2fe;
-            border-radius: 6px;
+            border-radius: .12rem;
             background: none;
-            margin-top: 16px;
+            margin-top: .32rem;
             outline: none; 
         }
-    }
-    
+    }  
     .follow-type{
-        height: 60px;
-        line-height: 60px;
+        height: 1.2rem;
+        line-height: 1.2rem;
         button{
-            padding: 5px .2rem;
+            padding: .1rem .2rem;
             color: #999;
             border: 1px solid #e5e5e5;
-            border-radius: 6px;
+            border-radius: .12rem;
             background: none;
-            margin-top: 16px;
+            margin-top: .32rem;
             outline: none; 
         }
         .fixedbtn{
@@ -485,36 +515,36 @@ export default {
         .clickbtn{
             color: #fff;
             border: 1px solid #4fa2fe;
-            border-radius: 6px;
+            border-radius: .12rem;
             background: #4fa2fe;;
         }
     }
     .proportions{
         text-align: left;
         padding-left: .24rem;
-        font-size: 10px;
-        height: 20;
-        line-height: 20px;
+        font-size: .2rem;
+        height: .4rem;
+        line-height: .4rem;
         color: #999;
         // background-color: pink;
     }
     .follow-num{
-        height: 50px;
-        line-height: 50px;
+        height: 1rem;
+        line-height: 1rem;
         padding: 0 .24rem;
         .left{
             color: #666;
-            font-size: 13px;
+            font-size: .26rem;
             font-weight: 900;
         }
         .right{
             button{
-                width: 17px;
-                height:17px;
-                line-height: 17px;
+                width: .34rem;
+                height: .34rem;
+                line-height: .34rem;
                 border: 1px solid #e6e6e6;
                 border-radius: 50%;
-                font-size: 16px;
+                font-size: .32rem;
                 background: none;
                 // font-weight: 900;
                 outline: none; 
@@ -533,30 +563,30 @@ export default {
         }
     }
     .target-profit{
-        height :54px;
-        line-height: 54px;
+        height :1.08rem;
+        line-height: 1.08rem;
         input{
             width: 1.38rem;
             border:1px solid #e5e5e5;
-            height: 26px;
-            margin-top: 14px;
+            height: .52rem;
+            margin-top: .28rem;
             outline: none;
             margin-right: .3rem;
             text-align: center;
         }
     }
     .title{
-        font-size: 14px;
-        line-height: 34px;
-        margin-top: 20px;
+        font-size: .28rem;
+        line-height: .68rem;
+        margin-top: .4rem;
         border: 1px solid #e6e6e6;
     }
     .pre-set{
-        height:94px;
-        line-height: 94px;
+        height:1.88rem;
+        line-height: 1.88rem;
         .left{
             color: #666;
-            font-size: 13px;
+            font-size: .26rem;
             font-weight: 900; 
         }
         span{
@@ -564,12 +594,12 @@ export default {
         }
         button{
             width: 1rem;
-            height: 26px;
+            height: .52rem;
             border: 1px solid #e8e8e8;
             color: #999;
             background: none;
             text-align: center;
-            border-radius: 6px;
+            border-radius: .12rem;
             margin-right: .3rem;
             outline: none;
         }
@@ -581,20 +611,20 @@ export default {
     
     }
     .abandon{
-        height: 50px;
-        line-height: 50px;
+        height: 1rem;
+        line-height: 1rem;
         span{
-            font-size: 13px;
+            font-size: .26rem;
             color: #666;
         }
         button{
-            padding: 6px .2rem;
+            padding: .12rem .2rem;
             background: none;
             border: none;
             outline: none;
             color: #999;
-            margin-top: 10px;
-            border-radius: 6px;
+            margin-top: .2rem;
+            border-radius: .12rem;
 
         }
         .btn-chose{
@@ -611,15 +641,15 @@ export default {
         border-bottom: 1px solid #dbdbdb;
         button{
             width: 6.5rem;
-            height: 50px;
+            height: 1rem;
             border: none;
             outline: none;
             font-weight: 900;
             background-color: #4fa2fe;
             color: #fff;
-            font-size: 22px;
-            border-radius: 8px;
-            margin: 24px 0;
+            font-size: .44rem;
+            border-radius: .16rem;
+            margin: .48rem 0;
         }
     }
     #footer{
@@ -629,13 +659,13 @@ export default {
         justify-content: center;
         #foot-center{
             width: 2rem;
-            height: 45px;
+            height: .9rem;
             display: flex;
             justify-content: space-between;
             img{
                 // width: .3rem;
-                margin-top: 12px;
-                height:28px;
+                margin-top: .24rem;
+                height:.56rem;
             }
         }
     }

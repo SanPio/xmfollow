@@ -48,7 +48,7 @@
                 </dl>
               </div>
               <div class="tit-right">
-                <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting">跟随设置</button>
+                <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
                 <button class="flow-btn" v-if="!item.followed">跟随</button>
               </div>
             </div>
@@ -141,63 +141,37 @@ export default {
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
      
-      boxItem:[],
-      bottomDistance:2,
-      autoFill:false,
-      echartArr:[],
-      nearTime:7,
-      pageNum:1,
-      pageSize:4,
-      sortField:'',
-      sortType:1,
-      userId:1,
+      boxItem: [],
+      bottomDistance: 2,
+      autoFill: false,
+      echartArr: [],
+      nearTime: 7,
+      pageNum: 1,
+      pageSize: 4,
+      sortField: '',
+      sortType: 1,
+      userId: 1,
+      accountId: 2,
       optionId: [],
-      len:8
+      len: 4,
+      urlTitle:"http://192.168.1.11:8080/"
     }
   },
   created(){
-    //初始化数据请求
-   
-    this.clickrequest(7,1,4,'',1,1)
-       
+    
+    //储存userId
+    localStorage.setItem('userId', JSON.stringify(this.userId));
+    //储存accountId
+    localStorage.setItem('accountId', JSON.stringify(this.accountId));
+    //初始化数据请求   
        
     },
    mounted(){
-     
-        
-      //   // 基于准备好的dom，初始化echarts实例
-      // for(let i = 0; i < this.len; i++ ){
-      //     let myChart = echarts.init(document.getElementById('' +i));
-      //   // 绘制图表
-      //     console.log(656445665)
-      //     console.log(this.echartArr[i])
-      //     myChart.setOption({
-      //       animation: false,
-      //       xAxis: {
-      //           type: 'category',
-      //           show:false
-      //           // boundaryGap: false,
-      //           // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      //       },
-      //       yAxis: {  
-      //           show:false
-      //       },
-      //       grid : {
-      //         left:0,
-      //         right:0,
-      //         top : 0,
-      //         bottom : 0
-      //       },
-      //       series: [{
-      //           data: [10,20],
-      //           type: 'line',
-      //           areaStyle: {},
-      //           symbol:'none',  //这句就是去掉点的    
-      //           smooth:true,  //这句就是让曲线变平滑的 
-      //       }]
-      //     });
-      // }
-      // this.forFuntion()
+
+    this.clickrequest(7,1,4,'',1,1)
+
+
+      
   },
   methods:{
     //加载请求
@@ -214,10 +188,10 @@ export default {
       console.log(postData)
       this.$http({
           method: 'post',
-          url:'/wx/index/list',
+          url: this.urlTitle +'wx/index/list',
           data:postData
       }).then((res)=>{
-          this.len  = res.data.data.list.length
+          console.log(res)
           for(let j=0; j<res.data.data.list.length; j++){
             this.boxItem.push(res.data.data.list[j]);
             this.optionId.push(res.data.data.list[j].optionId) ;
@@ -232,8 +206,41 @@ export default {
             this.echartArr.push(arr)
             
           }
-          console.log(this.boxItem)
-          console.log(this.optionId)
+          console.log(this.echartArr)
+
+          this.$nextTick(()=> { //init 你的echarts  
+                                 
+                // 基于准备好的dom，初始化echarts实例
+            for(let i = 0; i <this.echartArr.length ; i++ ){
+                let myChart = echarts.init(document.getElementById(i));
+              // 绘制图表
+                myChart.setOption({
+                  animation: false,
+                  xAxis: {
+                      type: 'category',
+                      show:false
+                      // boundaryGap: false,
+                      // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                  },
+                  yAxis: {  
+                      show:false
+                  },
+                  grid : {
+                    left:0,
+                    right:0,
+                    top : 0,
+                    bottom : 0
+                  },
+                  series: [{
+                      data: this.echartArr[i],
+                      type: 'line',
+                      areaStyle: {},
+                      symbol:'none',  //这句就是去掉点的    
+                      smooth:true,  //这句就是让曲线变平滑的 
+                  }]
+                });
+            }
+          })
           //结束加载图
           this.$refs.loadmore.onBottomLoaded();
           
@@ -242,8 +249,6 @@ export default {
           this.$refs.loadmore.onBottomLoaded();
       })
     },
-
-
       //点击请求
      clickrequest(nearTime,pageNum,pageSize,sortField,sortType,userId){
       let postData = this.$qs.stringify({
@@ -254,13 +259,12 @@ export default {
         sortType: sortType,
         userId: userId
       });
-      console.log(postData)
       this.$http({
           method: 'post',
-          url:'/wx/index/list',
+          url: this.urlTitle+'wx/index/list',
           data:postData
       }).then((res)=>{
-          
+      
           this.boxItem = res.data.data.list;
           this.echartArr = [];
           this.optionId = [];
@@ -275,66 +279,49 @@ export default {
             this.$set(this.echartArr,i,arr)
           
           }
-          console.log(this.echartArr)
+          this.$nextTick(()=> { //init 你的echarts  
+                  
+                    // 基于准备好的dom，初始化echarts实例
+                for(let i = 0; i < 4; i++ ){
+                    let myChart = echarts.init(document.getElementById(i));
+                  // 绘制图表
+                  
+                    myChart.setOption({
+                      animation: false,
+                      xAxis: {
+                          type: 'category',
+                          show:false
+                          // boundaryGap: false,
+                          // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                      },
+                      yAxis: {  
+                          show:false
+                      },
+                      grid : {
+                        left:0,
+                        right:0,
+                        top : 0,
+                        bottom : 0
+                      },
+                      series: [{
+                          data: this.echartArr[i],
+                          type: 'line',
+                          areaStyle: {},
+                          symbol:'none',  //这句就是去掉点的    
+                          smooth:true,  //这句就是让曲线变平滑的 
+                      }]
+                    });
+                }
+          })
           //结束加载图
           this.$refs.loadmore.onBottomLoaded();
           
       }).catch((err)=>{  
           //结束加载图
+          console.log(err)
           this.$refs.loadmore.onBottomLoaded();
       })
     },
-
-
-
-
-
-
-
-  //echarts会表
-
-  forFuntion(){
-        // 基于准备好的dom，初始化echarts实例
-      for(let i = 0; i < this.echartArr.length; i++ ){
-          let myChart = echarts.init(document.getElementById('' +i));
-        // 绘制图表
-          console.log(656445665)
-          myChart.setOption({
-            animation: false,
-            xAxis: {
-                type: 'category',
-                show:false
-                // boundaryGap: false,
-                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {  
-                show:false
-            },
-            grid : {
-              left:0,
-              right:0,
-              top : 0,
-              bottom : 0
-            },
-            series: [{
-                data: this.echartArr[i],
-                type: 'line',
-                areaStyle: {},
-                symbol:'none',  //这句就是去掉点的    
-                smooth:true,  //这句就是让曲线变平滑的 
-            }]
-          });
-      }
-
-  },
-
-
-
-
-
-
-
-
 
     timeshow(){
       this.timebln = !this.timebln;
@@ -356,14 +343,10 @@ export default {
       }else if(ind == 2){
         this.nearTime=30;
       }
-    
-
-
       //按时间请求
       this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
 
     },
-  
     btnClickLeft(ind){
       this.actLeft =ind;
       this.actRight = -1;
@@ -444,11 +427,9 @@ export default {
       window.location.href="mine.html";
     },
     //到跟随设置页面
-    toFollowSetting(){
+    toFollowSetting(ind){
       window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
-    }
-    
-    
+    }   
   }
 }
 </script>
@@ -457,18 +438,18 @@ export default {
 // 头部
 #title{
   padding:0 .24rem;
-  height: 38px;
-  line-height: 38px;
+  height: .76rem;
+  line-height: .76rem;
   border-bottom: 1px solid#e5e5e5;
   display: flex;
   justify-content:space-between;
   li{
    
-    font-size: 14px;
+    font-size: .28rem;
     font-weight: 900;
     .division{
-      width: 1px;
-      height: 14px;
+      width: 0.02rem;
+      height: .28rem;
       margin: 0 .6rem 0 .8rem;
     }
   }
@@ -479,25 +460,25 @@ export default {
 #tran-time{
   position: absolute;
   background-color: #fff;
-  top:39px;
+  top:.78rem;
   width: 100%;
   z-index: 2;
   li{
     padding:0 .24rem;
-    font-size: 13px;
+    font-size: .26rem;
     font-weight: normal;
     text-align: left;
-    height: 35px;
-    line-height: 35px;
+    height: .76rem;
+    line-height: .7rem;
     border-bottom: 1px solid #e5e5e5;
   }
 }
 #sort{
   background-color: #fff;
   width: 100%;
-  font-size: 13px;
+  font-size: .26rem;
   position: absolute;
-  top:39px;
+  top:.78rem;
   z-index: 2;
   .sort-list{
     ul{
@@ -507,8 +488,8 @@ export default {
       border-bottom: 1px solid #e5e5e5;
       li{
         padding:0 .24rem;
-        height: 35px;
-        line-height: 35px;
+        height: .7rem;
+        line-height: .7rem;
         
       }
       .btnbox{
@@ -518,11 +499,11 @@ export default {
           width: .22rem;
         }
         p{
-          height: 24px;
+          height: .48rem;
           border: 1px solid #999999;
           border-radius: .08rem;
-          margin-top: 5.5px;
-          line-height: 24px;
+          margin-top: .1rem;
+          line-height: .48rem;
           padding: 0 .26rem; 
         }
         .btnblue{
@@ -544,41 +525,41 @@ export default {
 }
 // 列表
 .title{
-  height: 56px;
+  height: 1.12rem;
   border-bottom: 1px solid #e5e5e5;
   display: -webkit-flex;
   display: flex;
   justify-content:space-between;
-  font-size: 13px;
+  font-size: .26rem;
   padding: 0 .24rem;
   .tlt-left{
     display: -webkit-flex;
     display: flex;
     justify-content:space-between;
-    margin-top: 8px;
+    margin-top: .16rem;
     dl{
       margin-left: .2rem;
       text-align: left;
       dt{
         font-weight: 900;
-        line-height: 18px;
-        margin-top: 2px;
+        line-height: .36rem;
+        margin-top: .04rem;
         span{
-          font-size: 10px;
-          line-height: 10px;
+          font-size: .2rem;
+          line-height: .2rem;
           color:#ff7c2b;
           margin-left: .2rem;
         }
       }
       dd{
-        margin-top: 2px;
+        margin-top: .04rem;
         color: #4fa2fe;
-        font-size: 12px;
+        font-size: .24rem;
       }
     }
     img{
-      width: 37px;
-      height: 37px;
+      width: .74rem;
+      height: .74rem;
       border:1px solid red;
       border-radius: 50%;
 
@@ -586,12 +567,12 @@ export default {
   }
   .tit-right{
     button{
-      margin-top:16px;
+      margin-top:.32rem;
       width: 1.46rem;
-      height: 26px;
+      height: .52rem;
       border:1px solid #4fa2fe;
       background: none;
-      border-radius: 6px;
+      border-radius: .12rem;
       color: #4fa2fe;
     }
     .flow-btn{
@@ -601,29 +582,29 @@ export default {
   }
 }
 .content{
-  font-size: 12px;
-  line-height: 12px;
+  font-size: .24rem;
+  line-height: .24rem;
   display: -webkit-flex;
   display: flex;
   justify-content:space-between;
-  padding: 20px .24rem;
+  padding: .4rem .24rem;
   .con-left{
     width: 1.14rem;
-    height: 60px;
+    height: 1.2rem;
     
   }
   .con-right{
     width: 5.3rem;
-    height:74px ;
+    height:1.48rem ;
     dl{
       float: left;
       width: 1.7rem;
       text-align: left;
-      margin:0 .1rem 8px 0;
+      margin:0 .1rem .16rem 0;
 
       dt{
         color: #999999;
-        margin-bottom: 8px;
+        margin-bottom: .16rem;
       }
       dd{
         font-weight: 900;
@@ -644,14 +625,14 @@ export default {
 }
 .footer{
   width: 100%;
-  height:50px;
-  padding-top: 6px;
+  height:1rem;
+  padding-top: .12rem;
   background-color:#ffffff;
   position: fixed;
   bottom:0;
   display: flex;
   justify-content: space-around;
-  font-size: 10px;
+  font-size: .2rem;
   dl{
     width: 1.6rem;
     text-align: center;
@@ -663,7 +644,7 @@ export default {
   img{
     width: .44rem;
     height: .44rem;
-    margin-bottom: 2px;
+    margin-bottom: .04rem;
   }
 }
 </style>

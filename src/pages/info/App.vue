@@ -28,16 +28,16 @@
                
                         <li v-for="(item,ind) in holdArr" :key="ind">
                             <p class="hold-info-left">
-                                <span class="tit">{{item.symbol}}</span>
-                                <button class="buybtn" v-if="item.type==1">买</button>
-                                <button class="cellbtn" v-if="item.type==2">卖</button>
-                                <button class="hangbtn" v-if="item.type==6">挂</button>
+                                <span class="tit"> {{ item.symbol }} </span>
+                                <button class="buybtn" v-if="item.type==0">买</button>
+                                <button class="cellbtn" v-if="item.type==1">卖</button>
+                                <button class="hangbtn" v-if="item.type==2||item.type==3||item.type==4||item.type==5">挂</button>
                                 <span class="num" >{{ item.lots }}</span>
                                 <span class="standard">标准手</span>
                             </p>
                             <p class="hold-info-right">
-                                <span class="money">${{ item.profit }}</span>
-                                <span class="spot">spreads{{ item.spreads }}</span>
+                                <span class="money" :class="{'redcolor':(item.profit<0 )} " >${{ item.profit }}</span>
+                                <span class="spot">{{ item.spreads }}点</span>
                             </p>
                         </li>
                         
@@ -61,7 +61,7 @@
                                 <span class="standard">标准手</span>
                             </p>
                             <p class="history-right">
-                                <span class="money">${{ item.profit }}点</span>
+                                <span class="money" :class="{'redcolor':(item.profit<0 )} ">${{ item.profit }}</span>
                             </p>
                         </li>
                     </ul>
@@ -149,7 +149,9 @@ export default {
     name: 'App',
     data(){
         return {
-            optionId:0,
+            optionId:1,
+            userId : 1,
+            accountId: 1,
             tableTitleSrc : require('../../assets/table-title.png'),
             portraitSrc : require('../../assets/Navigate-click.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
@@ -158,6 +160,7 @@ export default {
             historyBtnShow : [true,false,true,false,true,false],
             buyShow : true,
             ellShow : true,
+            redcolor:true,
             mianInfoTitle : ["操盘经验","余额","收益率","起始资金","盈亏点数","跟随人数","第一单"],
             mianInfo : [],
             secInfoTitle : ["平均持仓时间","最大盈利点数","最大亏损点数","最大手数","最小手数"],
@@ -167,14 +170,18 @@ export default {
             info : {},
             hisArr : [],
             holdArr:[],
-            userId : 1
+            urlTitle:"http://192.168.1.11:8080/"
         }
     },
     created(){
         var v = this.parseUrl();//解析所有参数
+        this.optionId = v['optionId'];
+        console.log(this.optionId)
+        this.userId = Number(JSON.parse(sessionStorage.getItem('userId'))) ;
+        this.accountId = Number( JSON.parse(sessionStorage.getItem('accountId')));
         //初始化数据请求
-        this.$http.post('/wx/index/'+ v['optionId']+'/info',{    
-          
+        this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
+         
         }).then((res) => {
             this.info = res.data.data;
             console.log(this.info.signalTactics)
@@ -201,27 +208,39 @@ export default {
             console.log(err)
         });
 
-
-        this.$http.get('/wx/order/trader/'+ v['optionId'] +'/history',{  
+            //历史记录
+        this.$http.get(this.urlTitle+'wx/order/trader/'+ v['optionId'] +'/history',{  
             params : { 
                 pageNum  : 1,
                 pageSize : 6,
-                userId : this.userId 
+                optionId : this.optionId,
+                userId : Number(this.userId )
             }      
         }).then((res) => {
-            console.log(res.data.data);
-            // for(let i=0; i<res.data.data.list;i++){
-            //     this.hisArr.push(res.data.data.list[i])
-            // }
+          
             this.hisArr = res.data.data.list;
-            this.holdArr = res.data.data.list;
-            // console.log(this.hisArr[0].symbol)
+           
             
         }).catch((err) => {
             console.log(err)
         });
+        //持仓信息
 
-
+        this.$http.get(this.urlTitle+'wx/order/trader/'+this.optionId+'/traderNowOrders',{  
+            params : { 
+                pageNum  : 1,
+                pageSize : 6,
+                optionId : this.optionId,
+                userId : Number(this.userId )
+            }      
+        }).then((res) => {
+            console.log(res.data.data.list)
+             this.holdArr = res.data.data.list;
+         
+            
+        }).catch((err) => {
+            console.log(err)
+        });
 
 
 
@@ -321,8 +340,8 @@ export default {
             this.ellShow = !this.ellShow
         },
         //到跟随设置页面
-        toFollowSetting(){
-            window.location.href="followsetting.html";
+        toFollowSetting(){            
+            window.location.href=`followsetting.html?optionId=${this.optionId}`;
         },
         returnBtn(){
             window.location.href="index.html";
@@ -336,11 +355,11 @@ export default {
         width: 100;
         background-color: #44aafa;
         color: #ffffff;
-        padding: 12px .32rem 15px .22rem;
-        font-size: 14px;
+        padding: .24rem .32rem .3rem .22rem;
+        font-size: .28rem;
         .h-title{
             display: flex;
-            padding-bottom: 14px;
+            padding-bottom: .28rem;
             .h-left{
                 img{
                     width: 1.2rem;
@@ -349,22 +368,22 @@ export default {
                 }
             }
             .h-right{
-                padding: 6px 0 0 .2rem;
+                padding: .12rem 0 0 .2rem;
                 dt{
-                    font-size: 18px;
+                    font-size: .36rem;
                     font-weight: 900;
-                    margin-top: 10px;
+                    margin-top: .2rem;
                 } 
             }
         }
         .h-center .h-c-left,.h-footer .h-f-left{
       
-            font-size: 14px;
+            font-size: .28rem;
             font-weight: 700;
         }
         .h-center .h-c-right,.h-footer .h-f-right{
           
-            font-size: 13px;
+            font-size: .26rem;
             font-weight: normal;
         }
         .h-footer,.h-center{
@@ -379,26 +398,26 @@ export default {
         }
     }
     .swip-title{
-        font-size: 15px;
+        font-size: .3rem;
         color:#50a8fd;
         text-align: center;
         font-weight: 900;
-        margin-top: 10px;
-        line-height: 32px;
+        margin-top: .2rem;
+        line-height: .64rem;
     }
     .swip-content{
         width: 6.98rem;
-        height: 249px;
+        height: 5rem;
         border:1px solid #eeeeee;
         margin-left: 0.22rem;
         border-radius: .12rem;
         //持仓信息、 历史记录
         .hold-info,.history{
-             font-size: 14px;
+             font-size: .28rem;
             li{
-                height:38px;
+                height:.76rem;
                 border-bottom: 1px solid #c9c9c9;  
-                line-height: 38px;
+                line-height: .76rem;
                 padding:0 .22rem;
                 display: flex;
                 justify-content: space-between;
@@ -406,37 +425,40 @@ export default {
                    color: #ffffff;
                    background-color: #007aff;
                    border: none;
-                   padding: 1px;
+                   padding: .02rem;
                    outline: none;
                 }
                 .cellbtn{
-                    padding: 1px;
+                    padding: .02rem;
                     color: #ffffff;
                     background-color: #fe0000;
                     border: none;
                     outline: none;
                 }
                 .hangbtn{
-                    padding: 1px;
+                    padding: .02rem;
                     color: #ffffff;
                     background-color: #ff7c2b;
                     border: none;
                     outline: none;
                 }
                 .tit,.num{
-                    font-size: 14px; 
+                    font-size: .28rem; 
                 }
                 .standard{
-                    font-size: 12px;
+                    font-size: .24rem;
                     color: #999999;
                 }
                 .money{
                     color: #007aff;
                     font-weight: 900;
                 }
+                .redcolor{
+                    color: red;
+                }
                 .spot{
                     color: #666666;
-                    font-size: 12px;
+                    font-size: .24rem;
                     font-weight: 900;
                     margin-left: .08rem;
                 }
@@ -448,27 +470,27 @@ export default {
         }
         //主要信息、次要信息、交易原则
         .mian-info,.sec-info,.principle{
-            font-size: 13px;
+            font-size: .26rem;
             padding: 0 .4rem;
             li{ 
                 display: flex;
                 justify-content: space-between;
-                height: 34px;
-                line-height: 34px;
+                height: .68rem;
+                line-height: .68rem;
             }
         }
         //周期变化表
         #cycle{
             width: 7rem;
-            height:240px;
-            font-size: 13px;
+            height:4.8rem;
+            font-size: .26rem;
             // background-color: yellow;
 
         }
         .table-title{
             display: flex;
             justify-content: flex-end;
-            padding-top: 14px;
+            padding-top: .28rem;
             img{
                 width: 2.2rem;
                 height:0.2rem;
@@ -478,11 +500,11 @@ export default {
         
     }
     #footer{
-        height:50px;
+        height: 1rem;
         text-align: center;
         color: #4fa2fe;
-        font-size: 18px;
-        line-height: 50px;
+        font-size: .36rem;
+        line-height: 1rem;
         font-weight: 900;
         border-bottom: 1px solid #dbdbdb;
     }
@@ -497,13 +519,13 @@ export default {
         justify-content: center;
         #bot-center{
             width: 2rem;
-            height: 45px;
+            height: .9rem;
             display: flex;
             justify-content: space-between;
             img{
                 // width: .3rem;
-                margin-top: 12px;
-                height:28px;
+                margin-top: .24rem;
+                height:.56rem;
             }
         }
     }
