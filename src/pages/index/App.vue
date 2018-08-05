@@ -165,38 +165,38 @@ export default {
    mounted(){
      
         
-        // 基于准备好的dom，初始化echarts实例
-      for(let i = 0; i < this.len; i++ ){
-          let myChart = echarts.init(document.getElementById('' +i));
-        // 绘制图表
-          console.log(656445665)
-          console.log(this.echartArr[i])
-          myChart.setOption({
-            animation: false,
-            xAxis: {
-                type: 'category',
-                show:false
-                // boundaryGap: false,
-                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {  
-                show:false
-            },
-            grid : {
-              left:0,
-              right:0,
-              top : 0,
-              bottom : 0
-            },
-            series: [{
-                data: [10,20],
-                type: 'line',
-                areaStyle: {},
-                symbol:'none',  //这句就是去掉点的    
-                smooth:true,  //这句就是让曲线变平滑的 
-            }]
-          });
-      }
+      //   // 基于准备好的dom，初始化echarts实例
+      // for(let i = 0; i < this.len; i++ ){
+      //     let myChart = echarts.init(document.getElementById('' +i));
+      //   // 绘制图表
+      //     console.log(656445665)
+      //     console.log(this.echartArr[i])
+      //     myChart.setOption({
+      //       animation: false,
+      //       xAxis: {
+      //           type: 'category',
+      //           show:false
+      //           // boundaryGap: false,
+      //           // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      //       },
+      //       yAxis: {  
+      //           show:false
+      //       },
+      //       grid : {
+      //         left:0,
+      //         right:0,
+      //         top : 0,
+      //         bottom : 0
+      //       },
+      //       series: [{
+      //           data: [10,20],
+      //           type: 'line',
+      //           areaStyle: {},
+      //           symbol:'none',  //这句就是去掉点的    
+      //           smooth:true,  //这句就是让曲线变平滑的 
+      //       }]
+      //     });
+      // }
       // this.forFuntion()
   },
   methods:{

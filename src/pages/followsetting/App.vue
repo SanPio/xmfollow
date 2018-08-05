@@ -7,12 +7,13 @@
                     <img :src="userImgSrc" alt="">
                 </div>
                 <dl class="right">
-                    <dt>哈哈哈</dt>
+                    <dt> {{ followInfo.signalName }} </dt>
                     <dd>
-                        <span>按比例&nbsp;{{proportion}}倍</span>
-                        
+                        <span> {{ followInfo.lotsTypeStr }}&nbsp;{{followInfo.lots}}</span>
+                        <span v-if="followInfo.lotsTypeStr=='按比例'">倍</span>
+                        <span v-if="followInfo.lotsTypeStr=='按手数'">手</span>
                         <span class="incomeTitle">跟随收益</span>
-                        <span class="income"> ${{income}} </span>
+                        <span class="income" :class="{'redcolor':redcolor}" > ${{followInfo.profitTotal}} </span>
                     </dd>
                 </dl>
             </div>
@@ -70,7 +71,7 @@
         <p class="content padding clearfix target-profit ">
             <span class="left con-title">止盈</span>
             <span class="right" style="font-size:10px;color:#999;">点</span>
-            <input type="number" class="right" >
+            <input type="number" class="right" v-model="takeProfits">
         </p>
         <p class="proportions">
             <span >当盈利达到止盈点数时自动平仓</span>
@@ -80,7 +81,7 @@
         <p class="content padding clearfix target-profit">
             <span class="left con-title">止损</span>
             <span class="right" style="font-size:10px;color:#999;">点</span>
-            <input type="number" class="right">
+            <input type="number" class="right" v-model="stopLoss">
         </p>
         <p class="proportions">
             <span >当损失达到止损点数时自动平仓</span> 
@@ -144,35 +145,117 @@ export default {
     name: 'App', 
     data(){
         return {
-          userImgSrc: require('./assets/img2.jpg'),
-          showImgSrc: require('./assets/setting-img.jpg'),
-          returnleftSrc : require('./assets/btn-left@2x.png'),
-          returnRightSrc : require('./assets/btn-right@2x.png'),
-          proportion: 0.50,
-          income: 34.02,
-          followNum : 0.01,
-          clickBtn: true,
-          followOnOff: true,
-          reverseOnOff :true,
-          handsNumArr:["1","0.1","0.01"],
-          handsNum:0,
-          abandonShow:true,
-          holdState:true //持仓状态，点击取消跟随时查询
+            userImgSrc: require('./assets/img2.jpg'),
+            showImgSrc: require('./assets/setting-img.jpg'),
+            returnleftSrc : require('./assets/btn-left@2x.png'),
+            returnRightSrc : require('./assets/btn-right@2x.png'),
+            proportion: 0.50,
+            income: 34.02,
+            followNum : 0,
+            clickBtn: true,
+            followOnOff: true,
+            reverseOnOff : true,
+            handsNumArr: ["1","0.1","0.01"],
+            handsNum: 0,
+            abandonShow: true,
+            redcolor:false,
+            holdState: true, //持仓状态，点击取消跟随时查询
+            //获取回来的信息
+            followInfo:{},
+            signalName: '',
+            lotsType: '',
+            stopLoss:0,//止损点
+            takeProfits: 0,//止盈点
         }
     },
     created(){
         //初始化数据请求
         this.$http.get('/wx/order/member/followSettingInfo',{ 
             params : {
-                accountId : 1, 
-                optionId : 2,
+                accountId : 2, 
+                optionId : 1,
                 userId : 1
             }
 
            
-        }).then(function(res){
-            console.log(res)
-        }).catch(function(err){
+        }).then((res) => {
+            
+            console.log(res.data.data);
+            this.followInfo  = res.data.data;
+            this.signalName = res.data.data.signalName;
+            this.lotsType = res.data.data.lotsType;
+            this.takeProfits = res.data.data.takeProfits;
+            this.stopLoss = res.data.data.stopLoss;
+            this.followNum = res.data.data.lots
+            //固定跟随还是手数跟随
+            if(res.data.data.lotsTypeStr == "按比例"){
+                this.clickBtn = true;
+            }else if(res.data.data.lotsTypeStr == "按手数"){
+                this.clickBtn = false;
+            }
+            //跟随收益是正还是负的
+            if(  Number(res.data.data.profitTotal) > 0 ){
+                this.redcolor = false;
+            }else{
+                this.redcolor = true;
+            }
+            //跟单开关
+            if(res.data.data.nullity == 0){
+                this.followOnOff = true;
+            }else if(res.data.data.nullity == 1){
+                this.followOnOff = false;
+            }
+            //反向跟随
+
+            if( res.data.data.opposite == 0 ){
+                this.reverseOnOff = false;
+            }else if(res.data.data.opposite == 1){
+                this.reverseOnOff = true;
+            }
+            
+            if( res.data.data.minLotsCount == 1){
+                this.handsNum = 0
+            }else if(res.data.data.minLotsCount == 0.1){
+                this.handsNum = 1;
+            }else if(res.data.data.minLotsCount == 0.01){
+                this.handsNum = 2;
+            }
+
+
+            if( res.data.data.broundoff == 0){
+                this.abandonShow = true;
+            }else if(res.data.data.broundoff == 1){
+                this.abandonShow = false;
+            }
+            // this.lotsType = res.data.data.lotsType
+            console.log(this.signalName )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }).catch((err) => {
         
             console.log(err)
         })
@@ -194,7 +277,22 @@ export default {
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
                 if (action == 'cancel') {     //确认的回调
-                console.log(1); 
+                    console.log(1); 
+                    let postData = this.$qs.stringify({
+                        accountId : 2, 
+                        optionId : 1,
+                        userId : 1
+                    });
+                    console.log(postData)
+                    this.$http({
+                        method: 'post',
+                        url: '/wx/order/member/cancelFollowing',
+                        data:postData
+                    }).then((res)=>{
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    });
                 }
                 if (action == 'confirm') {     //确认的回调
                 console.log(2); 
@@ -213,7 +311,31 @@ export default {
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
                 if (action == 'cancel') {     //确认的回调
-                console.log(1); 
+                    
+                     let postData = this.$qs.stringify({
+                        // integer: ,
+                        // optionId: ,
+                        // type : ,
+                        // userId : ,
+                    });
+                    console.log(postData)
+                    this.$http({
+                        method: 'post',
+                        url: '/wx/order/member/followStop',
+                        data:postData
+                    }).then((res)=>{
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+
+
+
+
+
+
+
+
                 }
                 if (action == 'confirm') {     //确认的回调
                 console.log(2); 
@@ -303,6 +425,9 @@ export default {
             }
             .income{
                 color: #4fa2fe;
+            }
+            .redcolor{
+                color:red;
             }
         }
         .cancel{

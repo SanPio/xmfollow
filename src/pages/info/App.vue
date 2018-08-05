@@ -54,8 +54,9 @@
                         <li v-for="(item,ind) in hisArr" :key="ind">
                             <p class="history-left">
                                 <span class="tit"> {{ item.symbol }} </span>
-                                <button class="buybtn" v-if="item.type==1">买</button>
-                                <button class="cellbtn" v-if="item.type==2">卖</button>
+                                <button class="buybtn" v-if="item.type==0">买</button>
+                                <button class="cellbtn" v-if="item.type==1">卖</button>
+                                <button class="hangbtn" v-if="item.type==2||item.type==3||item.type==4||item.type==5">挂</button>
                                 <span class="num" >{{ item.lots }}</span>
                                 <span class="standard">标准手</span>
                             </p>
@@ -208,7 +209,7 @@ export default {
                 userId : this.userId 
             }      
         }).then((res) => {
-            console.log(res.data.data.list);
+            console.log(res.data.data);
             // for(let i=0; i<res.data.data.list;i++){
             //     this.hisArr.push(res.data.data.list[i])
             // }
