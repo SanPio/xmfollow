@@ -39,10 +39,6 @@
             </div> -->
         </div>
 
-
-
-
-
         <!-- 弹窗遮罩 -->
         <div ref="back" class="back" ></div>
         <!-- 弹窗 -->
@@ -102,8 +98,7 @@ export default {
             downSrcShow:true,
             popUpShow:false,
             infoArr: [],
-            pageNum: 1   
-            
+            pageNum: 1              
         }
     },
     created(){
@@ -112,10 +107,6 @@ export default {
         // this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
         
         //初始化数据请求
-    
-
-
-
         let postData = this.$qs.stringify({
             userId:1,
             pageNum:1,
@@ -133,18 +124,11 @@ export default {
         }).catch((err) => {
             console.log(err)
         });
-
-
-
-
-
     
     },
     mounted(){
         this.calculationHeight();
         this.calculation();
-
-
     },
     methods: {
         //设定上拉下拉区域为窗口高度
@@ -157,8 +141,6 @@ export default {
             }
             this.$refs.mybox.style.minHeight=`${winHeight}px`
         },
-
-
         //计算窗口
         calculation(){
             let winWidth = 0;
@@ -179,7 +161,6 @@ export default {
             this.$refs.back.style.width=`${winWidth}px`;
             this.$refs.back.style.height=`${winHeight}px`;
         },
-
         //上拉加载
         loadBottom(){
             console.log('上拉加载');
@@ -192,7 +173,6 @@ export default {
             this.$http({
             method: 'post',
                 url: this.urlTitle+'wx/member/accountList',
-            
                 data:postData
             }).then((res)=>{
                 console.log(res.data.data.userOrderHistoryManageReponseList);
@@ -206,19 +186,9 @@ export default {
                 //结束加载图
                 this.$refs.loadmore.onBottomLoaded();
 
-
-
-
             }).catch((err) => {
                 console.log(err)
             });    
-
-
-
-
-
-
-
 
         },
         //跳转到账号历程
@@ -245,13 +215,7 @@ export default {
             }).catch((err) => {
                 console.log(err)
             });
-
-            // window.location.reload()
-
-
-
-
-
+            window.location.reload()
 
         },
         //添加绑定
@@ -294,20 +258,10 @@ export default {
             
                 data:postData
             }).then((res)=>{
-                console.log(res)
-
-
-
-
-
 
             }).catch((err) => {
                 console.log(err)
             });
-
-
-
-            console.log("确认绑定")
         },
         //点击弹窗更新绑定
         confirmUpdate(){
@@ -315,8 +269,6 @@ export default {
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
             console.log('更新绑定')
-
-
             let postData = this.$qs.stringify({
                 accountSid: this.infoArr[this.updataind].accountsid,
                 userId: this.userId,
@@ -325,9 +277,6 @@ export default {
                 usertradesvr: this.platform
                 // accountnote: this.remarks
             });
-
-
-            console.log(postData)
             this.$http({
             method: 'post',
                 url: this.urlTitle+'wx/member/rebindAccount',  
@@ -338,28 +287,6 @@ export default {
             }).catch((err) => {
                 console.log(err)
             });
-
-            // var params = new URLSearchParams();
-            // params.append('accountid', '11');
-            // params.append('userid', '1');
-            // params.append('usertradeacts', this.account);
-            // params.append('usertradepsd', this.password);
-            // params.append('usertradesvr', this.platform);
-            // params.append('accountnote', this.remarks);
-
-            // this.$http.put(this.urlTitle+'wx/member/rebindAccount', params).then((res)=>{
-            //     console.log(res)
-            // })
-
-
-
-
-
-
-
-
-
-
         },
         //点击弹窗取消按钮
         cancelBtn(){
