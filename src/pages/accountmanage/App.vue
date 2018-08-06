@@ -2,7 +2,6 @@
     <div id="box">
         <div style="overflow-y: scroll;background:#fff;">
             <mt-loadmore 
-            :top-method="loadTop"
             :bottom-method="loadBottom" 
             :autoFill="false"  
             ref="loadmore">
@@ -10,19 +9,19 @@
                     <div class="acclist clearfix" v-for="(item, ind) in infoArr" :key="ind">
                         <div class="left">
                             <p class="account">
-                                <span> {{ item.account}} </span>
-                                <img v-if="item.state==0" :src="correctSrc" alt="" style="width:12px">
-                                <img v-if="item.state==1" :src="errorSrc" alt="">
-                                <img v-if="item.state==2" :src="waitSrc" alt="" style="width:9px">
+                                <span> {{ item.name}} </span>
+                                <img v-if="item.audit==0" :src="correctSrc" alt="" style="width:.24rem">
+                                <img v-if="item.audit==2" :src="errorSrc" alt="">
+                                <img v-if="item.audit==1" :src="waitSrc" alt="" style="width:.18rem">
                             </p>
                             <p class="platform">
-                                登录交易平台名称
+                                {{item.tradesvr}}
                             </p>
                         </div>
                         <div class="right">
-                            <button v-if="item.state==0" @click="toCourse(ind)">账号历程</button>
-                            <button :class="{'btnBule':item.state==1||2}" @click="updateAccount(ind)">更新信息</button>
-                            <button @click="relieve">解除绑定</button>
+                            <button v-if="item.audit==0" @click="toCourse(ind)">账号历程</button>
+                            <button :class="{'btnBule':(item.audit==1||item.audit==2)}" @click="updateAccount(ind)">更新信息</button>
+                            <button @click="relieve(ind)">解除绑定</button>
                         </div>
                     </div>
                 </div>  
@@ -44,32 +43,30 @@
 
 
 
-        <!-- 弹窗 -->
+        <!-- 弹窗遮罩 -->
         <div ref="back" class="back" ></div>
-            
-            
-        
+        <!-- 弹窗 -->
         <div class="popup" v-if="popUpShow">
                 <ul class="poptop">
                     <li>
                         <span>登录平台</span>
-                        <input type="text" placeholder="请输入账号" >
+                        <input type="text" placeholder="请输入交易平台" v-model="platform">
                         <img :src="downSrcShow?downSrc:upSrc" alt="" @click="pullList" v-if="false">
                         <ul></ul>
                     </li>
                     <li>
                         <span>登录账号</span>
-                        <input type="text" placeholder="请输入账号">
+                        <input type="text" placeholder="请输入账号" v-model="account">
                       
                     </li>
                     <li>
                         <span>登录密码</span>
-                        <input type="password" placeholder="请输入密码">
+                        <input type="password" placeholder="请输入密码" v-model="password">
                  
                     </li>
                     <li>
                         <span>账号备注</span>
-                        <input type="text" placeholder="请输入备注名称">
+                        <input type="text" placeholder="请输入备注名称" v-model="remarks">
                 
                     </li>
                 </ul>
@@ -86,6 +83,8 @@ export default {
     name: 'App', 
     data(){
         return {
+            urlTitle: '',
+            userId : 1,
             correctSrc: require('./assets/Administration-right@2x.png'),
             errorSrc: require('./assets/Administration-error@2x.png'),
             waitSrc: require('./assets/Administration-Toexamine@2x.png'),
@@ -94,54 +93,53 @@ export default {
             //弹窗登录平台下拉按钮
             // upSrc: require('./assets/Myhomepage-Arrow@2x.png'),
             // downSrc: require('./assets/transaction-Arrow@2x.png'),
+            updataind: 0,
+            platform: '',
+            account: '',
+            password: '',
+            remarks: '',
             confirmShow:true,
             downSrcShow:true,
             popUpShow:false,
-            infoArr: [
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:0
-                },
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:1
-                },
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:2
-                },
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:0
-                },
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:1
-                },
-                {
-                    account: '账号名称001',
-                    platform: '登录交易平台名称',
-                    state:2
-                }
-            ],
+            infoArr: [],
+            pageNum: 1   
+            
         }
     },
-    // created(){
-    //     //初始化数据请求
-    //     this.$http.post('',{    
-    //         name:"virus"  
-    //     }).then(function(res){
-    //         // console.log(res)
-    //     }).catch(function(err){
+    created(){
+        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
+        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
+        // this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
         
-    //         // console.log(err)
-    //     })
-    // },
+        //初始化数据请求
+    
+
+
+
+        let postData = this.$qs.stringify({
+            userId:1,
+            pageNum:1,
+            pageSize: 10
+        });
+        this.$http({
+          method: 'post',
+            url: this.urlTitle+'wx/member/accountList',
+            data:postData
+        }).then((res)=>{
+            console.log(res.data.data.userOrderHistoryManageReponseList)
+            this.infoArr = res.data.data.userOrderHistoryManageReponseList;
+            //结束加载图
+            this.$refs.loadmore.onBottomLoaded();
+        }).catch((err) => {
+            console.log(err)
+        });
+
+
+
+
+
+    
+    },
     mounted(){
         this.calculationHeight();
         this.calculation();
@@ -182,24 +180,79 @@ export default {
             this.$refs.back.style.height=`${winHeight}px`;
         },
 
-
-
-        //下拉刷新
-        loadTop(){
-            console.log('下拉刷新')
-        },
         //上拉加载
         loadBottom(){
             console.log('上拉加载');
-            this.infoArr.push({'account': '账号名称001', 'platform': '登录交易平台名称','state':0})
+            this.pageNum ++ ;
+            let postData = this.$qs.stringify({
+                userId: this.userId,
+                pageNum: this.pageNum,
+                pageSize: 10
+            });
+            this.$http({
+            method: 'post',
+                url: this.urlTitle+'wx/member/accountList',
+            
+                data:postData
+            }).then((res)=>{
+                console.log(res.data.data.userOrderHistoryManageReponseList);
+                let resList = res.data.data.userOrderHistoryManageReponseList;
+                let len = res.data.data.userOrderHistoryManageReponseList.length;
+                // this.infoArr = res.data.data.userOrderHistoryManageReponseList;
+                for(let i = 0; i < len; i ++){
+                    this.infoArr.push( resList[i] )
+                }
+                cosnole.log(this.infoArr)
+                //结束加载图
+                this.$refs.loadmore.onBottomLoaded();
+
+
+
+
+            }).catch((err) => {
+                console.log(err)
+            });    
+
+
+
+
+
+
+
+
         },
         //跳转到账号历程
         toCourse(ind){
             console.log('跳到账号历程')
         },
         //解除绑定
-        relieve(){
+        relieve(ind){
             console.log("解除绑定 ")
+        
+            let postData = this.$qs.stringify({
+                accountsid:this.infoArr[ind].accountsid,
+                userid:this.userId,
+            });
+            console.log(postData)
+            this.$http({
+            method: 'post',
+                url: this.urlTitle+'wx/member/delBindAccount',
+                data:postData
+            }).then((res)=>{
+                console.log(res)
+                //结束加载图
+                this.$refs.loadmore.onBottomLoaded();
+            }).catch((err) => {
+                console.log(err)
+            });
+
+            // window.location.reload()
+
+
+
+
+
+
         },
         //添加绑定
         addAccount(){
@@ -214,6 +267,7 @@ export default {
             this.$refs.back.style.zIndex=2;
             this.popUpShow = true;
             this.confirmShow = false;
+            this.updataind = ind;
         },
         //弹窗点击下拉菜单
         pullList(){
@@ -224,6 +278,35 @@ export default {
             //隐藏遮罩
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
+            let postData = this.$qs.stringify({
+                userId: this.userId,
+                usertradeacts: this.account,
+                usertradepsd: this.password,
+                usertradesvr: this.platform,
+                accountnote: this.remarks
+            });
+
+
+            console.log(postData)
+            this.$http({
+            method: 'post',
+                url: this.urlTitle+'wx/member/insBindAccount',
+            
+                data:postData
+            }).then((res)=>{
+                console.log(res)
+
+
+
+
+
+
+            }).catch((err) => {
+                console.log(err)
+            });
+
+
+
             console.log("确认绑定")
         },
         //点击弹窗更新绑定
@@ -232,6 +315,51 @@ export default {
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
             console.log('更新绑定')
+
+
+            let postData = this.$qs.stringify({
+                accountSid: this.infoArr[this.updataind].accountsid,
+                userId: this.userId,
+                usertradeacts: this.account,
+                usertradepsd: this.password,
+                usertradesvr: this.platform
+                // accountnote: this.remarks
+            });
+
+
+            console.log(postData)
+            this.$http({
+            method: 'post',
+                url: this.urlTitle+'wx/member/rebindAccount',  
+                data:postData
+            }).then((res)=>{
+                console.log(res)
+
+            }).catch((err) => {
+                console.log(err)
+            });
+
+            // var params = new URLSearchParams();
+            // params.append('accountid', '11');
+            // params.append('userid', '1');
+            // params.append('usertradeacts', this.account);
+            // params.append('usertradepsd', this.password);
+            // params.append('usertradesvr', this.platform);
+            // params.append('accountnote', this.remarks);
+
+            // this.$http.put(this.urlTitle+'wx/member/rebindAccount', params).then((res)=>{
+            //     console.log(res)
+            // })
+
+
+
+
+
+
+
+
+
+
         },
         //点击弹窗取消按钮
         cancelBtn(){
@@ -245,32 +373,32 @@ export default {
 <style lang="scss" scoped>
     //列表
     .acclist{
-        padding: 14px .24rem;
+        padding: .28rem .24rem;
         border-bottom: 1px solid #c9c9c9;
         background-color: #fff;
         .left{
             text-align: left;
             .account{
-                line-height: 18px;
-                font-size: 14px;
+                line-height: .36rem;
+                font-size: .28rem;
                 font-weight: 900;
                 img{
-                    width: 10px;
+                    width: .2rem;
                 }
             }
             .platform{
                 color: #4fa2fe;
-                font-size: 12px;
-                margin-top: 4px;
+                font-size: .24rem;
+                margin-top: .08rem;
             }
         }
         .right{
             button{
                 color: #4fa2fe;
                 border:1px solid #4fa2fe;
-                border-radius: 6px;
+                border-radius: .1rem;
                 background: #fff; 
-                padding: 6px .2rem;
+                padding: .12rem .2rem;
                 margin-left: .06rem;
             }
             .btnBule{
@@ -286,31 +414,31 @@ export default {
         background: #fff;
         width: 100%;
         .bottop{
-            height:80px;
+            height:1.6rem;
             text-align: center;
             border-top: 1px solid #c9c9c9;
             button{
                 background-color: #fff;
                 color: #4fa2fe;
                 font-weight: 900;
-                font-size: 22px;
+                font-size: .44rem;
                 border: none;
-                line-height: 80px;
+                line-height: 1.6rem;
             }
             
         }
         .botfoot{
-            height: 44px;
+            height: .88rem;
             border-top: 1px solid #dbdbdb;
             p{
                 margin-left: 3rem; 
-                height: 44px; 
+                height: .88rem; 
                 width: 2rem;
                 display: flex;
                 justify-content: space-between;
                 img{
-                    margin-top: 14px;
-                    height:16px;
+                    margin-top: .28rem;
+                    height:.32rem;
                 }
             }
         }
@@ -329,35 +457,35 @@ export default {
     .popup{
         position: absolute;
         left: .8rem;
-        top: 80px;
+        top: 1.6rem;
         z-index: 3;
         opacity: 1;
-        padding: 14px .3rem;
+        padding: .28rem .3rem;
         background-color: #fff;
-        border-radius: 14px;
+        border-radius: .28rem;
         .poptop{
             li{
                 text-align: left;
                 width: 5.1rem;
-                height: 32px;
-                padding: 8px .2rem;
+                height: .64rem;
+                padding: .16rem .2rem;
                 border-bottom: 1px solid #c9c9c9;
                 span{
                     font-weight: 900;
-                    font-size: 13px;
-                    line-height: 32px;
+                    font-size: .26rem;
+                    line-height: .64rem;
                     margin-right: .2rem;
                 }
                 input{
                     width: 3rem;
-                    height:17px;
+                    height:.34rem;
                     padding-left: .2rem;
                     border: none;
                     outline: none;
                     border-left: 1px solid #e5e5e5;
                 }
                 img{
-                    width: 16px;
+                    width: .32rem;
                 }
             }
         }
@@ -366,14 +494,14 @@ export default {
             justify-content: space-around;
             button{
                 width: 1.8rem;
-                height: 32px;
-                font-size: 13px;
+                height: .64rem;
+                font-size: .26rem;
                 font-weight: 900;
                 border: 1px solid #4fa2fe;
-                border-radius: 6px;
+                border-radius: .1rem;
                 color: #4fa2fe;
-                margin-top: 20px;
-                margin-bottom: 6px;
+                margin-top: .4rem;
+                margin-bottom: .12rem;
                 background: #fff;
             }
             .confirm{

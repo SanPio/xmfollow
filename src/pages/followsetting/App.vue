@@ -261,16 +261,15 @@ export default {
                         optionId : this.optionId,
                         userId : this.userId
                     });
+                    console.log(postData)
                     this.$http({
                         method: 'post',
                         url: this.urlTitle+'wx/order/member/cancelFollowing',
                         data:postData
                     }).then((res)=>{
+                        console.log(res)
                         if(res.data.data.success == true){
-                            Toast({
-                                message: '操作成功',
-                                duration: 2000
-                            });
+                            
                         }
                     }).catch((err) => {
                         
@@ -306,10 +305,7 @@ export default {
                         data:postData
                     }).then((res)=>{
                         if(res.data.data.success == true){
-                            Toast({
-                                message: '操作成功',
-                                duration: 2000
-                            });
+                            window.location.href='index.html';
                         }
                     }).catch((err) => {
                     

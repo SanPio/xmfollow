@@ -133,12 +133,12 @@
         <div id="footer">
             <span @click="toFollowSetting">跟随设置</span>
         </div>
-        <div id="bottom">
+        <!-- <div id="bottom">
             <div id="bot-center">
                 <img :src="returnleftSrc" alt="" @click="returnBtn">
                 <img :src="returnRightSrc" alt="">
             </div>
-        </div>     
+        </div>      -->
     </div>
 </template>
 <script>
@@ -184,7 +184,6 @@ export default {
          
         }).then((res) => {
             this.info = res.data.data;
-            console.log(this.info.signalTactics)
             //主要信息
             this.mianInfo.push(res.data.data.experience);
             this.mianInfo.push('$' + res.data.data.money);
@@ -234,9 +233,7 @@ export default {
                 userId : Number(this.userId )
             }      
         }).then((res) => {
-            console.log(res.data.data.list)
-             this.holdArr = res.data.data.list;
-         
+             this.holdArr = res.data.data.list;  
             
         }).catch((err) => {
             console.log(err)
@@ -244,6 +241,26 @@ export default {
 
 
 
+        //周期变化表
+        let postData = this.$qs.stringify({
+            optionid : this.optionId,
+
+        });
+        this.$http({
+            method: 'post',
+            url: this.urlTitle+'wx/index/selectSlt',
+            data:postData
+        }).then((res)=>{
+            console.log(res)
+
+
+
+
+ 
+
+        }).catch((err) => {
+            console.log(err)
+        });
 
 
 
@@ -500,13 +517,14 @@ export default {
         
     }
     #footer{
+        margin-top: 2rem;
         height: 1rem;
         text-align: center;
         color: #4fa2fe;
         font-size: .36rem;
         line-height: 1rem;
         font-weight: 900;
-        border-bottom: 1px solid #dbdbdb;
+        // border-bottom: 1px solid #dbdbdb;
     }
     
     // .mint-swipe .mint-swipe-indicators .mint-swipe-indicators{

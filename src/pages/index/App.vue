@@ -66,7 +66,9 @@
                   <dd> {{item.yield}} </dd>
                 </dl>
                 <dl class="pro-loss">
-                  <dt> 近一周盈亏点数 </dt>
+                  <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
+                  <dt v-if="nearTime==14"> 近两周盈亏点数 </dt>
+                  <dt v-if="nearTime==30"> 近一月盈亏点数 </dt>
                   <dd> {{item.profitNo}} </dd>
                 </dl>
                 <dl class="balance">
@@ -154,7 +156,8 @@ export default {
       accountId: 2,
       optionId: [],
       len: 4,
-      urlTitle:"http://192.168.1.11:8080/"
+      // urlTitle:"http://192.168.1.11:8080/"
+      urlTitle:"http://192.168.1.4:80/"
     }
   },
   created(){
@@ -265,7 +268,7 @@ export default {
           url: this.urlTitle+'wx/index/list',
           data:postData
       }).then((res)=>{
-      
+          console.log(res)
           this.boxItem = res.data.data.list;
           this.echartArr = [];
           this.optionId = [];

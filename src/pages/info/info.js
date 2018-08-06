@@ -6,8 +6,9 @@ import App from './App'
 import { Swipe, SwipeItem } from 'mint-ui'
 import { Badge } from 'mint-ui';
 import axios from 'axios'
+import qs from 'qs'
 Vue.component(Badge.name, Badge);
-
+Vue.prototype.$qs = qs
 Vue.prototype.$http = axios
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);

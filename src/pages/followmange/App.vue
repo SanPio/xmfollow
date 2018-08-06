@@ -255,26 +255,26 @@ export default {
 
     // 正在跟随
     .nowtitle{
-        padding: 24px .24rem;
+        padding: .48rem .24rem;
         background-color: #f9f9f9;
         position: fixed;
-        width: 7.02rem;
-        top: 49px;
+        width: 95%;
+        top: .98rem;
         z-index: 2;
         .left{
-            line-height: 27px;
-            font-size: 14px;
+            line-height: .54rem;
+            font-size: .28rem;
             font-weight: 900;
         }
         .right{
             button{
-                padding: 7px .26rem;
+                padding: .14rem .26rem;
                 background: none;
                 border: 1px solid #4fa2fe;
-                border-radius: 6px;
+                border-radius: .1rem;
                 color: #4fa2fe;
-                font-size: 12px;
-                line-height: 12px;
+                font-size: .24rem;
+                line-height: .24rem;
                 font-weight: 900;
             }
             button:nth-of-type(1){
@@ -289,37 +289,37 @@ export default {
     .nowlist{
         
         .litop{
-            height: 60px;
+            height: 1.2rem;
             padding: 0 .24rem;
             border-bottom: 1px solid #e5e5e5;
             .lileft{
                 margin-right:.16rem;
-                margin-top: 10px;
+                margin-top: .2rem;
                 img{
-                    width: 40px;
-                    height: 40px;
+                    width: .8rem;
+                    height: .8rem;
                     border-radius: 50%;
                 }
             }
             .licenter{
                 text-align: left;
                 .name{
-                    font-size: 12px;
+                    font-size: .24rem;
                     font-weight: 900;
-                    line-height: 14px;
-                    margin-top: 16px;
+                    line-height: .28rem;
+                    margin-top: .32rem;
                 }
                 .flownum{
-                    font-size: 10px;
-                    margin-top: 4px;
-                    line-height: 10px;
+                    font-size: .2rem;
+                    margin-top: .08rem;
+                    line-height: .2rem;
                 }
             }
             .liright{
                 p{
                     text-align: left;
-                    font-size: 10px;
-                    line-height: 16px;
+                    font-size: .2rem;
+                    line-height: .32rem;
                     span:nth-of-type(1){
                         color: #999;  
                         margin-right: .1rem;  
@@ -338,23 +338,23 @@ export default {
                     }
                 }
                 p:nth-of-type(1){
-                    margin-top: 16px;
+                    margin-top: .32rem;
                 }
             }
         }
         .libot{
             background-color: #f9f9f9;
-            padding: 9px .6rem;
+            padding: .18rem .6rem;
             display: flex;
             justify-content: space-between;
             button{
-                padding: 7px .26rem;
+                padding: .14rem .26rem;
                 background: none;
                 border: 1px solid #4fa2fe;
-                border-radius: 6px;
+                border-radius: .12rem;
                 color: #4fa2fe;
-                font-size: 12px;
-                line-height: 12px;
+                font-size: .24rem;
+                line-height: .24rem;
             }
         }
         
@@ -364,39 +364,39 @@ export default {
     // 跟随记录
     .recordlist{
         .listtop{
-            height: 60px;
+            height: 1.2rem;
             padding: 0 .24rem;
             border-bottom: 1px solid #e5e5e5;
             background-color: #fff;
             .listleft{
                 margin-right:.16rem;
-                margin-top: 10px;
+                margin-top: .2rem;
                 img{
-                    width: 40px;
-                    height: 40px;
+                    width: .8rem;
+                    height: .8rem;
                     border-radius: 50%;
                 }
             }
             .listcenter{
                 text-align: left;
                 .name{
-                    font-size: 12px;
+                    font-size: .24rem;
                     font-weight: 900;
-                    line-height: 14px;
-                    margin-top: 16px;
+                    line-height: .28rem;
+                    margin-top: .32rem;
                 }
                 .flownum{
-                    font-size: 10px;
-                    margin-top: 4px;
-                    line-height: 10px;
+                    font-size: .2rem;
+                    margin-top: .08rem;
+                    line-height: .2rem;
                 }
             }
             .listright{
                 p{
                     text-align: left;
-                    font-size: 10px;
-                    line-height: 16px;
-                    margin-top: 22px;
+                    font-size: .2rem;
+                    line-height: .32rem;
+                    margin-top: .44rem;
                     span:nth-of-type(1){
                         color: #999;  
                         margin-right: .1rem;  
@@ -416,11 +416,11 @@ export default {
         }
         .listbot{
             text-align: left;
-            padding: 8px .4rem;
+            padding: .16rem .4rem;
             background-color: #f9f9f9;
             p{
-                height: 26px;
-                line-height: 26px;
+                height: .52rem;
+                line-height: .52rem;
                 span:nth-of-type(1){
                     color: #999;
                     margin-right: .1rem;
@@ -451,13 +451,13 @@ export default {
     //     justify-content: center;
     //     #foot-center{
     //         width: 2rem;
-    //         height: 45px;
+    //         height: .9rem;
     //         display: flex;
     //         justify-content: space-between;
     //         img{
     //             // width: .3rem;
-    //             margin-top: 12px;
-    //             height:28px;
+    //             margin-top: .24rem;
+    //             height:.56rem;
     //         }
     //     }
     // }
