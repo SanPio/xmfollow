@@ -170,15 +170,15 @@ export default {
             info : {},
             hisArr : [],
             holdArr:[],
-            urlTitle:"http://192.168.1.11:8080/"
+            urlTitle:""
         }
     },
     created(){
         var v = this.parseUrl();//解析所有参数
         this.optionId = v['optionId'];
-        console.log(this.optionId)
-        this.userId = Number(JSON.parse(sessionStorage.getItem('userId'))) ;
-        this.accountId = Number( JSON.parse(sessionStorage.getItem('accountId')));
+        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
+        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
+        this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
         //初始化数据请求
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          

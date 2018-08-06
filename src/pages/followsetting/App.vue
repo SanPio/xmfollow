@@ -157,12 +157,14 @@ export default {
             lotsType: '',
             stopLoss:0,//止损点
             takeProfits: 0,//止盈点
-            urlTitle:"http://192.168.1.11:8080/"
+            urlTitle:""
         }
     },
     created(){
-        this.userId = Number(JSON.parse(sessionStorage.getItem('userId')))   ;
-        this.accountId = Number( JSON.parse(sessionStorage.getItem('accountId')));
+        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
+        console.log(this.urlTitle)
+        this.userId = Number(JSON.parse(localStorage.getItem('userId')))   ;
+        this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
         var v = this.parseUrl();//解析所有参数
         this.optionId = v['optionId'];
         //初始化数据请求

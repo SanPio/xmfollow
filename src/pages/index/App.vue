@@ -158,7 +158,8 @@ export default {
     }
   },
   created(){
-    
+    //储存域名端口
+    localStorage.setItem('urlTitle', JSON.stringify(this.urlTitle));
     //储存userId
     localStorage.setItem('userId', JSON.stringify(this.userId));
     //储存accountId
