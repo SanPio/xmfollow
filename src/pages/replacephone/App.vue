@@ -71,48 +71,48 @@ export default {
 </script>
 <style lang="scss" scoped>
     #content{
-        font-size: 14px;
+        font-size: .28rem;
         padding: 0 .5rem;
-        margin-top: 20px;
+        margin-top: .4rem;
         li{
             input{
                 width: 1.8rem;
             }
             display: flex;
-            height: 49px;
+            height: .98rem;
             border-bottom: 1px solid #c9c9c9;
             .con-left{
                 width: 1.48rem;
-                height: 16px;
-                line-height: 16px;
+                height: .32rem;
+                line-height: .32rem;
                 padding: 0 .18rem;
-                margin-top: 18px;
+                margin-top: .36rem;
                 border-right: 1px solid #e5e5e5;
             }
             .con-right{
                 margin-left: .3rem;
                 span{
-                    line-height: 50px;
-                    margin-left: 4px;
+                    line-height: 1rem;
+                    margin-left: .08rem;
                 }
                 .phonenum,.code{
-                    font-size: 14px;
-                    line-height: 14px;
-                    padding: 4px;
-                    margin-top: 14px;
+                    font-size: .28rem;
+                    line-height: .28rem;
+                    padding: .08rem;
+                    margin-top: .28rem;
                     outline: none;
                     border: none
                 }
                 button{
                     width: 1.6rem;
-                    height: 28px;
+                    height: .56rem;
                     margin-left: .2rem;
                     border: 1px solid #4fa2fe;
                     background-color: #fff;
                     outline: none;
-                    font-size: 12px;
+                    font-size: .24rem;
                     color: #4fa2fe;
-                    border-radius: 20px;
+                    border-radius: .4rem;
                 }
                 .time{
                     border: 1px solid #999999;
@@ -124,16 +124,16 @@ export default {
     #bottom{
         text-align: center;
         button{
-            margin-top: 50px;
+            margin-top: 1rem;
             width: 6.5rem;
-            height: 50px;
-            font-size: 22px;
+            height: 1rem;
+            font-size: .44rem;
             font-weight: 900;
             color: #fff;
             background-color: #4fa2fe;
             border: none;
             outline: none;
-            border-radius: 10px;
+            border-radius: .2rem;
         }
     }
       

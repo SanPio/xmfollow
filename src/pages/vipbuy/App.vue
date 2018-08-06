@@ -78,21 +78,21 @@ export default {
 </script>
 <style lang="scss" scoped>
     #title{
-        height: 134px;
+        height: 2.68rem;
         color: #4fa2fe;
-        line-height: 134px;
+        line-height: 2.68rem;
         text-align: center;
-        font-size: 22px;
+        font-size: .44rem;
         font-weight: 900;
     }
     #content{
-        font-size: 14px;
+        font-size: .28rem;
         font-weight: 900;
         color: #333333;
         padding: 0 .5rem;
         li{
-            height: 48px;
-            line-height: 48px;
+            height: .96rem;
+            line-height: .96rem;
             padding: 0 .2rem;
             display: flex;
             .con-title{
@@ -101,14 +101,14 @@ export default {
             .con-type{
                 button{
                     width: 1.38rem;
-                    height: 26px;
+                    height: .52rem;
                     color: #4fa2fe;
                     border: 1px solid #4fa2fe;
                     margin-right: .4rem;
                     background-color: #fff;
                     outline:none;
-                    border-radius: 5px;
-                    font-size: 12px;
+                    border-radius: .1rem;
+                    font-size: .24rem;
                 }
                 .btn-clicked{
                     color: #fff;
@@ -119,13 +119,13 @@ export default {
                 input{
                     outline:none;
                     width: 1.38rem;
-                    height: 26px;
+                    height: .52rem;
                     border: 1px solid #e5e5e5;
-                    border-radius: 5px;
+                    border-radius: .1rem;
                     text-align: center;
                 }
                 span{
-                    font-size: 12px;
+                    font-size: .24rem;
                     color: #999999;
                     margin-left: .2rem;
                 }
@@ -142,18 +142,18 @@ export default {
         }
     }
     #bottom{
-        margin-top: 150px;
+        margin-top: 3rem;
         text-align: center;
         button{
             width: 6.48rem;
-            height: 50px;
-            line-height: 50px;
+            height: 1rem;
+            line-height: 1rem;
             background-color: #4fa2fe;
             color:#fff;
-            font-size: 22px;
+            font-size: .44rem;
             font-weight: 900;
             outline: none;
-            border-radius: 8px;
+            border-radius: .16rem;
             border: none;
         }
     }

@@ -631,43 +631,43 @@ export default {
     #header{
         position: fixed;
         top: 0;
-        height: 44px;
+        height: .88rem;
         background-color: #53a8fe;
         padding: 0 .24rem;
         width: 7.01rem;
         z-index: 3000;
         img{
-            width: 36px;
-            height:36px;
+            width: .72rem;
+            height:.72rem;
             border-radius: 50%;
-            margin-top: 4px;
+            margin-top: .08rem;
             margin-right: .18rem;
         }
         dl{
             text-align: left;
             color:#fff;
             dt{
-                font-size: 12px;
-                line-height: 12px;
+                font-size: .24rem;
+                line-height: .24rem;
                 font-weight: 900;
-                margin-top: 8px;
+                margin-top: .16rem;
             }
             dd{
-                font-size: 10px;
-                line-height: 10px;
-                margin-top: 5px;
+                font-size: .2rem;
+                line-height: .2rem;
+                margin-top: .1rem;
 
             }
            
         } 
         button{
             width: 1.38rem;
-            height:26px;
+            height: .52rem;
             background: #53a8fe;
             color:#fff;
-            border-radius: 6px;
+            border-radius: .12rem;
             border: 1px solid #fff;
-            margin-top: 8px;
+            margin-top: .16rem;
             font-weight: bold;
         }
     }
@@ -677,13 +677,13 @@ export default {
 
 
     .colorbtn{
-        width: 14px;
-        height:14px;
-        font-size: 10px;
-        line-height: 10px;
+        width: .28rem;
+        height: .28rem;
+        font-size: .2rem;
+        line-height: .2rem;
         border: none;
         color: #fff;
-        border-radius: 2px;
+        border-radius: .04rem;
     }
     .buybtn{
         background-color: #007aff;
@@ -695,28 +695,28 @@ export default {
         background-color: #ff7c2b;
     }
     .infolist{
-        font-size: 10px;
-        line-height: 10px;
+        font-size: .2rem;
+        line-height: .2rem;
         color: #999;
         .infotop{
-            height: 55px;
+            height: 1.1rem;
             border-bottom: 1px solid #c9c9c9;
             padding: 0 .24rem;
             .left{
                 text-align: left;
                 p:nth-of-type(1){
-                    margin-top: 12px;
-                    margin-bottom: 10px;
+                    margin-top: .24rem;
+                    margin-bottom: .2rem;
                     span{
-                        font-size: 14px;
-                        line-height: 14px;
+                        font-size: .28rem;
+                        line-height: .28rem;
                         font-weight:bold;
                         color: #000; 
                     } 
                     span:nth-last-of-type(1){
-                        font-size: 10px;
+                        font-size: .2rem;
                         font-weight: normal;
-                        line-height: 10px;
+                        line-height: .2rem;
                         color: #999;
                     }
                 }
@@ -728,7 +728,7 @@ export default {
                     span:nth-of-type(1){
                         font-weight: normal;
                         color: #999;
-                        margin-right: 2px;
+                        margin-right: .04rem;
                     }
                 }
 
@@ -737,8 +737,8 @@ export default {
                 .left{
                     text-align: right;
                     p:nth-of-type(1){
-                        font-size: 14px;
-                        line-height: 14px;
+                        font-size: .28rem;
+                        line-height: .28rem;
                         font-weight: bold;
                         
                     }
@@ -751,8 +751,8 @@ export default {
                     p:nth-of-type(2){
                         span{
                             color: #666;
-                            font-size: 10px;
-                            line-height: 10px;
+                            font-size: .2rem;
+                            line-height: .2rem;
                             font-weight: bold;
                         }
                         
@@ -760,10 +760,10 @@ export default {
                 }
                 .right{
                     button{
-                        line-height: 14px;
-                        height: 14px;
+                        line-height: .28rem;
+                        height: .28rem;
                         color: #666;
-                        margin-top: 22px;
+                        margin-top: .44rem;
                         font-weight: bold;
                         margin-left: .2rem;
                         border: none;
@@ -774,11 +774,11 @@ export default {
             }
         }
         .infocen{
-            padding: 8px .24rem ;
+            padding: .16rem .24rem ;
             background-color: #f9f9f9;
             li{
-                height: 24px;
-                line-height: 24px;
+                height: .48rem;
+                line-height: .48rem;
                 text-align: left;
                 span:nth-last-of-type(1){
                     margin-left: .24rem;
@@ -791,16 +791,16 @@ export default {
             background-color: #f9f9f9;
             display: flex;
             justify-content: space-around;
-            padding: 16px .24rem;
+            padding: .32rem .24rem;
             button{
                 width: 1.68rem;
-                height: 32px;
-                left: 32px;
+                height: .64rem;
+                left: .64rem;
                 color: #4fa2fe;
                 border: 1px solid #4fa2fe;
                 background-color: #f9f9f9;
-                border-radius: 6px;
-                font-size: 14px;
+                border-radius: .12rem;
+                font-size: .28rem;
                 font-weight: 900;
             }
         }
@@ -823,35 +823,35 @@ export default {
     .popup{
         position: absolute;
         left: .8rem;
-        top: 80px;
+        top: 1.6rem;
         z-index: 3;
         opacity: 1;
-        padding: 14px .3rem;
+        padding: .28rem .3rem;
         background-color: #fff;
-        border-radius: 14px;
+        border-radius: .28rem;
         .poptop{
             li{
                 text-align: left;
                 width: 5.1rem;
-                height: 32px;
-                padding: 8px .2rem;
+                height: .64rem;
+                padding: .16rem .2rem;
                 border-bottom: 1px solid #c9c9c9;
                 span{
                     font-weight: 900;
-                    font-size: 13px;
-                    line-height: 32px;
+                    font-size: .26rem;
+                    line-height: .26rem;
                     margin-right: .2rem;
                 }
                 input{
                     width: 3rem;
-                    height:17px;
+                    height: .34rem;
                     padding-left: .2rem;
                     border: none;
                     outline: none;
                     border-left: 1px solid #e5e5e5;
                 }
                 img{
-                    width: 16px;
+                    width: .32rem;
                 }
             }
         }
@@ -860,14 +860,14 @@ export default {
             justify-content: space-around;
             button{
                 width: 1.8rem;
-                height: 32px;
-                font-size: 13px;
+                height: .64rem;
+                font-size: .64rem;
                 font-weight: 900;
                 border: 1px solid #4fa2fe;
-                border-radius: 6px;
+                border-radius: .12rem;
                 color: #4fa2fe;
-                margin-top: 20px;
-                margin-bottom: 6px;
+                margin-top: .4rem;
+                margin-bottom: .12rem;
                 background: #fff;
             }
             .confirm{

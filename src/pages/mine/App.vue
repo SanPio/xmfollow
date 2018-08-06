@@ -248,7 +248,7 @@ export default {
         toFollowmange(ind){
             window.location.href="followmange.html";
         }
-    }
+    }   
 }
 </script>
 <style lang="scss" scoped>
@@ -257,8 +257,8 @@ export default {
         position: fixed;
         top:0;
         width: 7.1rem;
-        font-size: 13px;
-        height: 44px;
+        font-size: .26rem;
+        height: .88rem;
         background-color: #4fa2fe;
         color: #ffffff;
         padding: 0 .22rem;
@@ -267,20 +267,20 @@ export default {
         .head-left{
             display: flex;
             img{
-                width: 36px;
-                height: 36px;
+                width: .72rem;
+                height: .72rem;
                 border-radius: 50%;
-                margin: 4px .2rem 0 0;
+                margin: .08rem .2rem 0 0;
                 background-color: red;
             }
             dt{
                 font-weight: 900;
-                font-size: 14px;
-                line-height: 24px;
+                font-size: .28rem;
+                line-height: .48rem;
             }
             dd{
-                font-size: 10px;
-                line-height: 10px;
+                font-size: .2rem;
+                line-height: .2rem;
             }
         }
         .head-right{
@@ -288,16 +288,16 @@ export default {
             display: flex;
             justify-content: space-between;
             img{
-                margin-top: 12px;
-                width: 18px;
-                height:18px;
+                margin-top: .24rem;
+                width: .36rem;
+                height: .36rem;
             }
         } 
     }
     //Header上拉前效果
     #header{
-        font-size: 13px;
-        height: 78px;
+        font-size: .26rem;
+        height: 1.56rem;
         background-color: #4fa2fe;
         color: #ffffff;
         padding: 0 .22rem;
@@ -306,20 +306,20 @@ export default {
         .head-left{
             display: flex;
             img{
-                width: 60px;
-                height: 60px;
+                width: 1.2rem;
+                height: 1.2rem;
                 background-color: red;
                 border-radius: 50%;
-                margin: 13px .24rem 0 0;
+                margin: .26rem .24rem 0 0;
             }
             dt{
                 font-weight: 900;
-                font-size: 15px;
-                margin-top: 24px;
-                margin-bottom: 4px;
+                font-size: .3rem;
+                margin-top: .48rem;
+                margin-bottom: .08rem;
             }
             dd{
-                font-size: 12px;
+                font-size: .24rem;
                 // line-height: 10px;
             }
         }
@@ -328,9 +328,9 @@ export default {
             display: flex;
             justify-content: space-between;
             img{
-                margin-top: 12px;
-                width: 22px;
-                height:22px;
+                margin-top: .24rem;
+                width: .44rem;
+                height: .44rem;
             }
         } 
     }
@@ -339,64 +339,64 @@ export default {
         padding: 0 .22rem;
         display: flex;
         justify-content: space-between;
-        height: 78px;
+        height: 1.56rem;
         background-color: #4fa2fe;
         color : #ffffff;
         text-align: center;
         dt{
-            font-size: 12px;
-            line-height: 12px;
-            margin-top: 16px;
-            margin-bottom: 9px;
+            font-size: .24rem;
+            line-height: .24rem;
+            margin-top: .32rem;
+            margin-bottom: .18rem;
         }
         dd{
-            font-size: 20px;
+            font-size: .4rem;
             font-weight: 900;
-            line-height: 18px;
+            line-height: .36rem;
         }
     }
     //导航按钮
     #center{
-        font-size: 12px;
+        font-size: .24rem;
         display: flex;
-        padding:12px 0 24px 0;
+        padding: .24rem 0 .48rem 0;
         dl{
             width: 33%;
-            height:44px;
+            height: .88rem;
             text-align: center;
             img{
-                width: 32px;
-                height:32px;
+                width: .64rem;
+                height: .64rem;
             }
             dd{
-                margin-top: 7px;
+                margin-top: .14rem;
                 color: #666666;
             }
         }
     }
     //账号信息展示
     #content{
-        margin-top: 28px;
+        margin-top: .56rem;
         padding: 0 .22rem;
         color: #ffffff;
         li{
             //账号标题
             .con-tit{
-                height:34px;
-                line-height: 34px;
+                height: .68rem;
+                line-height: .68rem;
                 // background-color: pink;
-                font-size: 12px;
+                font-size: .24rem;
                 color: #666666;
                 border-bottom: 1px solid #c9c9c9;
                 display: flex;
                 justify-content: space-between;
                 img{
-                    width: 13px;
+                    width: .26rem;
                 }
             }
             //账号内容 展示
             .con-box{
-                font-size: 13px;
+                font-size: .26rem;
                 text-align: center;
                 padding: 0 .2rem;
                 .con-box-account{
@@ -407,37 +407,37 @@ export default {
                 }
                 .con-box-follow{
                     background-color: #ff884e;
-                    margin-bottom: 20px;
+                    margin-bottom: .4rem;
                 }
                 li{
-                    border-radius: 10px; 
-                    margin-top: 14px;
-                    padding-bottom: 14px;
+                    border-radius: .2rem; 
+                    margin-top: .28rem;
+                    padding-bottom: .28rem;
                     .con-box-head{
-                        font-size: 16px;
-                        line-height: 40px;
+                        font-size: .32rem;
+                        line-height: .8rem;
                         font-weight: 900;
-                        height: 40px;
+                        height: .8rem;
                     }
                     .con-box-bot{
                         dl{
                             float: left;
                             width: 33%;
                             .con-box-bot-btn{
-                                font-size: 14px;
-                                line-height: 40px;
+                                font-size: .28rem;
+                                line-height: .8rem;
                                 font-weight: 900;
                             }
                             dt{
-                                font-size: 11px;
-                                line-height: 20px;
-                                height: 20px;
+                                font-size: .22rem;
+                                line-height: .4rem;
+                                height: .4rem;
                             }
                             dd{
-                                font-size: 14px;
+                                font-size: .28rem;
                                 font-weight: 900;
-                                line-height: 30px;
-                                height: 30px;
+                                line-height: .6rem;
+                                height: .6rem;
                             }
                         }
                     }
@@ -449,14 +449,14 @@ export default {
     //底部导航按钮
     .footer{
         width: 100%;
-        height:50px;
-        padding-top: 6px;
+        height: 1rem;
+        padding-top: .12rem;
         background-color:#ffffff;
         position: fixed;
         bottom:0;
         display: flex;
         justify-content: space-around;
-        font-size: 10px;
+        font-size: .2rem;
         dl{
             width: 1rem;
             text-align: center;
@@ -468,7 +468,7 @@ export default {
         img{
             width: .44rem;
             height: .44rem;
-            margin-bottom: 2px;
+            margin-bottom: .04rem;
         }
     }
 </style>

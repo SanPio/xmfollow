@@ -331,29 +331,29 @@ export default {
         // height: 125px;
         background-color: #4fa2fe;
         color: #ffffff;
-        font-size: 14px;
+        font-size: .28rem;
         text-align: center;
         dt{
-            padding: 8px 0;
+            padding: .16rem 0;
             img{
-                width: 76px;
-                height: 76px;
+                width: 1.52rem;
+                height: 1.52rem;
                 border-radius: 50%;
             }
         }
         dd{
-            line-height: 14px;
-            padding-bottom: 10px;
+            line-height: .28rem;
+            padding-bottom: .2rem;
             font-weight: 900;
         }
     }
     #info-top,#info-bot{
-        font-size: 13px;
-        margin-top: 6px;
+        font-size: .26rem;
+        margin-top: .12rem;
         li{
             display: flex;
-            height: 38px;
-            line-height: 38px;
+            height: .76rem;
+            line-height: .76rem;
             border-bottom: 1px solid #c9c9c9;   
         }
         .info-top-title,.info-bot-title{
@@ -363,7 +363,7 @@ export default {
         }
         .info-top-content,.info-bot-title{
             img{
-                height:11px;
+                height: .22rem;
                 margin-left: 3.3rem;
             }
         }
@@ -382,10 +382,10 @@ export default {
             }
             button{
                 width: 1.4rem;
-                height: 28px; 
+                height: .56rem; 
                 outline: none;
                 border: none;
-                border-radius: 6px;
+                border-radius: .12rem;
                 margin-left: .2rem;
             }
             .invit,.receive{
@@ -407,8 +407,8 @@ export default {
         #push{
             position:absolute;
             left: 3.5rem;
-            top: 14px;
-            font-size: 16px;
+            top: .28rem;
+            font-size: .32rem;
             font-weight: 900;
             border: none;
             outline: none;
