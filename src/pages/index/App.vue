@@ -4,6 +4,7 @@
         <ul id="title" class="clearfix">
           <li @click="timeshow">
             <span>{{time}}</span>
+
             <img :src="timebln ? upSrc : downSrc" alt="">
             <img :src="imgSrc1" alt="" class="division">
           </li>
@@ -33,9 +34,9 @@
         </ul>
     </div>
       
-      <div style="overflow-y: scroll;">
+      <div style="overflow:scroll; -webkit-overflow-scrolling: touch">
          <mt-loadmore 
-          :bottom-method="loadBottom" :autoFill="false" ref="loadmore">
+          :bottom-method="loadBottom" :autoFill="false" ref="loadmore" :bottom-all-loaded="allLoaded">
           <div v-for = "(item,ind) in boxItem" :key="ind" @click="jump(ind)">
             <div class="title">
               <div class="tlt-left">
@@ -43,13 +44,13 @@
                   <img :src="imgSrc2" alt="">
                 </div>
                 <dl>
-                  <dt> {{item.signalName}} <span> {{ item.star }}</span></dt>
+                  <dt> {{item.signalName}} <span> {{ item.star }}星</span></dt>
                   <dd>{{item.signalIntroduce}}</dd>
                 </dl>
               </div>
               <div class="tit-right">
                 <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
-                <button class="flow-btn" v-if="!item.followed">跟随</button>
+                <button class="flow-btn" v-if="!item.followed" @click.stop="followMe(ind)" >跟随</button>
               </div>
             </div>
             <div class="content">
@@ -156,11 +157,39 @@ export default {
       accountId: 2,
       optionId: [],
       len: 4,
-      // urlTitle:"http://192.168.1.11:8080/"
-      urlTitle:"http://192.168.1.4:80/"
+      urlTitle:"http://192.168.1.11:8080/",
+      // urlTitle:"http://192.168.1.6:80/",
+      // urlTitle:"http://132.232.44.112:80/",
+      // urlTitle:"http://121.196.208.147:80/",
+    
+      allLoaded: false,
+      setFollowType:8
     }
   },
   created(){
+
+    // this.$http.get('http://www.0539maj.com/app/wechat/authorize',{ 
+    //         params : {
+          
+    //             returnUrl: 'http://www.0539maj.com/app/wechat/userinfo'
+      
+    //         }   
+    //     }).then((res) => { 
+    //       console.log(res)
+    //     }).catch((err) =>{
+    //       console.log(err)
+    //     })
+
+    // this.$http.get("http://www.0539maj.com/app/wechat/authorize?returnUrl='http://www.0539maj.com/app/wechat/userinfo'").then((res) => {
+
+    //   console.log(res)
+    // })
+
+
+
+
+
+    
     //储存域名端口
     localStorage.setItem('urlTitle', JSON.stringify(this.urlTitle));
     //储存userId
@@ -189,13 +218,16 @@ export default {
         sortType: sortType,
         userId: userId
       });
-      console.log(postData)
+
       this.$http({
           method: 'post',
           url: this.urlTitle +'wx/index/list',
           data:postData
       }).then((res)=>{
-          console.log(res)
+
+          if(res.data.data.total <= pageNum*pageSize){
+             this.allLoaded = true;//数据全部加载完毕
+          }
           for(let j=0; j<res.data.data.list.length; j++){
             this.boxItem.push(res.data.data.list[j]);
             this.optionId.push(res.data.data.list[j].optionId) ;
@@ -210,7 +242,7 @@ export default {
             this.echartArr.push(arr)
             
           }
-          console.log(this.echartArr)
+       
 
           this.$nextTick(()=> { //init 你的echarts  
                                  
@@ -245,6 +277,7 @@ export default {
                 });
             }
           })
+         
           //结束加载图
           this.$refs.loadmore.onBottomLoaded();
           
@@ -269,6 +302,9 @@ export default {
           data:postData
       }).then((res)=>{
           console.log(res)
+          if(res.data.data.total <= pageNum*pageSize){
+             this.allLoaded = true;//数据全部加载完毕
+          }
           this.boxItem = res.data.data.list;
           this.echartArr = [];
           this.optionId = [];
@@ -322,7 +358,7 @@ export default {
           
       }).catch((err)=>{  
           //结束加载图
-          console.log(err)
+          // console.log(err)
           this.$refs.loadmore.onBottomLoaded();
       })
     },
@@ -413,12 +449,61 @@ export default {
       this.abilitybln = false;
       this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
     },
+    //点击跟随
+
+
+    followMe(ind){
+    
+       this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
+            params : {
+          
+                userid: this.userId,
+                optionid: this.optionId[ind],
+                accountsid: this.accountId, 
+                
+            }   
+        }).then((res) => { 
+          // console.log(res)
+          if( res.data.status == 0 ){
+              //跟随设置
+              window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
+
+          }else if( res.data.status == 1 ){
+              //购买会员
+              window.location.href=`vipbuy.html`;
+          }else if( res.data.status == 2 ){
+              //绑定
+              window.location.href=`accountmanage.html`;
+          }
+
+
+        console.log(res)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }).catch((err)=>{
+          console.log(err)
+        })
+    },
 
     //上拉加载
     loadBottom(){
       this.pageNum = this.pageNum +1
       
-      this.request(this.nearTime,this.pageNum,4,this.sortField,this.sortType,this.userId)
+      this.request(this.nearTime,this.pageNum,6,this.sortField,this.sortType,this.userId)
 
     },
     jump(ind){

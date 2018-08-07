@@ -8,7 +8,8 @@ import { Navbar, TabItem } from 'mint-ui'
 import { TabContainer, TabContainerItem } from 'mint-ui'
 import { Loadmore } from 'mint-ui'
 import { MessageBox } from 'mint-ui';
-
+import qs from 'qs'
+Vue.prototype.$qs = qs
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(TabContainer.name, TabContainer)
 Vue.component(TabContainerItem.name, TabContainerItem)

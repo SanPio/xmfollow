@@ -6,6 +6,7 @@ import App from './App'
 import axios from 'axios'
 import qs from 'qs'
 import { Loadmore } from 'mint-ui'
+import { MessageBox } from 'mint-ui';
 Vue.prototype.$qs = qs
 Vue.component(Loadmore.name, Loadmore)
 Vue.prototype.$http = axios

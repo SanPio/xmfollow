@@ -20,9 +20,10 @@
                         </p>
                 </div>
                 <!-- 正在跟随列表 -->
-                <div style="overflow-y: scroll;margin-top:125px;">
+                <div style="overflow:scroll; -webkit-overflow-scrolling: touch;margin-top:125px;">
                     <mt-loadmore 
                     :bottom-method="loadBottom" 
+                    :bottom-all-loaded="nowallLoaded"
                     :autoFill="false" ref="loadmores">
                         <div class="nowlist" v-for="(item, ind) in nowArr" :key="ind">
 
@@ -60,9 +61,10 @@
             <mt-tab-container-item id="record">
                 <!-- 此div用于占位 -->
                 <div style="height:46px"></div>
-                 <div style="overflow-y: scroll;">
+                 <div style="overflow:scroll; -webkit-overflow-scrolling: touch">
                     <mt-loadmore 
-                    :bottom-method="hisloadBottom" 
+                    :bottom-method="hisloadBottom"
+                    :bottom-all-loaded="hisallLoaded" 
                     :autoFill="false" ref="loadmore">
 
 
@@ -153,38 +155,117 @@ export default {
             hisProfit: false,
             recordList:["a", "b"],
             recordOpen: [false,false],
-            
+            urlTitle:"",
+            userId: 1,
+            accountId: 1,
+            nowPageNum: 1,
+            hisPageNum: 1,
+            nowallLoaded: false,
+            hisallLoaded: false
         }
     },
-    // created(){
-    //     //初始化数据请求
-    //     this.$http.post('',{    
-    //         name:"virus"  
-    //     }).then(function(res){
-    //         // console.log(res)
-    //     }).catch(function(err){
+    created(){
+        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
+        this.userId = Number(JSON.parse(localStorage.getItem('userId')))   ;
+        this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
+        //初始化数据请求
+                //正在跟随初始化
+        this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
+            params : {
+                // accountId : this.accountId, 
+                accountId : 2, 
+                pageNum: 1,
+                pageSize: 2,
+                userId : 1
+
+            }   
+        }).then((res) => { 
+            console.log(res)         
+            //数据加载完毕停止加载
+            // if(res.data.data.countaccountsid <= this.pageNum*10){
+            //         this.nowallLoaded = true;
+            // }
+
+
+
+
+        }).catch((err) => {
+            console.log(err)
+        });
         
-    //         // console.log(err)
-    //     })
-    // },
+                //跟随记录初始化
+            
+        this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
+            params : {
+                // accountId : this.accountId, 
+                accountId : 2, 
+                pageNum: 1,
+                pageSize: 2,
+                userId : 1
+
+            }   
+        }).then((res) => { 
+            // console.log(res)
+
+
+
+            //数据加载完毕停止加载
+            // if(res.data.data.countaccountsid <= this.pageNum*10){
+            //         this.hisallLoaded = true;
+            // }
+        }).catch((err) => {
+            console.log(err)
+        });
+    },
     methods: {
      
         //正在跟随上拉加载
         loadBottom(){
-            for(let i = 0; i < 4; i ++){
-                this.nowArr.push("x");
-                this.nowOpen.push(false)
-            }
+            this.nowPageNum ++ ;
+                   //正在跟随初始化
+            this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
+                params : {
+                    // accountId : this.accountId, 
+                    accountId : 2, 
+                    pageNum: this.nowPageNum,
+                    pageSize: 10,
+                    userId : 1
+
+                }   
+            }).then((res) => { 
+                // console.log(res)
+                //数据加载完毕停止加载
+            // if(res.data.data.countaccountsid <= this.pageNum*10){
+            //         this.nowallLoaded = true;
+            // }
+            }).catch((err) => {
+                console.log(err)
+            });
             
-            // console.log('上拉加载')
+            console.log('上拉加载')
 
         },
         //跟随记录上拉加载
         hisloadBottom(){
-            for(let i = 0; i < 4; i ++){
-                this.recordList.push("tt")
-                this.recordOpen.push(false)
-            }
+            this.hisPageNum ++;
+            this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
+            params : {
+                // accountId : this.accountId, 
+                accountId : 2, 
+                pageNum: 1,
+                pageSize: 2,
+                userId : 1
+
+            }   
+        }).then((res) => { 
+            // console.log(res)
+            //数据加载完毕停止加载
+            // if(res.data.data.countaccountsid <= this.pageNum*10){
+            //         this.hisallLoaded = true;
+            // }
+        }).catch((err) => {
+            console.log(err)
+        });
             
             // console.log('上拉加载')
 

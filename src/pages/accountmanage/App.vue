@@ -1,9 +1,10 @@
 <template>
     <div id="box">
-        <div style="overflow-y: scroll;background:#fff;">
+        <div style="overflow:scroll; -webkit-overflow-scrolling: touch;background:#fff;">
             <mt-loadmore 
             :bottom-method="loadBottom" 
-            :autoFill="false"  
+            :autoFill="false"
+            :bottom-all-loaded="allLoaded"  
             ref="loadmore">
                 <div ref="mybox">
                     <div class="acclist clearfix" v-for="(item, ind) in infoArr" :key="ind">
@@ -75,6 +76,7 @@
     </div>
 </template>
 <script>
+import { MessageBox } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
@@ -98,7 +100,9 @@ export default {
             downSrcShow:true,
             popUpShow:false,
             infoArr: [],
-            pageNum: 1              
+            pageNum: 1,
+            allLoaded: false,
+            bindtype : 1
         }
     },
     created(){
@@ -117,10 +121,11 @@ export default {
             url: this.urlTitle+'wx/member/accountList',
             data:postData
         }).then((res)=>{
-            console.log(res.data.data.userOrderHistoryManageReponseList)
+            if(res.data.data.countaccountsid <= this.pageNum*10){
+                    this.allLoaded = true;
+            }
             this.infoArr = res.data.data.userOrderHistoryManageReponseList;
-            //结束加载图
-            this.$refs.loadmore.onBottomLoaded();
+         
         }).catch((err) => {
             console.log(err)
         });
@@ -175,6 +180,9 @@ export default {
                 url: this.urlTitle+'wx/member/accountList',
                 data:postData
             }).then((res)=>{
+                if(res.data.data.countaccountsid <= this.pageNum*10){
+                    this.allLoaded = true;
+                }
                 console.log(res.data.data.userOrderHistoryManageReponseList);
                 let resList = res.data.data.userOrderHistoryManageReponseList;
                 let len = res.data.data.userOrderHistoryManageReponseList.length;
@@ -182,7 +190,6 @@ export default {
                 for(let i = 0; i < len; i ++){
                     this.infoArr.push( resList[i] )
                 }
-                cosnole.log(this.infoArr)
                 //结束加载图
                 this.$refs.loadmore.onBottomLoaded();
 
@@ -220,10 +227,21 @@ export default {
         },
         //添加绑定
         addAccount(){
-            //显示遮罩
-            this.$refs.back.style.zIndex=2;
-            this.popUpShow = true;
-            this.confirmShow = true;
+            for(let i = 0; i < this.infoArr.length; i ++){
+                console.log(this.infoArr[i].audit)
+                if(this.infoArr[i].audit == 0){
+                    MessageBox('提示', '您已有账号');
+                    return
+                }else if(this.infoArr[i].audit == 2){
+                    MessageBox('提示', '您的账号正在审核，请稍后');
+                    return 
+                }else{
+                    this.$refs.back.style.zIndex=2;
+                    this.popUpShow = true;
+                    this.confirmShow = true;
+                    return  
+                }
+            }       
         },
         //更新绑定
         updateAccount(ind){
@@ -232,6 +250,17 @@ export default {
             this.popUpShow = true;
             this.confirmShow = false;
             this.updataind = ind;
+            this.remarks = infoArr[ind].name
+            this.platform = infoArr[ind].tradesvr
+
+
+
+
+
+
+
+
+
         },
         //弹窗点击下拉菜单
         pullList(){
@@ -258,7 +287,8 @@ export default {
             
                 data:postData
             }).then((res)=>{
-
+                //刷新页面
+                window.location.reload();
             }).catch((err) => {
                 console.log(err)
             });
@@ -283,6 +313,8 @@ export default {
                 data:postData
             }).then((res)=>{
                 console.log(res)
+                //刷新页面
+                window.location.reload();
 
             }).catch((err) => {
                 console.log(err)
@@ -299,6 +331,9 @@ export default {
 </script>
 <style lang="scss" scoped>
     //列表
+    #box{
+        background-color: #fff;
+    }
     .acclist{
         padding: .28rem .24rem;
         border-bottom: 1px solid #c9c9c9;

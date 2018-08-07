@@ -118,7 +118,7 @@
                     </ul>
                 </div>
             </mt-swipe-item>
-            <mt-swipe-item>
+            <!-- <mt-swipe-item>
                 <p class="swip-title">
                     周期变化表
                 </p>
@@ -128,7 +128,7 @@
                         
                     </div>
                 </div>
-            </mt-swipe-item>
+            </mt-swipe-item> -->
         </mt-swipe> 
         <div id="footer">
             <span @click="toFollowSetting">跟随设置</span>
@@ -241,26 +241,26 @@ export default {
 
 
 
-        //周期变化表
-        let postData = this.$qs.stringify({
-            optionid : this.optionId,
+        // //周期变化表
+        // let postData = this.$qs.stringify({
+        //     optionid : this.optionId,
 
-        });
-        this.$http({
-            method: 'post',
-            url: this.urlTitle+'wx/index/selectSlt',
-            data:postData
-        }).then((res)=>{
-            console.log(res)
+        // });
+        // this.$http({
+        //     method: 'post',
+        //     url: this.urlTitle+'wx/index/selectSlt',
+        //     data:postData
+        // }).then((res)=>{
+        //     console.log(res)
 
 
 
 
  
 
-        }).catch((err) => {
-            console.log(err)
-        });
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
 
 

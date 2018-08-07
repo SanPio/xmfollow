@@ -8,12 +8,14 @@
                     <img :src="userImgSrc" alt="" @click="toPersonInfo">
                 </div>
                 <dl>
-                    <dt >
-                        <span @click="toPersonInfo">我的猫</span>
+                    <dt style="text-align: left;"> 
+                        <span @click="toPersonInfo"> {{info.name}}</span>
                     </dt>
                     <dd>
-                        <span>金牌会员</span>
-                        <span>（剩余360天）</span>
+                        <span v-if="info.meeber==1">认证会员</span>
+                        <span v-if="info.meeber==2">VIP会员</span>
+                        <span v-if="info.meeber==0"> 非会员</span>
+                        <span v-if="info.meeber==1 || info.meeber==2">（剩余{{day}}天）</span>
                     </dd>
                 </dl>
             </div>
@@ -28,7 +30,9 @@
         <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
-                <dd>${{titleInfo[ind]}}k</dd>
+                <dd v-if="ind==0">${{titleInfo[ind]}}</dd>
+                <dd v-if="ind==1">{{titleInfo[ind]}}</dd>
+                <dd v-if="ind==2">${{titleInfo[ind]}}</dd>
             </dl>
         </div>
         <!--Center 跳转部分 -->
@@ -59,8 +63,7 @@
                 <!-- 账号标题 -->
                 <div class="con-tit"  @click="conboxOpenClose(ind)">
                     <p class="con-tit-left">
-                        <span>001002003</span>
-                        <span>账号</span>
+                        <span>{{ accInfo[ind].accountName}}</span>
                     </p>
                     <p class="con-tit-right">
                         <img :src="item ? upSrc : downSrc" alt="">
@@ -74,23 +77,23 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>历史收益</dt>
-                                <dd>$17.43k</dd>
+                                <dd>${{ accInfo[ind].bigDecimal }}</dd>
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].percent }}</dd>
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
-                                <dd>$17.43k</dd>
+                                <dd>${{ accInfo[ind].bigDecimalyu }}</dd>
                             </dl>
                             <dl>
                                 <dt>已用保证金</dt>
-                                <dd>$17.43k</dd>
+                                <dd>${{ accInfo[ind].margin }}</dd>
                             </dl>
                             <dl>
                                 <dt>可用保证金</dt>
-                                <dd>$17.43k</dd>
+                                <dd>${{ accInfo[ind].free_margin }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
@@ -103,23 +106,23 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>持仓单量</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].countOrderid }}</dd>
                             </dl>
                             <dl>
                                 <dt>持仓手数</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].sumlots }}</dd>
                             </dl>
                             <dl>
                                 <dt>获利</dt>
-                                <dd>$17.43k</dd>
+                                <dd>${{ accInfo[ind].sumprofitli }}</dd>
                             </dl>
                             <dl>
-                                <dt>上周获利点数</dt>
-                                <dd>$17.43k</dd>
+                                <dt>上周获利点数</dt> 
+                                <dd>{{ accInfo[ind].zhousymbol }}</dd>
                             </dl>
                             <dl>
                                 <dt>上月获利点数</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].yuesymbol }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
@@ -132,14 +135,15 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>累计跟随</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].countoption }}</dd>
                             </dl>
                             <dl>
                                 <dt>盈利点数</dt>
-                                <dd>$17.43k</dd>
+                                <dd>{{ accInfo[ind].countorder }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>    
+                                <!-- <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>     -->
+                                <dt class="con-box-bot-btn">跟随管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -191,24 +195,112 @@ export default {
             upSrc : require('../../assets/Myhomepage-Arrow@2x.png'),
             downSrc :  require('../../assets/transaction-Arrow@2x.png'),
             titleArr : ['历史收益','收益率','当前余额'],
-            titleInfo : [17.32,1088,1058],
+            titleInfo : [],
             //content区域
             contentShow : true,
+            urlTitle:"",
+            userId : 1,
             //box循环测试
-            accNumArr : [true,false,false,false]
+            accNumArr : [true],
+            info:{},
+            accInfo:[],
+            day : 0
         }
     },
-    // created(){
-    //     //初始化数据请求
-    //     this.$http.post('/wx/member/manager',{    
-    //         userid:"1"  
-    //     }).then(function(res){
-    //         console.log(res)
-    //     }).catch(function(err){
-        
-    //         console.log(err)
-    //     })
-    // },
+    created(){
+        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
+        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
+
+        //初始化数据请求
+        // wx/member/manager
+
+         let postData = this.$qs.stringify({
+
+            userid: this.userId
+        });
+        console.log(postData)
+        this.$http({
+            method: 'post',
+            url: this.urlTitle +'wx/member/manager',
+            data:postData
+        }).then((res)=>{
+            console.log(res.data.data)
+            this.info = res.data.data;
+            this.accInfo = res.data.data.account;
+            console.log(this.accInfo)
+            if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
+                this.dateMinus(res.data.data.overDatetime)
+            }
+            this.titleInfo.push(res.data.data.sumUserprofit);
+            this.titleInfo.push(res.data.data.percentUser);
+            this.titleInfo.push(res.data.data.sumUserprofitYu);
+
+            for(let i = 0; i < res.data.data.account.length-1; i++){
+                this.accNumArr.push(false)
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }).catch((err) => {
+            console.log(err)
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    },
     mounted(){
         //Header组件缩放
         var _this =this; //改变指针，将Vue实例传到闭包
@@ -247,13 +339,25 @@ export default {
         //跳转到跟随管理
         toFollowmange(ind){
             window.location.href="followmange.html";
+        },
+
+
+        //计算会员到期时间
+        
+        dateMinus(sDate){
+            var sdate = new Date(sDate.replace(/-/g, "/"));
+            var now = new Date();
+            var days = sdate.getTime() - now.getTime();
+            var day = parseInt(days / (1000 * 60 * 60 * 24));
+            this.day = day + 1;
         }
-    }   
+    }       
 }
 </script>
 <style lang="scss" scoped>
     //Header上拉后效果
     #header-scroll{
+        
         position: fixed;
         top:0;
         width: 7.1rem;
