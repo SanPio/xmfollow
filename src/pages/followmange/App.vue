@@ -165,9 +165,9 @@ export default {
         }
     },
     created(){
-        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
-        this.userId = Number(JSON.parse(localStorage.getItem('userId')))   ;
-        this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId') ;
+        this.accountId = localStorage.getItem('accountId');
         //初始化数据请求
                 //正在跟随初始化
         this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 

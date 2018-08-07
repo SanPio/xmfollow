@@ -30,9 +30,9 @@
         <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
-                <dd v-if="ind==0">${{titleInfo[ind]}}</dd>
-                <dd v-if="ind==1">{{titleInfo[ind]}}</dd>
-                <dd v-if="ind==2">${{titleInfo[ind]}}</dd>
+                <dd v-if="ind==0">${{titleInfo[0]}}</dd>
+                <dd v-if="ind==1">{{titleInfo[1]}}</dd>
+                <dd v-if="ind==2">${{titleInfo[2]}}</dd>
             </dl>
         </div>
         <!--Center 跳转部分 -->
@@ -59,41 +59,41 @@
 
         <!-- Content各账号详细内容 -->
         <ul id="content" v-if="contentShow">
-            <li v-for="(item,ind) in accNumArr" :key="ind">
+            <li v-for="(item,ind) in accInfo" :key="ind">
                 <!-- 账号标题 -->
                 <div class="con-tit"  @click="conboxOpenClose(ind)">
-                    <p class="con-tit-left">
-                        <span>{{ accInfo[ind].accountName}}</span>
+                    <p class="con-tit-left"> 
+                   <span>{{ item.accountName}}</span>
                     </p>
                     <p class="con-tit-right">
-                        <img :src="item ? upSrc : downSrc" alt="">
+                        <img :src="accNumArr[ind] ? upSrc : downSrc" alt="">
                     </p>
                 </div>
                 <!-- 详细内容 -->
-                <ul v-if="item" class="con-box">
+                <ul v-if="accNumArr[ind]" class="con-box">
                     <!-- 账号资产 -->
                     <li class="con-box-account">
                         <p class="con-box-head" >账号资产</p>
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>历史收益</dt>
-                                <dd>${{ accInfo[ind].bigDecimal }}</dd>
+                                <dd>${{ item.bigDecimal }}</dd>
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
-                                <dd>{{ accInfo[ind].percent }}</dd>
+                                <dd>{{ item.percent }}</dd>
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
-                                <dd>${{ accInfo[ind].bigDecimalyu }}</dd>
+                                <dd>${{ item.bigDecimalyu }}</dd>
                             </dl>
                             <dl>
                                 <dt>已用保证金</dt>
-                                <dd>${{ accInfo[ind].margin }}</dd>
+                                <dd>${{ item.margin }}</dd>
                             </dl>
                             <dl>
                                 <dt>可用保证金</dt>
-                                <dd>${{ accInfo[ind].free_margin }}</dd>
+                                <dd>${{ item.free_margin }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
@@ -106,23 +106,23 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>持仓单量</dt>
-                                <dd>{{ accInfo[ind].countOrderid }}</dd>
+                                <dd>{{ item.countOrderid }}</dd>
                             </dl>
                             <dl>
                                 <dt>持仓手数</dt>
-                                <dd>{{ accInfo[ind].sumlots }}</dd>
+                                <dd>{{ item.sumlots }}</dd>
                             </dl>
                             <dl>
                                 <dt>获利</dt>
-                                <dd>${{ accInfo[ind].sumprofitli }}</dd>
+                                <dd>${{ item.sumprofitli }}</dd>
                             </dl>
                             <dl>
                                 <dt>上周获利点数</dt> 
-                                <dd>{{ accInfo[ind].zhousymbol }}</dd>
+                                <dd>{{ item.zhousymbol }}</dd>
                             </dl>
                             <dl>
                                 <dt>上月获利点数</dt>
-                                <dd>{{ accInfo[ind].yuesymbol }}</dd>
+                                <dd>{{ item.yuesymbol }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
@@ -135,11 +135,11 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>累计跟随</dt>
-                                <dd>{{ accInfo[ind].countoption }}</dd>
+                                <dd>{{ item.countoption }}</dd>
                             </dl>
                             <dl>
                                 <dt>盈利点数</dt>
-                                <dd>{{ accInfo[ind].countorder }}</dd>
+                                <dd>{{ item.countorder }}</dd>
                             </dl>
                             <dl>
                                 <!-- <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>     -->
@@ -208,15 +208,15 @@ export default {
         }
     },
     created(){
-        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
-        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId');
 
         //初始化数据请求
-        // wx/member/manager
 
-         let postData = this.$qs.stringify({
 
-            userid: this.userId
+        let postData = this.$qs.stringify({
+         
+            userid: 1
         });
         console.log(postData)
         this.$http({
@@ -224,7 +224,7 @@ export default {
             url: this.urlTitle +'wx/member/manager',
             data:postData
         }).then((res)=>{
-            console.log(res.data.data)
+            console.log(res)
             this.info = res.data.data;
             this.accInfo = res.data.data.account;
             console.log(this.accInfo)
@@ -237,66 +237,14 @@ export default {
 
             for(let i = 0; i < res.data.data.account.length-1; i++){
                 this.accNumArr.push(false)
+                // this.$set(this.accNumArr,i,false)
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            console.log(this.accNumArr)
 
         }).catch((err) => {
             console.log(err)
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -176,9 +176,9 @@ export default {
     created(){
         var v = this.parseUrl();//解析所有参数
         this.optionId = v['optionId'];
-        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
-        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
-        this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId');
+        this.accountId = localStorage.getItem('accountId');
         //初始化数据请求
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          

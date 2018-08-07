@@ -106,8 +106,8 @@ export default {
         }
     },
     created(){
-        this.urlTitle = JSON.parse(localStorage.getItem('urlTitle'));
-        this.userId = Number(JSON.parse(localStorage.getItem('userId'))) ;
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId');
         // this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
         
         //初始化数据请求

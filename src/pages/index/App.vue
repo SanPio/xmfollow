@@ -157,9 +157,9 @@ export default {
       accountId: 2,
       optionId: [],
       len: 4,
-      urlTitle:"http://192.168.1.11:8080/",
+      // urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
-      // urlTitle:"http://132.232.44.112:80/",
+      urlTitle:"http://www.0539maj.com/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -168,44 +168,25 @@ export default {
   },
   created(){
 
-    // this.$http.get('http://www.0539maj.com/app/wechat/authorize',{ 
-    //         params : {
-          
-    //             returnUrl: 'http://www.0539maj.com/app/wechat/userinfo'
-      
-    //         }   
-    //     }).then((res) => { 
-    //       console.log(res)
-    //     }).catch((err) =>{
-    //       console.log(err)
-    //     })
+    var a=this.GetRequest();
+    var index_1=a['accountsid'];
+    var index_2=a['userid'];
+    this.accountId = index_1;
+    this.userId = index_2;
 
-    // this.$http.get("http://www.0539maj.com/app/wechat/authorize?returnUrl='http://www.0539maj.com/app/wechat/userinfo'").then((res) => {
-
-    //   console.log(res)
-    // })
-
-
-
-
-
-    
     //储存域名端口
-    localStorage.setItem('urlTitle', JSON.stringify(this.urlTitle));
+    localStorage.setItem('urlTitle', this.urlTitle);
     //储存userId
-    localStorage.setItem('userId', JSON.stringify(this.userId));
+    localStorage.setItem('userId', this.userId);
     //储存accountId
-    localStorage.setItem('accountId', JSON.stringify(this.accountId));
+    localStorage.setItem('accountId', this.accountId);
     //初始化数据请求   
        
     },
-   mounted(){
-
-    this.clickrequest(7,1,4,'',1,1)
-
-
-      
-  },
+    mounted(){
+      this.clickrequest(7,1,4,'',1,1);
+      alert("optionID:"+ this.accountId +'userID:'+ this.userId )
+    },
   methods:{
     //加载请求
 
@@ -482,22 +463,24 @@ export default {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         }).catch((err)=>{
           console.log(err)
         })
     },
+
+    GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    },
+
 
     //上拉加载
     loadBottom(){
