@@ -47,16 +47,17 @@
                 <dt>
                     <img :src="orderImgSrc" alt="">
                 </dt>
-                <dd>订单管理</dd>
+                <dd @click="toFollowmange">订单管理</dd>
             </dl>
              <dl>
                 <dt>
                     <img :src="followImgSrc" alt="" @click="toFollowmange">
                 </dt>
                 <dd  @click="toFollowmange">跟随管理</dd>
+                
             </dl>
         </div>
-
+        
         <!-- Content各账号详细内容 -->
         <ul id="content" v-if="contentShow">
             <li v-for="(item,ind) in accInfo" :key="ind">
@@ -174,12 +175,14 @@
     </div>
 </template>
 <script>
+import { MessageBox } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
         return {
             invitImgSrc : require('./assets/Invitation.jpg'),
-            userImgSrc : require('./assets/Myhomepage-clicked@2x.png'),
+            // userImgSrc : require('./assets/Head-portrait.jpg'),
+            userImgSrc : '',
             memberImgSrc : require('./assets/My-home-page-icon1.jpg') ,
             setImgSrc :　require('./assets/Set-up.jpg'),
             numberImgSrc : require('./assets/Account-number.jpg') ,
@@ -217,7 +220,7 @@ export default {
 
         let postData = this.$qs.stringify({
          
-            userid:  this.accountId
+            userid:  this.userId
         });
         console.log(postData)
         this.$http({
@@ -235,6 +238,7 @@ export default {
             this.titleInfo.push(res.data.data.sumUserprofit);
             this.titleInfo.push(res.data.data.percentUser);
             this.titleInfo.push(res.data.data.sumUserprofitYu);
+            this.userImgSrc = res.data.data.image;
 
             for(let i = 0; i < res.data.data.account.length-1; i++){
                 this.accNumArr.push(false)
@@ -287,7 +291,8 @@ export default {
         },
         //跳转到跟随管理
         toFollowmange(ind){
-            window.location.href="followmange.html";
+            // window.location.href="followmange.html";
+          MessageBox('提示', '建设中');
         },
 
 
@@ -324,7 +329,6 @@ export default {
                 height: .72rem;
                 border-radius: 50%;
                 margin: .08rem .2rem 0 0;
-                background-color: red;
             }
             dt{
                 font-weight: 900;

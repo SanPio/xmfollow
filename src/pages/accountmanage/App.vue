@@ -21,8 +21,10 @@
                         </div>
                         <div class="right">
                             <button v-if="item.audit==0" @click="toCourse(ind)">账号历程</button>
-                            <button :class="{'btnBule':(item.audit==1||item.audit==2)}" @click="updateAccount(ind)">更新信息</button>
-                            <button @click="relieve(ind)">解除绑定</button>
+                            <button :class="{'btnBule':(item.audit==1||item.audit==2)}" @click="updateAccount(ind)" v-if="item.issimulated
+==0">更新信息</button>
+                            <button @click="relieve(ind)" v-if="item.issimulated==0">解除绑定</button>
+
                         </div>
                     </div>
                 </div>  
@@ -121,6 +123,10 @@ export default {
             url: this.urlTitle+'wx/member/accountList',
             data:postData
         }).then((res)=>{
+
+            console.log(res)
+
+
             if(res.data.data.countaccountsid <= this.pageNum*10){
                     this.allLoaded = true;
             }
@@ -229,12 +235,16 @@ export default {
         addAccount(){
             for(let i = 0; i < this.infoArr.length; i ++){
                 console.log(this.infoArr[i].audit)
-                if(this.infoArr[i].audit == 0){
+                if(this.infoArr[i].audit == 0 &&this.infoArr[i].issimulated == 0){
                     MessageBox('提示', '您已有账号');
                     return
-                }else if(this.infoArr[i].audit == 2){
+                }else if(this.infoArr[i].audit == 1 &&this.infoArr[i].issimulated == 0){
                     MessageBox('提示', '您的账号正在审核，请稍后');
                     return 
+                }else if( this.infoArr[i].audit == 2 &&this.infoArr[i].issimulated == 0 ){
+                      MessageBox('提示', '您的账号审核失败，请直接更新账号信息');  
+                      return
+                    
                 }else{
                     this.$refs.back.style.zIndex=2;
                     this.popUpShow = true;

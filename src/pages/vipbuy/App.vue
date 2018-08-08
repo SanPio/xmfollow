@@ -36,7 +36,7 @@ export default {
             btnClickedIndex : 0,
             monOrYear : ['月','年'],
             num: 1,
-            money : 500,
+            money : 598,
         }
     },
     // created(){
@@ -62,7 +62,7 @@ export default {
         choseNum(){
            console.log(this.num)
             if(this.btnClickedIndex==0){
-                this.money = this.num * 500;//当选择为月时
+                this.money = this.num * 598;//当选择为月时
             }else if(this.btnClickedIndex==1){
                 this.money = this.num * 998;//当选择为年时
             }

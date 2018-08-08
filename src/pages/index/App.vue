@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-      <div id="header">
+      <div id="header" v-if="false">
         <ul id="title" class="clearfix">
           <li @click="timeshow">
             <span>{{time}}</span>
@@ -67,9 +67,10 @@
                   <dd> {{item.yield}} </dd>
                 </dl>
                 <dl class="pro-loss">
-                  <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
+                  <!-- <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
                   <dt v-if="nearTime==14"> 近两周盈亏点数 </dt>
-                  <dt v-if="nearTime==30"> 近一月盈亏点数 </dt>
+                  <dt v-if="nearTime==30"> 近一月盈亏点数 </dt> -->
+                  <dt > 盈亏点数 </dt>
                   <dd> {{item.profitNo}} </dd>
                 </dl>
                 <dl class="balance">
@@ -121,6 +122,9 @@ require('echarts/lib/chart/line');
 // // 引入提示框和标题组件
 // require('echarts/lib/component/tooltip');
 // require('echarts/lib/component/title');
+// Vue.filter('tonum',function(val){
+//   parseInt(val*100)/100
+// })
 export default {
   name: 'App',
   
@@ -143,7 +147,6 @@ export default {
       imgSrc2: require('./assets/Head-portrait.jpg'),
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
-     
       boxItem: [],
       bottomDistance: 2,
       autoFill: false,
@@ -153,9 +156,9 @@ export default {
       pageSize: 4,
       sortField: '',
       sortType: 1,
-      userId: '',
-      accountId: '',
       optionId: [],
+      userId:1,
+      accountId:1,
       len: 4,
       urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
@@ -171,27 +174,43 @@ export default {
     var a=this.GetRequest();
     var index_1=a['accountsid'];
     var index_2=a['userid'];
-    //  alert("accountsid:"+ index_1 +'userID:'+ index_2 )
-    if(index_1 != "" && index_2 != ""){
+    // //  alert("accountsid:"+ index_1 +'userID:'+ index_2 )
+   
       this.accountId = index_1;
       this.userId = index_2;
       //储存userId
       localStorage.setItem('userId', this.userId);
       //储存accountId
       localStorage.setItem('accountId', this.accountId);
-    }else{
 
-    }
 
     //储存域名端口
     localStorage.setItem('urlTitle', this.urlTitle);
+      //储存userId
+      localStorage.setItem('userId', 1);
+      //储存accountId
+      localStorage.setItem('accountId',3);
+
+
     
     //初始化数据请求   
        
     },
     mounted(){
-      this.clickrequest(7,1,4,'',1,1);
+      this.clickrequest(7,1,10,'',1,1);
     },
+    // filters:{  
+    //   tofixd(value) {  
+    //     return value.toFixed(2)  
+    //   }  
+    // }  ,
+    // filters:{
+    //     tonum(val){
+    //       console.log( typeof val)
+    //       return parseInt(  Number(val) *100)/100
+        
+    //     }
+    // },
   methods:{
     //加载请求
 
@@ -308,7 +327,7 @@ export default {
           this.$nextTick(()=> { //init 你的echarts  
                   
                     // 基于准备好的dom，初始化echarts实例
-                for(let i = 0; i < 4; i++ ){
+                for(let i = 0; i < 10; i++ ){
                     let myChart = echarts.init(document.getElementById(i));
                   // 绘制图表
                   
@@ -437,16 +456,13 @@ export default {
     },
     //点击跟随
 
-
     followMe(ind){
-    
+       
        this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
             params : {
-          
                 userid: this.userId,
-                optionid: this.optionId[ind],
-                accountsid: this.accountId, 
-                
+                optionid: this.optionId[ind] ,
+                accountsid: this.accountId
             }   
         }).then((res) => { 
           // console.log(res)
@@ -461,17 +477,15 @@ export default {
               //绑定
               window.location.href=`accountmanage.html`;
           }
-
-
         console.log(res)
-
-
-
-
         }).catch((err)=>{
           console.log(err)
         })
     },
+
+
+
+
 
     GetRequest() {
         var url = location.search; //获取url中"?"符后的字串

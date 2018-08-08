@@ -358,7 +358,84 @@ export default {
         },
         //到跟随设置页面
         toFollowSetting(){            
-            window.location.href=`followsetting.html?optionId=${this.optionId}`;
+            // window.location.href=`followsetting.html?optionId=${this.optionId}`;
+           
+    
+                        this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
+                                params : {
+                            
+                                    userid: this.userId,
+                                    optionid: this.optionId,
+                                    accountsid: this.accountId, 
+                                    
+                                }   
+                            }).then((res) => { 
+                            // console.log(res)
+                            if( res.data.status == 0 ){
+                                //跟随设置
+                                window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
+                                console.log("  跟随社会自           ")
+
+                            }else if( res.data.status == 1 ){
+                                //购买会员
+                                window.location.href=`vipbuy.html`;
+
+
+
+
+
+
+                                    console.log("    购买         ")
+                            }else if( res.data.status == 2 ){
+                                //绑定
+                                window.location.href=`accountmanage.html`;
+
+
+
+                                    console.log("     分公司答复      ")
+                            }
+
+
+                            console.log(res)
+
+
+
+
+                            }).catch((err)=>{
+                            console.log(err)
+                            })
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         },
         returnBtn(){
             window.location.href="index.html";
