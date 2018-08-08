@@ -112,7 +112,7 @@ export default {
         
         //初始化数据请求
         let postData = this.$qs.stringify({
-            userId:1,
+            userId:this.userId,
             pageNum:1,
             pageSize: 10
         });

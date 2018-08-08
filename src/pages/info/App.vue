@@ -153,7 +153,7 @@ export default {
             userId : 1,
             accountId: 1,
             tableTitleSrc : require('../../assets/table-title.png'),
-            portraitSrc : require('../../assets/Navigate-click.jpg'),
+            portraitSrc : require('./assets/Head-portrait.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
             returnRightSrc : require('./assets/btn-right@2x.png'),
             holdBtnShow : [true,false,true,false,true,false],

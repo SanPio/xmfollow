@@ -140,7 +140,7 @@ export default {
       upSrc : require('./assets/Myhomepage-Arrow@2x.png'),
       downSrc :  require('./assets/transaction-Arrow@2x.png'),
       imgSrc1: require('./assets/transaction-Division@2x.png'),
-      imgSrc2: require('./assets/Myhomepage-Arrow@2x.png'),
+      imgSrc2: require('./assets/Head-portrait.jpg'),
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
      
@@ -153,13 +153,13 @@ export default {
       pageSize: 4,
       sortField: '',
       sortType: 1,
-      userId: 1,
-      accountId: 2,
+      userId: '',
+      accountId: '',
       optionId: [],
       len: 4,
-      // urlTitle:"http://192.168.1.11:8080/",
+      urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
-      urlTitle:"http://www.0539maj.com/app/",
+      // urlTitle:"http://www.0539maj.com/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -171,21 +171,26 @@ export default {
     var a=this.GetRequest();
     var index_1=a['accountsid'];
     var index_2=a['userid'];
-    this.accountId = index_1;
-    this.userId = index_2;
+    //  alert("accountsid:"+ index_1 +'userID:'+ index_2 )
+    if(index_1 != "" && index_2 != ""){
+      this.accountId = index_1;
+      this.userId = index_2;
+      //储存userId
+      localStorage.setItem('userId', this.userId);
+      //储存accountId
+      localStorage.setItem('accountId', this.accountId);
+    }else{
+
+    }
 
     //储存域名端口
     localStorage.setItem('urlTitle', this.urlTitle);
-    //储存userId
-    localStorage.setItem('userId', this.userId);
-    //储存accountId
-    localStorage.setItem('accountId', this.accountId);
+    
     //初始化数据请求   
        
     },
     mounted(){
       this.clickrequest(7,1,4,'',1,1);
-      alert("optionID:"+ this.accountId +'userID:'+ this.userId )
     },
   methods:{
     //加载请求
@@ -473,7 +478,7 @@ export default {
         var theRequest = new Object();
         if (url.indexOf("?") != -1) {
             var str = url.substr(1);
-            strs = str.split("&");
+             var  strs = str.split("&");
             for (var i = 0; i < strs.length; i++) {
                 theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
             }
@@ -632,7 +637,6 @@ export default {
     img{
       width: .74rem;
       height: .74rem;
-      border:1px solid red;
       border-radius: 50%;
 
     }

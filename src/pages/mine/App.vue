@@ -199,24 +199,25 @@ export default {
             //content区域
             contentShow : true,
             urlTitle:"",
-            userId : 1,
+            userId : '',
             //box循环测试
             accNumArr : [true],
             info:{},
             accInfo:[],
-            day : 0
+            day : 0,
+            accountId: ''
         }
     },
     created(){
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
-
+        this.accountId = localStorage.getItem('accountId');
         //初始化数据请求
 
 
         let postData = this.$qs.stringify({
          
-            userid: 1
+            userid:  this.accountId
         });
         console.log(postData)
         this.$http({
@@ -270,7 +271,7 @@ export default {
         },
         //返回到index主页（交易领航）
         toIndex(){
-            window.location.href="index.html";
+            window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
         },
         //跳转到个人信息页
         toPersonInfo(){

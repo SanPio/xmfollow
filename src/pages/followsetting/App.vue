@@ -162,7 +162,6 @@ export default {
     },
     created(){
         this.urlTitle = localStorage.getItem('urlTitle');
-        console.log(this.urlTitle)
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
         var v = this.parseUrl();//解析所有参数
@@ -399,9 +398,9 @@ export default {
                 opposite = 1;
             }
             let postData = this.$qs.stringify({
-                accountId: 1 ,
-                optionId : 1,
-                userId : 1,
+                accountId:  this.accountId,
+                optionId : this.accountId,
+                userId : this.accountId,
                 broundoff: broundoff,
                 lots : lots,
                 lotsType : lotsType,
