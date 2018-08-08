@@ -157,9 +157,9 @@ export default {
       sortField: '',
       sortType: 1,
       optionId: [],
-      userId:1,
-      accountId:1,
-      len: 4,
+      userId:'',
+      accountId:'',
+      len: 10,
       urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
       // urlTitle:"http://www.0539maj.com/app/",
@@ -186,10 +186,7 @@ export default {
 
     //储存域名端口
     localStorage.setItem('urlTitle', this.urlTitle);
-      //储存userId
-      localStorage.setItem('userId', 1);
-      //储存accountId
-      localStorage.setItem('accountId',3);
+      
 
 
     
@@ -457,7 +454,7 @@ export default {
     //点击跟随
 
     followMe(ind){
-       
+       console.log(this.optionId)
        this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
             params : {
                 userid: this.userId,

@@ -173,14 +173,39 @@ export default {
         this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
             params : {
                 // accountId : this.accountId, 
-                accountId : 2, 
+                accountsId : 3, 
                 pageNum: 1,
                 pageSize: 2,
                 userId : 1
 
             }   
         }).then((res) => { 
-            console.log(res)         
+            console.log(res)   
+            
+            
+            this.nowArr = res.data.data.followedReCordRespDtoList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             //数据加载完毕停止加载
             // if(res.data.data.countaccountsid <= this.pageNum*10){
             //         this.nowallLoaded = true;
@@ -195,27 +220,27 @@ export default {
         
                 //跟随记录初始化
             
-        this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
-            params : {
-                // accountId : this.accountId, 
-                accountId : 2, 
-                pageNum: 1,
-                pageSize: 2,
-                userId : 1
+        // this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
+        //     params : {
+        //         // accountId : this.accountId, 
+        //         accountId : 2, 
+        //         pageNum: 1,
+        //         pageSize: 2,
+        //         userId : 1
 
-            }   
-        }).then((res) => { 
-            // console.log(res)
+        //     }   
+        // }).then((res) => { 
+        //     // console.log(res)
 
 
 
-            //数据加载完毕停止加载
-            // if(res.data.data.countaccountsid <= this.pageNum*10){
-            //         this.hisallLoaded = true;
-            // }
-        }).catch((err) => {
-            console.log(err)
-        });
+        //     //数据加载完毕停止加载
+        //     // if(res.data.data.countaccountsid <= this.pageNum*10){
+        //     //         this.hisallLoaded = true;
+        //     // }
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
     },
     methods: {
      

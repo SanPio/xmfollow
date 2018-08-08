@@ -365,7 +365,6 @@ export default {
             img{
                 width: 1.2rem;
                 height: 1.2rem;
-                background-color: red;
                 border-radius: 50%;
                 margin: .26rem .24rem 0 0;
             }
