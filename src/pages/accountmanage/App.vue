@@ -47,12 +47,7 @@
         <!-- 弹窗 -->
         <div class="popup" v-if="popUpShow">
                 <ul class="poptop">
-                    <li>
-                        <span>登录平台</span>
-                        <input type="text" placeholder="请输入交易平台" v-model="platform">
-                        <img :src="downSrcShow?downSrc:upSrc" alt="" @click="pullList" v-if="false">
-                        <ul></ul>
-                    </li>
+                    
                     <li>
                         <span>登录账号</span>
                         <input type="text" placeholder="请输入账号" v-model="account">
@@ -62,12 +57,18 @@
                         <span>登录密码</span>
                         <input type="password" placeholder="请输入密码" v-model="password">
                  
+                    </li
+                    ><li>
+                        <span>服&nbsp;务&nbsp;器&nbsp;</span>
+                        <input type="text" placeholder="请输入账号所属服务器" v-model="platform">
+                        <img :src="downSrcShow?downSrc:upSrc" alt="" @click="pullList" v-if="false">
+                        <ul></ul>
                     </li>
-                    <li>
+                    <!-- <li>
                         <span>账号备注</span>
                         <input type="text" placeholder="请输入备注名称" v-model="remarks">
                 
-                    </li>
+                    </li> -->
                 </ul>
                 <div class="popbot">
                     <button class="confirm" v-if="confirmShow" @click="confirmBind">确认绑定</button>
@@ -116,7 +117,7 @@ export default {
         let postData = this.$qs.stringify({
             userId:this.userId,
             pageNum:1,
-            pageSize: 10
+            pageSize:10
         });
         this.$http({
           method: 'post',
@@ -126,11 +127,19 @@ export default {
 
             console.log(res)
 
-
+            //结束加载图
+            this.$refs.loadmore.onBottomLoaded();
             if(res.data.data.countaccountsid <= this.pageNum*10){
                     this.allLoaded = true;
             }
-            this.infoArr = res.data.data.userOrderHistoryManageReponseList;
+            var length = res.data.data.userOrderHistoryManageReponseList.length;
+            for(let i = 0; i < length; i++){
+                if ( res.data.data.userOrderHistoryManageReponseList[i].issimulated == 0) {
+                    this.infoArr.push(res.data.data.userOrderHistoryManageReponseList[i])
+                }
+            }
+            // this.infoArr = res.data.data.userOrderHistoryManageReponseList
+            console.log(this.infoArr)   
          
         }).catch((err) => {
             console.log(err)
@@ -186,15 +195,20 @@ export default {
                 url: this.urlTitle+'wx/member/accountList',
                 data:postData
             }).then((res)=>{
+                //结束加载图
+                this.$refs.loadmore.onBottomLoaded();
                 if(res.data.data.countaccountsid <= this.pageNum*10){
                     this.allLoaded = true;
                 }
                 console.log(res.data.data.userOrderHistoryManageReponseList);
                 let resList = res.data.data.userOrderHistoryManageReponseList;
                 let len = res.data.data.userOrderHistoryManageReponseList.length;
-                // this.infoArr = res.data.data.userOrderHistoryManageReponseList;
+                
                 for(let i = 0; i < len; i ++){
-                    this.infoArr.push( resList[i] )
+                    if(resList[i].issimulated == 0){
+                        this.infoArr.push( resList[i] )
+                    }
+                    
                 }
                 //结束加载图
                 this.$refs.loadmore.onBottomLoaded();
@@ -211,47 +225,71 @@ export default {
         //解除绑定
         relieve(ind){
             console.log("解除绑定 ")
-        
-            let postData = this.$qs.stringify({
-                accountsid:this.infoArr[ind].accountsid,
-                userid:this.userId,
-            });
-            console.log(postData)
-            this.$http({
-            method: 'post',
-                url: this.urlTitle+'wx/member/delBindAccount',
-                data:postData
-            }).then((res)=>{
-                console.log(res)
-                //结束加载图
-                this.$refs.loadmore.onBottomLoaded();
-            }).catch((err) => {
-                console.log(err)
-            });
-            window.location.reload()
+            MessageBox({
+                cancelButtonText:'确定',
+                confirmButtonText:'取消',
+                title: '解除绑定',
+                message: '您是否要解除账号绑定',
+                showConfirmButton:true,
+                showCancelButton:true
+            }).then(action => { 
+                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                if (action == 'cancel') {     //确认的回调     
+                    let postData = this.$qs.stringify({
+                        accountsid:this.infoArr[ind].accountsid,
+                        userid:this.userId,
+                    });
+                    console.log(postData)
+                    this.$http({
+                    method: 'post',
+                        url: this.urlTitle+'wx/member/delBindAccount',
+                        data:postData
+                    }).then((res)=>{
+                        console.log(res)
+                        window.location.reload()
+                    }).catch((err) => {
+                        console.log(err)
+                        window.location.reload()
+                    });
+                    
+
+                }
+                if (action == 'confirm') {     //确认的回调
+      
+                }
+            })
+
+
 
         },
         //添加绑定
         addAccount(){
-            for(let i = 0; i < this.infoArr.length; i ++){
-                console.log(this.infoArr[i].audit)
-                if(this.infoArr[i].audit == 0 &&this.infoArr[i].issimulated == 0){
-                    MessageBox('提示', '您已有账号');
-                    return
-                }else if(this.infoArr[i].audit == 1 &&this.infoArr[i].issimulated == 0){
-                    MessageBox('提示', '您的账号正在审核，请稍后');
-                    return 
-                }else if( this.infoArr[i].audit == 2 &&this.infoArr[i].issimulated == 0 ){
-                      MessageBox('提示', '您的账号审核失败，请直接更新账号信息');  
-                      return
-                    
-                }else{
-                    this.$refs.back.style.zIndex=2;
-                    this.popUpShow = true;
-                    this.confirmShow = true;
-                    return  
-                }
-            }       
+            if( this.infoArr.length){
+                for(let i = 0; i < this.infoArr.length; i ++){
+                    console.log(this.infoArr[i].audit)
+                    if(this.infoArr[i].audit == 0 &&this.infoArr[i].issimulated == 0){
+                        MessageBox('提示', '您已有账号');
+                        return
+                    }else if(this.infoArr[i].audit == 1 &&this.infoArr[i].issimulated == 0){
+                        MessageBox('提示', '您的账号正在审核，请稍后');
+                        return 
+                    }else if( this.infoArr[i].audit == 2 &&this.infoArr[i].issimulated == 0 ){
+                        MessageBox('提示', '您的账号审核失败，请直接更新账号信息');  
+                        return
+                        
+                    }else{
+                        this.$refs.back.style.zIndex=2;
+                        this.popUpShow = true;
+                        this.confirmShow = true;
+                        return  
+                    }
+                }      
+            }else{
+                this.$refs.back.style.zIndex=2;
+                this.popUpShow = true;
+                this.confirmShow = true;
+            }
+              
         },
         //更新绑定
         updateAccount(ind){
@@ -260,17 +298,8 @@ export default {
             this.popUpShow = true;
             this.confirmShow = false;
             this.updataind = ind;
-            this.remarks = infoArr[ind].name
-            this.platform = infoArr[ind].tradesvr
-
-
-
-
-
-
-
-
-
+            this.remarks = this.infoArr[ind].name
+            this.platform = this.infoArr[ind].tradesvr
         },
         //弹窗点击下拉菜单
         pullList(){
@@ -314,8 +343,8 @@ export default {
                 userId: this.userId,
                 usertradeacts: this.account,
                 usertradepsd: this.password,
-                usertradesvr: this.platform
-                // accountnote: this.remarks
+                usertradesvr: this.platform,
+                accountnote: ''
             });
             this.$http({
             method: 'post',

@@ -136,7 +136,7 @@ export default {
             optionId:1,
             userId: 1,
             accountId: 1,
-            userImgSrc: require('./assets/img2.jpg'),
+            userImgSrc: require('./assets/Head-portrait.jpg'),
             showImgSrc: require('./assets/setting-img.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
             returnRightSrc : require('./assets/btn-right@2x.png'),
@@ -172,7 +172,6 @@ export default {
                 accountId : this.accountId, 
                 optionId : this.optionId,
                 userId : this.userId
-                
             }   
         }).then((res) => { 
             console.log(res.data.data);
@@ -399,8 +398,8 @@ export default {
             }
             let postData = this.$qs.stringify({
                 accountId:  this.accountId,
-                optionId : this.accountId,
-                userId : this.accountId,
+                optionId : this.optionId,
+                userId : this.userId,
                 broundoff: broundoff,
                 lots : lots,
                 lotsType : lotsType,
@@ -416,8 +415,12 @@ export default {
                 url: this.urlTitle+'wx/order/member/followSetting',
                 data:postData
             }).then((res)=>{
-                if(res.data.data.success == true){
-                    window.location.href=`followsetting.html?optionId=${this.optionId}`;
+                console.log(res.data.success)
+                if(res.data.success == true){
+                    //   1.0版本以后跳转到跟随管理
+                    // window.location.href=`followsetting.html?optionId=${this.optionId}`;
+                    //   1.0版本回到主页
+                    window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
                 }
             }).catch((err) => {
                 console.log(err)

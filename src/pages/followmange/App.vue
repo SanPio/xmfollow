@@ -14,9 +14,12 @@
                 <div class="clearfix nowtitle">
                         <p class="left">全局控制</p>
                         <p class="right">
-                            <button @click="allClose">一键平仓</button>
+                            <!-- <button @click="allClose">一键平仓</button>
                             <button v-if="stopOn" @click="stopClick">暂停开仓</button>
-                            <button class="openbtn" v-if="!stopOn" @click="goOn">继续开仓</button>
+                            <button class="openbtn" v-if="!stopOn" @click="goOn">继续开仓</button> -->
+                            <button @click="boxMsg">一键平仓</button>
+                            <button v-if="stopOn" @click="boxMsg">暂停开仓</button>
+                            <button class="openbtn" v-if="!stopOn" @click="boxMsg">继续开仓</button>
                         </p>
                 </div>
                 <!-- 正在跟随列表 -->
@@ -29,29 +32,41 @@
 
                             <div class="litop clearfix" @click="listShow(ind)">
                                 <div class="left lileft">
+                                    <!-- <img :src="item.headImg" alt=""> -->
                                     <img :src="userImgSrc" alt="">
                                 </div>
                                 <div class="left licenter">
-                                    <p class="name">哈哈哈</p>
+                                    <p class="name">
+                                         {{ item.signalName }} 
+                                    </p>
                                     <p class="flownum">
-                                        <span>按比例&nbsp;{{num}}倍</span>
+                                        <span v-if="item.lotsType == 1">按比例&nbsp;{{num}}倍</span>
+                                        <span v-if="item.lotsType == 0">按手数&nbsp;{{num}}手</span>
                                     </p>
                                 </div>
                                 <div class="right liright">
                                     <p >
                                         <span>当前持仓</span>
-                                        <span class="hold">13</span>
+                                        <span class="hold">
+                                            {{ item.optiondetail }}
+                                        </span>
                                     </p>
                                     <p>
                                         <span>当前获利</span>
-                                        <span :class="profit ? 'profit-blue' : 'profit-red' ">$17.85</span>
+                                        <span :class="profit ? 'profit-blue' : 'profit-red' ">
+                                            $ {{ item.nowProfits }}
+                                        </span>
                                     </p>
                                 </div>
                             </div>
                             <p class="libot" v-if="nowOpen[ind]">
-                                <button @click="closeThis(ind)">一键平仓</button>
+                                <!-- 1.0版本不用 -->
+                                <!-- <button @click="closeThis(ind)">一键平仓</button>
                                 <button>订单管理</button>
-                                <button @click="toFollowSetting(ind)">跟随设置</button>
+                                <button @click="toFollowSetting(ind)">跟随设置</button> -->
+                                <button @click="boxMsg">一键平仓</button>
+                                <button @click="boxMsg">订单管理</button>
+                                <button @click="boxMsg">跟随设置</button>
                             </p>  
                         </div>
                     </mt-loadmore>
@@ -143,13 +158,13 @@ export default {
             nowTotal: 18,
             recordTotal: 30,
             num : 0.05,
-            userImgSrc: require('./assets/img2.jpg'),
+            userImgSrc: require('./assets/Head-portrait.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
             returnRightSrc : require('./assets/btn-right@2x.png'),
             stopOn: true,
             //正在跟随获利为正
             profit: true,
-            nowArr:["a", "b"],
+            nowArr:[],
             nowOpen: [false,false],
             // 跟随记录
             hisProfit: false,
@@ -172,48 +187,19 @@ export default {
                 //正在跟随初始化
         this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
             params : {
-                // accountId : this.accountId, 
-                accountsId : 3, 
+                accountsId : this.accountId, 
+                userId : this.userId,
                 pageNum: 1,
-                pageSize: 2,
-                userId : 1
-
+                pageSize: 10
             }   
         }).then((res) => { 
-            console.log(res)   
-            
-            
+            console.log(res); 
+            //结束加载图
+            this.$refs.loadmores.onBottomLoaded(); 
+            if (res.data.data.sumoptionid <= 10) {
+                this.nowallLoaded = true;
+            } 
             this.nowArr = res.data.data.followedReCordRespDtoList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //数据加载完毕停止加载
-            // if(res.data.data.countaccountsid <= this.pageNum*10){
-            //         this.nowallLoaded = true;
-            // }
-
-
-
-
         }).catch((err) => {
             console.log(err)
         });
@@ -243,26 +229,28 @@ export default {
         // });
     },
     methods: {
-     
+        //1.0版本弹出建设中
+        boxMsg(){
+            MessageBox('提示', '建设中');
+        },
         //正在跟随上拉加载
         loadBottom(){
             this.nowPageNum ++ ;
                    //正在跟随初始化
             this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
                 params : {
-                    // accountId : this.accountId, 
-                    accountId : 2, 
+                    accountsId : this.accountId, 
+                    userId : this.userId,
                     pageNum: this.nowPageNum,
                     pageSize: 10,
-                    userId : 1
-
                 }   
             }).then((res) => { 
-                // console.log(res)
-                //数据加载完毕停止加载
-            // if(res.data.data.countaccountsid <= this.pageNum*10){
-            //         this.nowallLoaded = true;
-            // }
+                //结束加载图
+                this.$refs.loadmores.onBottomLoaded();
+                if (res.data.data.sumoptionid <= this.nowPageNum*10) {
+                    this.nowallLoaded = true;
+                } 
+                this.nowArr = this.nowArr.concat( res.data.data.followedReCordRespDtoList );
             }).catch((err) => {
                 console.log(err)
             });

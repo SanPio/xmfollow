@@ -64,7 +64,7 @@
                 </dl>
                 <dl>
                   <dt> 交易收益率</dt>
-                  <dd> {{item.yield}} </dd>
+                  <dd> {{item.yield}}%</dd>
                 </dl>
                 <dl class="pro-loss">
                   <!-- <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
@@ -160,9 +160,9 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      urlTitle:"http://192.168.1.11:8080/",
+      // urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
-      // urlTitle:"http://www.0539maj.com/app/",
+      urlTitle:"http://www.0539maj.com/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -182,12 +182,13 @@ export default {
       localStorage.setItem('userId', this.userId);
       //储存accountId
       localStorage.setItem('accountId', this.accountId);
-
-
-    //储存域名端口
-    localStorage.setItem('urlTitle', this.urlTitle);
+      //储存域名端口
+      localStorage.setItem('urlTitle', this.urlTitle);
       
-
+         //储存userId
+  //     localStorage.setItem('userId', 2);
+  //     //储存accountId
+  //     localStorage.setItem('accountId', 127);
 
     
     //初始化数据请求   
@@ -198,7 +199,7 @@ export default {
     },
     // filters:{  
     //   tofixd(value) {  
-    //     return value.toFixed(2)  
+    //     return   parseInt(value*100) /100
     //   }  
     // }  ,
     // filters:{

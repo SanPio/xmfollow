@@ -5,11 +5,15 @@
             <!-- 账号名称 -->
             <div class="head-left">
                 <div>
-                    <img :src="userImgSrc" alt="" @click="toPersonInfo">
+                    <!-- 点击编辑个人信息功能1.0不上线 -->
+                    <!-- <img :src="userImgSrc" alt="" @click="toPersonInfo"> -->
+                    <img :src="userImgSrc" alt="" >
                 </div>
                 <dl>
                     <dt style="text-align: left;"> 
-                        <span @click="toPersonInfo"> {{info.name}}</span>
+                        <!-- 点击编辑个人信息功能1.0不上线 -->
+                        <!-- <span @click="toPersonInfo"> {{info.name}}</span> -->
+                        <span > {{info.name}}</span>
                     </dt>
                     <dd>
                         <span v-if="info.meeber==1">认证会员</span>
@@ -31,7 +35,7 @@
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
                 <dd v-if="ind==0">${{titleInfo[0]}}</dd>
-                <dd v-if="ind==1">{{titleInfo[1]}}</dd>
+                <dd v-if="ind==1">{{titleInfo[1]}}%</dd>
                 <dd v-if="ind==2">${{titleInfo[2]}}</dd>
             </dl>
         </div>
@@ -82,7 +86,7 @@
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
-                                <dd>{{ item.percent }}</dd>
+                                <dd>{{ item.percent }}%</dd>
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
@@ -255,16 +259,16 @@ export default {
 
     },
     mounted(){
-        //Header组件缩放
-        var _this =this; //改变指针，将Vue实例传到闭包
-        window.addEventListener('scroll',function(){
-            var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//监听滚动高度
-            if(scrollTop>14){
-                _this.headerOnOff = false; //Header收缩
-            }else{
-                _this.headerOnOff = true; //Header展开
-            }
-       })
+    //     //Header组件缩放
+    //     var _this =this; //改变指针，将Vue实例传到闭包
+    //     window.addEventListener('scroll',function(){
+    //         var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//监听滚动高度
+    //         if(scrollTop>14){
+    //             _this.headerOnOff = false; //Header收缩
+    //         }else{
+    //             _this.headerOnOff = true; //Header展开
+    //         }
+    //    })
         
     },
     methods: {
@@ -310,47 +314,47 @@ export default {
 </script>
 <style lang="scss" scoped>
     //Header上拉后效果
-    #header-scroll{
+    // #header-scroll{
         
-        position: fixed;
-        top:0;
-        width: 7.1rem;
-        font-size: .26rem;
-        height: .88rem;
-        background-color: #4fa2fe;
-        color: #ffffff;
-        padding: 0 .22rem;
-        display: flex;
-        justify-content: space-between;
-        .head-left{
-            display: flex;
-            img{
-                width: .72rem;
-                height: .72rem;
-                border-radius: 50%;
-                margin: .08rem .2rem 0 0;
-            }
-            dt{
-                font-weight: 900;
-                font-size: .28rem;
-                line-height: .48rem;
-            }
-            dd{
-                font-size: .2rem;
-                line-height: .2rem;
-            }
-        }
-        .head-right{
-            width: 2rem;
-            display: flex;
-            justify-content: space-between;
-            img{
-                margin-top: .24rem;
-                width: .36rem;
-                height: .36rem;
-            }
-        } 
-    }
+    //     position: fixed;
+    //     top:0;
+    //     width: 7.1rem;
+    //     font-size: .26rem;
+    //     height: .88rem;
+    //     background-color: #4fa2fe;
+    //     color: #ffffff;
+    //     padding: 0 .22rem;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     .head-left{
+    //         display: flex;
+    //         img{
+    //             width: .72rem;
+    //             height: .72rem;
+    //             border-radius: 50%;
+    //             margin: .08rem .2rem 0 0;
+    //         }
+    //         dt{
+    //             font-weight: 900;
+    //             font-size: .28rem;
+    //             line-height: .48rem;
+    //         }
+    //         dd{
+    //             font-size: .2rem;
+    //             line-height: .2rem;
+    //         }
+    //     }
+    //     .head-right{
+    //         width: 2rem;
+    //         display: flex;
+    //         justify-content: space-between;
+    //         img{
+    //             margin-top: .24rem;
+    //             width: .36rem;
+    //             height: .36rem;
+    //         }
+    //     } 
+    // }
     //Header上拉前效果
     #header{
         font-size: .26rem;
