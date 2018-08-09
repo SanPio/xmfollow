@@ -64,7 +64,7 @@
                 </dl>
                 <dl>
                   <dt> 交易收益率</dt>
-                  <dd> {{item.yield}}%</dd>
+                  <dd> {{item.yield | tonum}}%</dd>
                 </dl>
                 <dl class="pro-loss">
                   <!-- <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
@@ -161,8 +161,8 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.1.11:8080/",
-      // urlTitle:"http://192.168.1.6:80/",
-      urlTitle:"http://www.0539maj.com/app/",
+      urlTitle:"http://192.168.1.6:80/",
+      // urlTitle:"http://www.0539maj.com/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -186,10 +186,10 @@ export default {
       localStorage.setItem('urlTitle', this.urlTitle);
       
          //储存userId
-  //     localStorage.setItem('userId', 2);
-  //     //储存accountId
-  //     localStorage.setItem('accountId', 127);
-
+      localStorage.setItem('userId', 2);
+      //储存accountId
+      localStorage.setItem('accountId', 127);
+      
     
     //初始化数据请求   
        
@@ -202,13 +202,13 @@ export default {
     //     return   parseInt(value*100) /100
     //   }  
     // }  ,
-    // filters:{
-    //     tonum(val){
-    //       console.log( typeof val)
-    //       return parseInt(  Number(val) *100)/100
+    filters:{
+        tonum(val){
+          console.log( typeof val)
+          return parseInt(  Number(val) *100)/100
         
-    //     }
-    // },
+        }
+    },
   methods:{
     //加载请求
 
@@ -285,8 +285,7 @@ export default {
           this.$refs.loadmore.onBottomLoaded();
           
       }).catch((err)=>{  
-          //结束加载图
-          this.$refs.loadmore.onBottomLoaded();
+          console.log(err)
       })
     },
       //点击请求
@@ -304,7 +303,9 @@ export default {
           url: this.urlTitle+'wx/index/list',
           data:postData
       }).then((res)=>{
-          console.log(res)
+        console.log(res.data.data)
+        console.log(5555555)
+          // console.log(res.data.data.listp[0].yield)
           if(res.data.data.total <= pageNum*pageSize){
              this.allLoaded = true;//数据全部加载完毕
           }
@@ -338,7 +339,8 @@ export default {
                           // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                       },
                       yAxis: {  
-                          show:false
+                          show:false,
+                          scale:true,
                       },
                       grid : {
                         left:0,
