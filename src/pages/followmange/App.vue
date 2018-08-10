@@ -93,15 +93,18 @@
                                 <img :src="userImgSrc" alt="">
                             </div>
                             <div class="left listcenter">
-                                <p class="name">哈哈哈</p>
+                                <p class="name">
+                                    {{ item.name }}
+                                </p>
                                 <p class="flownum">
-                                    <span>按比例&nbsp;{{num}}倍</span>
+                                    <span v-if="item.lotsType == 1">按比例&nbsp;{{ item.lots }}倍</span>
+                                    <span v-if="item.lotsType == 0">按手数&nbsp;{{ item.lots }}手</span>
                                 </p>
                             </div>
                             <div class="right listright">
                                 <p>
                                     <span>累计获利</span>
-                                    <span :class="hisProfit ? 'profit-blue' : 'profit-red'">$17.85</span>
+                                    <span :class="item.yingli>0 ? 'profit-blue' : 'profit-red'">${{ item.yingli }}</span>
                                 </p>
                             </div>
                         </div>
@@ -110,25 +113,25 @@
                             <div class="listbot-left left">
                                 <p>
                                     <span>当前跟单数量</span>
-                                    <span>13</span>
+                                    <span> {{ item.countoptionid }}</span>
                                 </p>
                                 <p>
                                     <span>当前获利</span>
-                                    <span>$17.85</span>
+                                    <span>${{ item.leiji }}</span>
                                 </p>
-                                <p>
+                                <!-- <p>
                                     <span>开始跟随时间</span>
                                     <span>2018-01-13</span>
-                                </p>
+                                </p> -->
                             </div>
                             <div class="listbot-right right">
                                 <p>
                                     <span>累计跟单数量</span>
-                                    <span>263</span>
+                                    <span> {{ item.countlishi }} </span>
                                 </p>
                                 <p>
                                     <span>累计获利</span>
-                                    <span>$17.853</span>
+                                    <span>$ {{ item.yingli }} </span>
                                 </p>
                             </div>
                         </div>
@@ -193,7 +196,6 @@ export default {
                 pageSize: 10
             }   
         }).then((res) => { 
-            console.log(res); 
             //结束加载图
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
@@ -206,27 +208,23 @@ export default {
         
                 //跟随记录初始化
             
-        // this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
-        //     params : {
-        //         // accountId : this.accountId, 
-        //         accountId : 2, 
-        //         pageNum: 1,
-        //         pageSize: 2,
-        //         userId : 1
-
-        //     }   
-        // }).then((res) => { 
-        //     // console.log(res)
-
-
-
-        //     //数据加载完毕停止加载
-        //     // if(res.data.data.countaccountsid <= this.pageNum*10){
-        //     //         this.hisallLoaded = true;
-        //     // }
-        // }).catch((err) => {
-        //     console.log(err)
-        // });
+        this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
+            params : {
+                accountSid : this.accountId, 
+                pageNum: 1,
+                pageSize: 10,
+                userId : this.userId
+            }   
+        }).then((res) => { 
+            //结束加载图
+            this.$refs.loadmore.onBottomLoaded();
+            if(res.data.data.countoptionids <= 10){
+                this.hisallLoaded = true;
+            }
+            this.recordList = res.data.data.followedReCordRespDtoList;
+        }).catch((err) => {
+            console.log(err)
+        });
     },
     methods: {
         //1.0版本弹出建设中
@@ -263,19 +261,18 @@ export default {
             this.hisPageNum ++;
             this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
             params : {
-                // accountId : this.accountId, 
-                accountId : 2, 
-                pageNum: 1,
-                pageSize: 2,
-                userId : 1
+                accountSid : this.accountId, 
+                pageNum: this.hisPageNum,
+                pageSize: 10,
+                userId : this.userId
 
             }   
         }).then((res) => { 
-            // console.log(res)
-            //数据加载完毕停止加载
-            // if(res.data.data.countaccountsid <= this.pageNum*10){
-            //         this.hisallLoaded = true;
-            // }
+            this.$refs.loadmore.onBottomLoaded();
+            if(res.data.data.countoptionids <= this.hisPageNum *10){
+                this.hisallLoaded = true;
+            }
+            this.recordList =this.recordList.concat(  res.data.data.followedReCordRespDtoList );
         }).catch((err) => {
             console.log(err)
         });

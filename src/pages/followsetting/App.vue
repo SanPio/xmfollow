@@ -8,12 +8,12 @@
                 </div>
                 <dl class="right">
                     <dt> {{ followInfo.signalName }} </dt>
-                    <dd>
+                    <dd v-if="followInfo.qubie != 1">
                         <span> {{ followInfo.lotsTypeStr }}&nbsp;{{followInfo.lots}}</span>
                         <span v-if="followInfo.lotsTypeStr=='按比例'">倍</span>
                         <span v-if="followInfo.lotsTypeStr=='按手数'">手</span>
                         <span class="incomeTitle">跟随收益</span>
-                        <span class="income" :class="{'redcolor':redcolor}" > ${{followInfo.profitTotal}} </span>
+                        <span class="income" :class="{'redcolor':redcolor}" > {{"$" + followInfo.profitTotal}} </span>
                     </dd>
                 </dl>
             </div>
@@ -180,7 +180,7 @@ export default {
             this.lotsType = res.data.data.lotsType;
             this.takeProfits = res.data.data.takeProfits;
             this.stopLoss = res.data.data.stopLoss;
-            this.followNum = res.data.data.lots
+            this.followNum = res.data.data.lots;
             //固定跟随还是手数跟随
             if(res.data.data.lotsTypeStr == "按比例"){
                 this.clickBtn = true;

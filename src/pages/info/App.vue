@@ -131,7 +131,8 @@
             </mt-swipe-item> -->
         </mt-swipe> 
         <div id="footer">
-            <span @click="toFollowSetting">跟随设置</span>
+            
+            <button @click="toFollowSetting"> 跟随设置 </button>
         </div>
         <!-- <div id="bottom">
             <div id="bot-center">
@@ -213,7 +214,7 @@ export default {
                 pageNum  : 1,
                 pageSize : 6,
                 optionId : this.optionId,
-                userId : Number(this.userId )
+                userId : this.userId 
             }      
         }).then((res) => {
           
@@ -230,7 +231,7 @@ export default {
                 pageNum  : 1,
                 pageSize : 6,
                 optionId : this.optionId,
-                userId : Number(this.userId )
+                userId : this.userId 
             }      
         }).then((res) => {
              this.holdArr = res.data.data.list;  
@@ -363,78 +364,26 @@ export default {
     
                         this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
                                 params : {
-                            
                                     userid: this.userId,
                                     optionid: this.optionId,
-                                    accountsid: this.accountId, 
-                                    
+                                    accountsid: this.accountId,    
                                 }   
                             }).then((res) => { 
                             // console.log(res)
                             if( res.data.status == 0 ){
                                 //跟随设置
                                 window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
-                                console.log("  跟随社会自           ")
-
                             }else if( res.data.status == 1 ){
                                 //购买会员
                                 window.location.href=`vipbuy.html`;
-
-
-
-
-
-
-                                    console.log("    购买         ")
                             }else if( res.data.status == 2 ){
                                 //绑定
                                 window.location.href=`accountmanage.html`;
-
-
-
-                                    console.log("     分公司答复      ")
                             }
-
-
                             console.log(res)
-
-
-
-
                             }).catch((err)=>{
                             console.log(err)
                             })
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         },
         returnBtn(){
@@ -597,10 +546,19 @@ export default {
         margin-top: 2rem;
         height: 1rem;
         text-align: center;
-        color: #4fa2fe;
+        
         font-size: .36rem;
         line-height: 1rem;
         font-weight: 900;
+        button{
+           color: #fff; 
+           background-color: #4fa2fe;
+           width: 5rem;
+           padding: .2rem;
+           outline: none;
+           border:none;
+           border-radius: .1rem;
+        }
         // border-bottom: 1px solid #dbdbdb;
     }
     

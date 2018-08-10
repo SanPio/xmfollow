@@ -419,12 +419,15 @@ export default {
             text-align: center;
             border-top: 1px solid #c9c9c9;
             button{
-                background-color: #fff;
-                color: #4fa2fe;
+                background-color: #4fa2fe;
+                color: #fff;
                 font-weight: 900;
                 font-size: .44rem;
                 border: none;
-                line-height: 1.6rem;
+                padding: .2rem;
+                width: 5rem;
+                border-radius: .1rem;
+                margin-top: .3rem;
             }
             
         }

@@ -147,8 +147,7 @@
                                 <dd>{{ item.countorder }}</dd>
                             </dl>
                             <dl>
-                                <!-- <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>     -->
-                                <dt class="con-box-bot-btn">跟随管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -295,10 +294,12 @@ export default {
         },
         //跳转到跟随管理
         toFollowmange(ind){
-            // window.location.href="followmange.html";
+            window.location.href="followmange.html";
+        },
+        //跳转到订单管理
+        toOrder(ind){   
           MessageBox('提示', '建设中');
         },
-
 
         //计算会员到期时间
         
