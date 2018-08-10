@@ -40,8 +40,8 @@
                                          {{ item.signalName }} 
                                     </p>
                                     <p class="flownum">
-                                        <span v-if="item.lotsType == 1">按比例&nbsp;{{num}}倍</span>
-                                        <span v-if="item.lotsType == 0">按手数&nbsp;{{num}}手</span>
+                                        <span v-if="item.lotsType == 1">按比例&nbsp;{{ item.lots }}倍</span>
+                                        <span v-if="item.lotsType == 0">按手数&nbsp;{{ item.lots }}手</span>
                                     </p>
                                 </div>
                                 <div class="right liright">
@@ -158,8 +158,8 @@ export default {
         return {
             selected: 'now',
             fixed:true,
-            nowTotal: 18,
-            recordTotal: 30,
+            nowTotal: 0,
+            recordTotal: 0,
             num : 0.05,
             userImgSrc: require('./assets/Head-portrait.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
@@ -202,6 +202,10 @@ export default {
                 this.nowallLoaded = true;
             } 
             this.nowArr = res.data.data.followedReCordRespDtoList;
+            if(res.data.data.sumoptionid){
+                this.nowTotal = res.data.data.sumoptionid
+            }
+            
         }).catch((err) => {
             console.log(err)
         });
@@ -220,6 +224,9 @@ export default {
             this.$refs.loadmore.onBottomLoaded();
             if(res.data.data.countoptionids <= 10){
                 this.hisallLoaded = true;
+            }
+            if(res.data.data.countoptionids){
+                this.recordTotal = res.data.data.countoptionids
             }
             this.recordList = res.data.data.followedReCordRespDtoList;
         }).catch((err) => {

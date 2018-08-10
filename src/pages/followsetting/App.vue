@@ -13,7 +13,7 @@
                         <span v-if="followInfo.lotsTypeStr=='按比例'">倍</span>
                         <span v-if="followInfo.lotsTypeStr=='按手数'">手</span>
                         <span class="incomeTitle">跟随收益</span>
-                        <span class="income" :class="{'redcolor':redcolor}" > {{"$" + followInfo.profitTotal}} </span>
+                        <span class="income" :class="{'redcolor':redcolor}" v-if="followInfo.profitTotal"> {{"$" + followInfo.profitTotal}} </span>
                     </dd>
                 </dl>
             </div>
@@ -145,7 +145,7 @@ export default {
             followNum : 0,
             clickBtn: true,
             followOnOff: true,
-            reverseOnOff : true,
+            reverseOnOff : false,
             handsNumArr: ["1","0.1","0.01"],
             handsNum: 0,
             abandonShow: true,

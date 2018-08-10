@@ -19,7 +19,7 @@
             </p>   
         </div>
         <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9">
-            <mt-swipe-item>
+            <!-- <mt-swipe-item>
                 <p class="swip-title">
                     持仓信息
                 </p>
@@ -66,7 +66,7 @@
                         </li>
                     </ul>
                 </div>
-            </mt-swipe-item>
+            </mt-swipe-item> -->
             <mt-swipe-item>
                 <p class="swip-title">
                     主要信息
@@ -189,7 +189,12 @@ export default {
             this.mianInfo.push(res.data.data.experience);
             this.mianInfo.push('$' + res.data.data.money);
             this.mianInfo.push(res.data.data.yield);
-            this.mianInfo.push( '$' + res.data.data.initFunds);
+            if(res.data.data.initFunds){
+                this.mianInfo.push( '$' + res.data.data.initFunds);
+            }else{
+                this.mianInfo.push(0)
+            }
+            
             this.mianInfo.push(res.data.data.profitNo);
             this.mianInfo.push(res.data.data.followerNumber);
             this.mianInfo.push(res.data.data.firstOrder);
@@ -208,37 +213,37 @@ export default {
             console.log(err)
         });
 
-            //历史记录
-        this.$http.get(this.urlTitle+'wx/order/trader/'+ v['optionId'] +'/history',{  
-            params : { 
-                pageNum  : 1,
-                pageSize : 6,
-                optionId : this.optionId,
-                userId : this.userId 
-            }      
-        }).then((res) => {
+        //     //历史记录
+        // this.$http.get(this.urlTitle+'wx/order/trader/'+ v['optionId'] +'/history',{  
+        //     params : { 
+        //         pageNum  : 1,
+        //         pageSize : 6,
+        //         optionId : this.optionId,
+        //         userId : this.userId 
+        //     }      
+        // }).then((res) => {
           
-            this.hisArr = res.data.data.list;
+        //     this.hisArr = res.data.data.list;
            
             
-        }).catch((err) => {
-            console.log(err)
-        });
-        //持仓信息
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
+        // //持仓信息
 
-        this.$http.get(this.urlTitle+'wx/order/trader/'+this.optionId+'/traderNowOrders',{  
-            params : { 
-                pageNum  : 1,
-                pageSize : 6,
-                optionId : this.optionId,
-                userId : this.userId 
-            }      
-        }).then((res) => {
-             this.holdArr = res.data.data.list;  
+        // this.$http.get(this.urlTitle+'wx/order/trader/'+this.optionId+'/traderNowOrders',{  
+        //     params : { 
+        //         pageNum  : 1,
+        //         pageSize : 6,
+        //         optionId : this.optionId,
+        //         userId : this.userId 
+        //     }      
+        // }).then((res) => {
+        //      this.holdArr = res.data.data.list;  
             
-        }).catch((err) => {
-            console.log(err)
-        });
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
 
 
@@ -274,64 +279,64 @@ export default {
 
     },
     mounted(){
-        let myChart = echarts.init(document.getElementById('cycle'));
-        myChart.setOption({
-            tooltip : {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['充值','消费']
-            },
-            calculable : true,
-            xAxis : [
-                {
-                    axisLabel:{
-                        //x轴字体倾斜
-                        // rotate: 30,
-                        interval:0
-                    },
-                    axisLine:{
-                        lineStyle :{
-                            color: '#000000'
-                        }
-                    },
-                    type : 'category',
-                    boundaryGap : false,
-                    data :["2.1","2.2","2.3","2.4","2.5","2.6","2.7"]
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value',
-                    axisLine:{
-                        lineStyle :{
-                            color: '#000000'
-                        }
-                    }
-                }
-            ],
-            series : [
-                {
-                    name:'充值',
-                    type:'line',
-                    symbol:'none',
-                    smooth: 0.2,
-                    color:['#44abfa'],
-                    data:[20,10,30,50,500]
-                },
-                {
-                    name:'消费',
-                    type:'line',
-                    symbol:'none',
-                    smooth: 0.2,
-                    color:['#ff7c2b'],
-                    data:[5,9,80,60,42]
-                }
-            ],
-            grid : {
-                top : '20px'
-            }
-        })
+        // let myChart = echarts.init(document.getElementById('cycle'));
+        // myChart.setOption({
+        //     tooltip : {
+        //         trigger: 'axis'
+        //     },
+        //     legend: {
+        //         data:['充值','消费']
+        //     },
+        //     calculable : true,
+        //     xAxis : [
+        //         {
+        //             axisLabel:{
+        //                 //x轴字体倾斜
+        //                 // rotate: 30,
+        //                 interval:0
+        //             },
+        //             axisLine:{
+        //                 lineStyle :{
+        //                     color: '#000000'
+        //                 }
+        //             },
+        //             type : 'category',
+        //             boundaryGap : false,
+        //             data :["2.1","2.2","2.3","2.4","2.5","2.6","2.7"]
+        //         }
+        //     ],
+        //     yAxis : [
+        //         {
+        //             type : 'value',
+        //             axisLine:{
+        //                 lineStyle :{
+        //                     color: '#000000'
+        //                 }
+        //             }
+        //         }
+        //     ],
+        //     series : [
+        //         {
+        //             name:'充值',
+        //             type:'line',
+        //             symbol:'none',
+        //             smooth: 0.2,
+        //             color:['#44abfa'],
+        //             data:[20,10,30,50,500]
+        //         },
+        //         {
+        //             name:'消费',
+        //             type:'line',
+        //             symbol:'none',
+        //             smooth: 0.2,
+        //             color:['#ff7c2b'],
+        //             data:[5,9,80,60,42]
+        //         }
+        //     ],
+        //     grid : {
+        //         top : '20px'
+        //     }
+        // })
     },
     methods: {
         //接受交易领航跳转参数
@@ -372,7 +377,7 @@ export default {
                             // console.log(res)
                             if( res.data.status == 0 ){
                                 //跟随设置
-                                window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
+                                window.location.href=`followsetting.html?optionId=${this.optionId}`;
                             }else if( res.data.status == 1 ){
                                 //购买会员
                                 window.location.href=`vipbuy.html`;

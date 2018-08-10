@@ -162,7 +162,8 @@ export default {
       len: 10,
       // urlTitle:"http://192.168.1.11:8080/",
       // urlTitle:"http://192.168.1.6:80/",
-      urlTitle:"http://www.0539maj.com/app/",
+      // urlTitle:"http://www.0539maj.com/app/",
+      urlTitle:"http://132.232.44.112:80/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -185,10 +186,7 @@ export default {
       //储存域名端口
       localStorage.setItem('urlTitle', this.urlTitle);
       
-      //    //储存userId
-      // localStorage.setItem('userId', 1);
-      // //储存accountId
-      // localStorage.setItem('accountId', 90);
+
       
     
     //初始化数据请求   
@@ -204,7 +202,7 @@ export default {
     // }  ,
     filters:{
         tonum(val){
-          console.log( typeof val)
+          
           return parseInt(  Number(val) *100)/100
         
         }
