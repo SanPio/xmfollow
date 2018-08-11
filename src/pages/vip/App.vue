@@ -117,14 +117,13 @@ export default {
             if (typeof WeixinJSBridge == "undefined"){
                 if( document.addEventListener ){
                     document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-                    console.log(1111111)
                 }else if (document.attachEvent){  
                     document.attachEvent('WeixinJSBridgeReady', onBridgeReady);                 
                     document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);             
                 }
             }else{
-                this.onBridgeReady();
-                console.log(45555555)
+                //暂不使用   微信功能 ，后期开放
+                // this.onBridgeReady();
             }
         },
         onBridgeReady(){
@@ -193,8 +192,7 @@ export default {
             img{
                 display: block;
                 width: 100%;
-            }
-            
+            } 
         }
         .time{
             padding: .2rem 0;
