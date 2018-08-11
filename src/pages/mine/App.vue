@@ -26,7 +26,7 @@
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="">
-                <img :src="memberImgSrc" alt="" @click="toVIPBuy">
+                <img :src="memberImgSrc" alt="">
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <dt>
                     <img :src="orderImgSrc" alt="">
                 </dt>
-                <dd @click="toFollowmange">订单管理</dd>
+                <dd @click="toOrder">订单管理</dd>
             </dl>
              <dl>
                 <dt>
@@ -143,7 +143,7 @@
                                 <dd>{{ item.countoption }}</dd>
                             </dl>
                             <dl>
-                                <dt>盈利点数</dt>
+                                <dt>盈利单数</dt>
                                 <dd>{{ item.countorder }}</dd>
                             </dl>
                             <dl>
@@ -188,9 +188,13 @@ export default {
             userImgSrc : '',
             memberImgSrc : require('./assets/My-home-page-icon1.jpg') ,
             setImgSrc :　require('./assets/Set-up.jpg'),
-            numberImgSrc : require('./assets/Account-number.jpg') ,
-            orderImgSrc :　require('./assets/Order.jpg'),
-            followImgSrc : require('./assets/follow.jpg') ,
+            // numberImgSrc : require('./assets/Account-number.jpg') ,
+            // orderImgSrc :　require('./assets/Order.jpg'),
+            // followImgSrc : require('./assets/follow.jpg') ,
+
+             numberImgSrc : require('./assets/Accountnumber@2x.png') ,
+            orderImgSrc :　require('./assets/Order@2x.png'),
+            followImgSrc : require('./assets/follow@2x.png') ,
             leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
             rightBtnSrc : require('./assets/Myhomepage-clicked@2x.png') ,
             //header滚动
@@ -284,10 +288,7 @@ export default {
         toPersonInfo(){
             window.location.href="personInfo.html";
         },
-        //跳转到会员购买页
-        toVIPBuy(){
-            window.location.href="vipbuy.html";
-        },
+      
         //跳转到账号管理
         toAccount(){
             window.location.href="accountmanage.html";
@@ -299,6 +300,7 @@ export default {
         //跳转到订单管理
         toOrder(ind){   
           MessageBox('提示', '建设中');
+        // window.location.href="vip.html";
         },
 
         //计算会员到期时间

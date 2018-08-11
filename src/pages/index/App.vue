@@ -470,7 +470,7 @@ export default {
 
           }else if( res.data.status == 1 ){
               //购买会员
-              window.location.href=`vipbuy.html`;
+              window.location.href=`vip.html`;
           }else if( res.data.status == 2 ){
               //绑定
               window.location.href=`accountmanage.html`;
