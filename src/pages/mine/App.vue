@@ -26,7 +26,7 @@
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="">
-                <img :src="memberImgSrc" alt="">
+                <img :src="memberImgSrc" alt="" @click="toauthentication">
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
@@ -35,7 +35,7 @@
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
                 <dd v-if="ind==0">${{titleInfo[0]}}</dd>
-                <dd v-if="ind==1">{{titleInfo[1]}}%</dd>
+                <dd v-if="ind==1">{{titleInfo[1]}}</dd>
                 <dd v-if="ind==2">${{titleInfo[2]}}</dd>
             </dl>
         </div>
@@ -86,7 +86,7 @@
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
-                                <dd>{{ item.percent }}%</dd>
+                                <dd>{{ item.percent }}</dd>
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
@@ -242,10 +242,21 @@ export default {
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
             }
-            this.titleInfo.push(res.data.data.sumUserprofit);
-            this.titleInfo.push(res.data.data.percentUser);
-            this.titleInfo.push(res.data.data.sumUserprofitYu);
             this.userImgSrc = res.data.data.image;
+            if ( res.data.data.sumUserprofit > 1000 || res.data.data.sumUserprofit <= -1000 ) {
+                this.titleInfo.push( parseInt( res.data.data.sumUserprofit/10 )/100 + 'K')
+            }else {
+                this.titleInfo.push(res.data.data.sumUserprofit);
+            }
+            this.titleInfo.push(res.data.data.percentUser);
+            if ( res.data.data.sumUserprofitYu > 1000 || res.data.data.sumUserprofitYu <= -1000 ) {
+                this.titleInfo.push( parseInt( res.data.data.sumUserprofitYu/10 )/100 + 'K' )
+            }else {
+                this.titleInfo.push(res.data.data.sumUserprofitYu);
+            }
+
+
+
 
             for(let i = 0; i < res.data.data.account.length-1; i++){
                 this.accNumArr.push(false)
@@ -275,6 +286,9 @@ export default {
         
     },
     methods: {
+        toauthentication(){
+            window.location.href=`authentication.html`;
+        },
         //账号列表内容展开收缩控制
         conboxOpenClose(ind){
             // this.accNumArr[ind] = !this.accNumArr[ind];
@@ -414,7 +428,6 @@ export default {
         }
         dd{
             font-size: .4rem;
-            font-weight: 900;
             line-height: .36rem;
         }
     }
