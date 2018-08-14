@@ -37,7 +37,7 @@
       <div style="overflow:scroll; -webkit-overflow-scrolling: touch">
          <mt-loadmore 
           :bottom-method="loadBottom" :autoFill="false" ref="loadmore" :bottom-all-loaded="allLoaded">
-          <div v-for = "(item,ind) in boxItem" :key="ind" @click="jump(ind)">
+          <div v-for = "(item,ind) in boxItem" :key="ind" @click="jump(ind)" style="margin-bottom:.1rem;background:#fff">
             <div class="title">
               <div class="tlt-left">
                 <div class="logo">
@@ -59,7 +59,7 @@
                
           
                 <dl class="balance">
-                  <dt> 操盘经验 </dt>
+                  <dt> 交易时间 </dt>
                   <dd> {{item.experience}} </dd>
                 </dl>
                 <dl>
@@ -71,15 +71,15 @@
                   <dt v-if="nearTime==14"> 近两周盈亏点数 </dt>
                   <dt v-if="nearTime==30"> 近一月盈亏点数 </dt> -->
                   <dt > 盈亏点数 </dt>
-                  <dd> {{item.profitNo}} </dd>
+                  <dd> {{item.profitNo | plus}} </dd>
                 </dl>
                 <dl class="balance">
                   <dt> 余额 </dt>
-                  <dd> {{item.money}} </dd>
+                  <dd> {{item.money | plus}} </dd>
                 </dl>
                 <dl>
                   <dt> 起始资金 </dt>
-                  <dd> {{item.initFunds}} </dd>
+                  <dd> {{item.initFunds | plus}} </dd>
                 </dl>
                 <dl>
                   <dt> 跟随人数 </dt>
@@ -161,9 +161,9 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.1.11:8080/",
-      // urlTitle:"http://192.168.1.6:80/",
+      urlTitle:"http://192.168.1.9:80/", 
       // urlTitle:"http://www.0539maj.com/app/",
-      urlTitle:"http://132.232.44.112:80/app/",
+      // urlTitle:"http://132.232.44.112:80/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -202,10 +202,14 @@ export default {
     // }  ,
     filters:{
         tonum(val){
-          
           return parseInt(  Number(val) *100)/100
-        
+        },
+        plus(val){
+           if(val > 1000){
+             return parseInt(val/10)/100 + "K"
+           }
         }
+        
     },
   methods:{
     //加载请求
@@ -524,6 +528,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 // 头部
 #title{
   padding:0 .24rem;

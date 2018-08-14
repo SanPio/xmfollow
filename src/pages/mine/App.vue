@@ -26,7 +26,7 @@
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="">
-                <img :src="memberImgSrc" alt="" @click="toauthentication">
+                <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" @click="toauthentication">
                 <img :src="setImgSrc" alt="">
             </div>
         </div>
@@ -154,6 +154,29 @@
                 </ul>
             </li>
         </ul>
+        <div class="switch clearfix">
+                <p class="left sw-le" v-if="swi">
+                    <span class="">
+                        当前状态：
+                    </span>
+                    <span class="blue">
+                        模拟账号
+                    </span>
+                </p>
+                <p class="left sw-cen" @click="swiChange">
+                    <span class="blue" >
+                        点击切换
+                    </span>
+                </p>
+                <p class="left sw-ri" v-if="!swi">
+                    <span>
+                        当前状态：
+                    </span>
+                    <span class="blue">
+                        真实账号
+                    </span>
+                </p>
+        </div>
         <!-- Footer组件 底部返回按钮 -->
         <ul class="footer">
                 <li class="foot-left">
@@ -184,14 +207,10 @@ export default {
     data(){
         return {
             invitImgSrc : require('./assets/Invitation.jpg'),
-            // userImgSrc : require('./assets/Head-portrait.jpg'),
             userImgSrc : '',
             memberImgSrc : require('./assets/My-home-page-icon1.jpg') ,
+            memberImgSrcYellow : require('./assets/Myhomepage-icon1@2x.png') ,
             setImgSrc :　require('./assets/Set-up.jpg'),
-            // numberImgSrc : require('./assets/Account-number.jpg') ,
-            // orderImgSrc :　require('./assets/Order.jpg'),
-            // followImgSrc : require('./assets/follow.jpg') ,
-
              numberImgSrc : require('./assets/Accountnumber@2x.png') ,
             orderImgSrc :　require('./assets/Order@2x.png'),
             followImgSrc : require('./assets/follow@2x.png') ,
@@ -199,6 +218,7 @@ export default {
             rightBtnSrc : require('./assets/Myhomepage-clicked@2x.png') ,
             //header滚动
             headerOnOff :true,
+            acth:false,
             headerOn : "header",
             headerOff : "header-scroll",
             //上下按钮图标
@@ -215,7 +235,8 @@ export default {
             info:{},
             accInfo:[],
             day : 0,
-            accountId: ''
+            accountId: '',
+            swi: false
         }
     },
     created(){
@@ -241,6 +262,7 @@ export default {
             console.log(this.accInfo)
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
+                this.acth = true;
             }
             this.userImgSrc = res.data.data.image;
             if ( res.data.data.sumUserprofit > 1000 || res.data.data.sumUserprofit <= -1000 ) {
@@ -287,7 +309,10 @@ export default {
     },
     methods: {
         toauthentication(){
-            window.location.href=`authentication.html`;
+            if(this.acth == false){
+                 window.location.href=`authentication.html`;
+            }
+           
         },
         //账号列表内容展开收缩控制
         conboxOpenClose(ind){
@@ -325,7 +350,33 @@ export default {
             var days = sdate.getTime() - now.getTime();
             var day = parseInt(days / (1000 * 60 * 60 * 24));
             this.day = day + 1;
+        },
+
+        //切换状态
+        swiChange(){
+            //  localStorage.removeItem('iss');
+            this.swi = !this.swi;
+            if(this.swi == true){
+                localStorage.setItem('iss', 1);
+            } 
+            if( this.swi == false ){
+                localStorage.removeItem('iss');
+            }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }       
 }
 </script>
@@ -522,6 +573,62 @@ export default {
             }
         }
     }
+    //状态切换
+
+    .switch{
+        width: 100%;
+        height: .98rem;
+        padding: 0;
+        position: fixed;
+        bottom: 1.12rem;
+        border-top: 1px solid #c9c9c9;
+        border-bottom: 1px solid #c9c9c9;
+        line-height: .98rem;
+        color: #666;
+        font-size: .3rem;
+        font-weight: bold;
+        background-color: #fff;
+        .sw-le{
+            width: 4.8rem;
+            border-right: .01rem solid #c9c9c9;
+        }
+        .sw-cen{
+            width: 2.66rem;
+        }
+        .sw-ri{
+            width: 4.8rem;
+            border-left: .01rem solid #c9c9c9;
+        }
+        .blue{
+            color: #4fa2fe;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //底部导航按钮
     .footer{
         width: 100%;
