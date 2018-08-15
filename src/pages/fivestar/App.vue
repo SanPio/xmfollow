@@ -1,8 +1,13 @@
 <template>
     <div>
-        <h1 id="header">
-            购买V认证
-        </h1>
+        <div id="header">
+            <p>
+                {{ name }}
+            </p>
+            <p>
+                跟单资格
+            </p>
+        </div>
         <ul id="center">
             <li class="time">
                 <span>
@@ -10,15 +15,16 @@
                 </span>
                 <input maxlength = 3 onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" v-model="time">
                 <span>
-                    年
+                    月
                 </span>
             </li>
-            <li class="card" v-if="!dis">
+            <!-- <li class="card" v-if="!dis"> -->
+                <li class="card" v-if="cardshow">
                 <span>
                     优惠
                 </span>
                 <button :class="{'blue':blueColor}" :disabled="dis"  @click="cardClick">
-                    V&nbsp;认证兑换券
+                    满 {{ fullSubtractionMin }} 减 {{ fullSubtractionValue }}
                 </button>
             </li>
             <li class="money">
@@ -61,35 +67,63 @@ export default {
             haveClick: false,
             blueColor: false,
             dis: true,
+            cardshow:false,
             time: 1,
             msgbox: 1,
-            pay: 998,
-            money : 998,
-            discountId: ''
+            pay: 1000,
+            money : 1000,
+            fullSubtractionId: '',
+            optionId: '',
+            name: '',
+            fullSubtractionMin: '',
+            fullSubtractionValue: ''
+
         }
     },
     watch : {
         time : function(val){
-            this.pay = val *998;
-            this.money = val *998; 
+            this.pay = val *1000;
+            this.money = val *1000; 
+            if( this.money >= this.fullSubtractionMin ){
+                this.dis = false
+            
+            }else{
+                this.dis = true
+            }
         }
     },
     created(){
+
+        var a=this.GetRequest();
+        var index_1=a['optionId'];
+        var index_2=a['name'];
+        this.name = index_2;
+        this.optionId = index_1;
+        console.log(index_2)
+
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
          this.$http.get(this.urlTitle+'wx/member/selectDiscount',{ 
             params : { 
                 userId : this.userId,
-                
+                optionId:this.optionId  
             }
         }).then((res) => { 
                 console.log(res)
-                if ( res.data.data.exchange == "TRUE" ) {
+                if ( res.data.data.fullSubtraction == "TRUE" ) {
                     this.dis = false;
-                    this.discountId = res.data.data.exchangeId
+                    this.cardshow = true;
+                    this.fullSubtractionId = res.data.data.fullSubtractionId;
+                    this.fullSubtractionMin = res.data.data.fullSubtractionMin;
+                    this.fullSubtractionValue = res.data.data.fullSubtractionValue;
                 }else{
                     this.dis = true;
+                    this.cardshow = false;
                 }
+
+
+
+         
               
         }).catch((err) => {
             console.log(err)
@@ -100,38 +134,20 @@ export default {
             this.haveClick = !this.haveClick;
         },
         cardClick(){
+            console.log(this.money)
+        
             this.blueColor = !this.blueColor;
+           
+
             if(this.blueColor == true){
-                this.pay = this.money - 998
+                this.pay = this.money - this.fullSubtractionValue
             }else {
                 this.pay = this.money
             }
         },   
         //点击购买
         vipPay(){
-            if( this.pay == 0 ){
-                this.$http.get(this.urlTitle+'wechat/certifiedMembers',{ 
-                params : { 
-                    //需要支付的钱是paymoney 
-                    // paymoney : this.payMoney,
-                    userId : this.userId, 
- 
-                    memberType: 1,
-                    time: this.time,
-                    discountType: 3,
-                    discountId: this.discountId
-
-
-                }
-            }).then((res) => {
-                console.log(res)
-                if( res.data.data.SUCCESS = '"TRUE"'){
-                    location.href="mine.html";
-                }else {
-                    Toast("支付失败")
-                }           
-             })
-            }else{
+        
                 if ( this.dis == false && this.msgbox == 1 && this.blueColor==false ) {
                     MessageBox('提示', '你还有兑换券没有使用');
                     this.msgbox++ ;
@@ -150,11 +166,16 @@ export default {
                     }
                 }
 
-            }
+            
                  
         },
         onBridgeReady(){
-
+            var discountId = '';
+            if( this.blueColor == true ){
+                discountId = this.fullSubtractionId
+            }else{
+                discountId = ''
+            }
 
 
             this.$http.get(this.urlTitle+'wechat/unifiedOrder',{ 
@@ -162,11 +183,11 @@ export default {
                     //需要支付的钱是paymoney 
                     // paymoney : this.payMoney,
                     userId : this.userId, 
- 
-                    memberType: 1,
+                    optionId: this.optionId,
+                    memberType: 3,
                     time: this.time,
-                    discountType: 3,
-                    discountId: this.discountId
+                    discountType: 1,
+                    discountId: discountId
 
 
                 }
@@ -194,6 +215,18 @@ export default {
             }).catch((err) => {
                 console.log(err)
             });
+        },
+        GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                var  strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
         }
     }
 }
@@ -203,9 +236,8 @@ export default {
         font-weight: 900;
         color: #4fa2fe;
         font-size: .44rem;
-        line-height: 1.24rem;
-        height: 1.24rem;
-        margin-top: .2rem;
+        margin-bottom: .5rem ;
+        margin-top: .8rem;
     }
     #center{
         width: 6.9rem;

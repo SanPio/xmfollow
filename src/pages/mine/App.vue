@@ -55,9 +55,9 @@
             </dl>
              <dl>
                 <dt>
-                    <img :src="followImgSrc" alt="" @click="toFollowmange">
+                    <img :src="followImgSrc" alt="" @click="toFollowmangeIs">
                 </dt>
-                <dd  @click="toFollowmange">跟随管理</dd>
+                <dd  @click="toFollowmangeIs">跟随管理</dd>
                 
             </dl>
         </div>
@@ -154,7 +154,134 @@
                 </ul>
             </li>
         </ul>
-        <div class="switch clearfix">
+
+        <!-- ******************* -->
+         <!-- ******************* -->
+          <!-- ******************* -->
+
+        <!-- 模拟状态 -->
+        <ul id="isscontent" v-if="iss">
+            <li v-for="(item,ind) in issAccInfo" :key="ind">
+                <!-- 账号标题 -->
+                <div class="con-tit"  @click="issConboxOpenClose">
+                    <p class="con-tit-left"> 
+                   <span>{{ item.accountName}}</span>
+                    </p>
+                    <p class="con-tit-right">
+                        <img :src="issaccNumArr ? upSrc : downSrc" alt="">
+                    </p>
+                </div>
+                <!-- 详细内容 -->
+                <ul v-if="issaccNumArr" class="con-box">
+                    <!-- 账号资产 -->
+                    <li class="con-box-account">
+                        <p class="con-box-head" >账号资产</p>
+                        <div class="con-box-bot clearfix">
+                            <dl>
+                                <dt>历史收益</dt>
+                                <dd>${{ item.bigDecimal }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>收益率</dt>
+                                <dd>{{ item.percent }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>当前余额</dt>
+                                <dd>${{ item.bigDecimalyu }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>已用保证金</dt>
+                                <dd>${{ item.margin }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>可用保证金</dt>
+                                <dd>${{ item.free_margin }}</dd>
+                            </dl>
+                            <dl>
+                                <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
+                            </dl>
+                        </div>
+                    </li>
+                    <!-- 订单信息 -->
+                    <li class="con-box-order">
+                        <p class="con-box-head">订单信息</p>
+                        <div class="con-box-bot clearfix">
+                            <dl>
+                                <dt>持仓单量</dt>
+                                <dd>{{ item.countOrderid }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>持仓手数</dt>
+                                <dd>{{ item.sumlots }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>获利</dt>
+                                <dd>${{ item.sumprofitli }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>上周获利点数</dt> 
+                                <dd>{{ item.zhousymbol }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>上月获利点数</dt>
+                                <dd>{{ item.yuesymbol }}</dd>
+                            </dl>
+                            <dl>
+                                <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
+                            </dl>
+                        </div>
+                    </li>
+                    <!-- 跟随播报 -->
+                    <li class="con-box-follow">
+                        <p class="con-box-head">跟随播报</p>
+                        <div class="con-box-bot clearfix">
+                            <dl>
+                                <dt>累计跟随</dt>
+                                <dd>{{ item.countoption }}</dd>
+                            </dl>
+                            <dl>
+                                <dt>盈利单数</dt>
+                                <dd>{{ item.countorder }}</dd>
+                            </dl>
+                            <dl>
+                                <dt class="con-box-bot-btn" @click="toFollowmangeIss">跟随管理&nbsp;>></dt>    
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="switch clearfix" >
                 <p class="left sw-le" v-if="swi">
                     <span class="">
                         当前状态：
@@ -228,15 +355,18 @@ export default {
             titleInfo : [],
             //content区域
             contentShow : true,
+            iss: false,
             urlTitle:"",
             userId : '',
             //box循环测试
             accNumArr : [true],
             info:{},
             accInfo:[],
+            issAccInfo: [],
             day : 0,
             accountId: '',
-            swi: false
+            swi: false,
+            issaccNumArr: true,
         }
     },
     created(){
@@ -259,6 +389,7 @@ export default {
             console.log(res)
             this.info = res.data.data;
             this.accInfo = res.data.data.account;
+           this.issAccInfo = res.data.data.accountsmoni;
             console.log(this.accInfo)
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
@@ -285,7 +416,7 @@ export default {
                 // this.$set(this.accNumArr,i,false)
             }
 
-            console.log(this.accNumArr)
+            // console.log(this.accNumArr)
 
         }).catch((err) => {
             console.log(err)
@@ -319,6 +450,9 @@ export default {
             // this.accNumArr[ind] = !this.accNumArr[ind];
             this.$set(this.accNumArr,ind,!this.accNumArr[ind])
         },
+        issConboxOpenClose(){
+            this.issaccNumArr = !this.issaccNumArr
+        },
         //返回到index主页（交易领航）
         toIndex(){
             window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
@@ -332,9 +466,21 @@ export default {
         toAccount(){
             window.location.href="accountmanage.html";
         },
+
+        toFollowmangeIs(){
+           let haveiss = localStorage.getItem('iss');
+            if( haveiss == 1){
+                window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
+            }else{
+                window.location.href=`followmange.html?accountsid=${this.accInfo[0].accountid}`; 
+            }
+        },
         //跳转到跟随管理
         toFollowmange(ind){
-            window.location.href="followmange.html";
+            window.location.href=`followmange.html?accountsid=${this.accInfo[ind].accountid}`;
+        },
+        toFollowmangeIss(){
+             window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
         },
         //跳转到订单管理
         toOrder(ind){   
@@ -358,11 +504,18 @@ export default {
             this.swi = !this.swi;
             if(this.swi == true){
                 localStorage.setItem('iss', 1);
+                this.contentShow = false;
+                this.iss = true;
+
+
             } 
             if( this.swi == false ){
                 localStorage.removeItem('iss');
+                this.contentShow = true;
+                this.iss = false;
             }
         }
+        
 
 
 
@@ -502,7 +655,7 @@ export default {
         }
     }
     //账号信息展示
-    #content{
+    #content,#isscontent{
         margin-top: .56rem;
         padding: 0 .22rem;
         color: #ffffff;
@@ -573,6 +726,35 @@ export default {
             }
         }
     }
+    //模拟状态
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //状态切换
 
     .switch{

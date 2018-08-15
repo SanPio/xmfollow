@@ -142,40 +142,12 @@
         </mt-tab-container>
 
         <!-- 底部返回 -->
-        <ul class="footer">
-                <li class="foot-left">
-                    <!-- <dl @click="toIndex"> -->
-                        <dl >
-                        <dt>
-                            <img :src="leftBtnSrc" alt="">
-                        </dt>
-                        <dd >投资领航</dd>
-                    </dl>
-                </li>
-            <li class="foot-right">
-                <dl>
-                    <dt>
-                        <img :src="rightBtnSrc" alt="">
-                    </dt>
-                    <dd >我的</dd>
-                </dl>
-            </li>
-        </ul>
-        <!-- 次div为空，做占位用，返回按钮占56px高度 -->
-        <div style="height:56px"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <!-- <div id="footer">
+            <div id="foot-center">
+                <img :src="returnleftSrc" alt="" >
+                <img :src="returnRightSrc" alt="">
+            </div>
+        </div>        -->
     </div>
 </template>
 <script>
@@ -190,10 +162,8 @@ export default {
             recordTotal: 0,
             num : 0.05,
             userImgSrc: require('./assets/Head-portrait.jpg'),
-            // returnleftSrc : require('./assets/btn-left@2x.png'),
-            // returnRightSrc : require('./assets/btn-right@2x.png'),
-            leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
-            rightBtnSrc : require('./assets/Myhomepage-Unclicked@2x.png') ,
+            returnleftSrc : require('./assets/btn-left@2x.png'),
+            returnRightSrc : require('./assets/btn-right@2x.png'),
             stopOn: true,
             //正在跟随获利为正
             profit: true,
@@ -213,16 +183,11 @@ export default {
         }
     },
     created(){
-        let haveiss = localStorage.getItem('iss');
-        if(haveiss == 1){
-            document.title = '跟随管理(模拟)';
-        }else{
-            document.title = '跟随管理';
-        }
-        
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId') ;
-        this.accountId = localStorage.getItem('accountId');
+        var a=this.GetRequest();
+        this.accountId = a['accountsid'];
+
         //初始化数据请求
                 //正在跟随初始化
         this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
@@ -230,9 +195,11 @@ export default {
                 accountsId : this.accountId, 
                 userId : this.userId,
                 pageNum: 1,
-                pageSize: 10
+                pageSize: 10,
+                iss: 1
             }   
         }).then((res) => { 
+            console.log(res)
             //结束加载图
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
@@ -254,9 +221,11 @@ export default {
                 accountSid : this.accountId, 
                 pageNum: 1,
                 pageSize: 10,
-                userId : this.userId
+                userId : this.userId,
+                iss : 1
             }   
         }).then((res) => { 
+            console.log(res)
             //结束加载图
             this.$refs.loadmore.onBottomLoaded();
             if(res.data.data.countoptionids <= 10){
@@ -285,6 +254,7 @@ export default {
                     userId : this.userId,
                     pageNum: this.nowPageNum,
                     pageSize: 10,
+                    iss: 1
                 }   
             }).then((res) => { 
                 //结束加载图
@@ -308,8 +278,8 @@ export default {
                 accountSid : this.accountId, 
                 pageNum: this.hisPageNum,
                 pageSize: 10,
-                userId : this.userId
-
+                userId : this.userId,
+                iss: 1
             }   
         }).then((res) => { 
             this.$refs.loadmore.onBottomLoaded();
@@ -376,12 +346,24 @@ export default {
             })
         },
         toFollowSetting(ind){
-            window.location.href="followsetting.html";
+            window.location.href="issfollowsetting.html";
         },
 
         //跟随记录
         recordListShow(ind){
             this.$set(this.recordOpen,ind,!this.recordOpen[ind])
+        },
+        GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                var  strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
         }
     }
 }
@@ -577,31 +559,25 @@ export default {
 
 
     // 底部导航按钮
-    //底部导航按钮
-    .footer{
-        width: 100%;
-        height: 1rem;
-        padding-top: .12rem;
-        background-color:#ffffff;
-        position: fixed;
-        bottom:0;
-        display: flex;
-        justify-content: space-around;
-        font-size: .2rem;
-        dl{
-            width: 1rem;
-            text-align: center;
-            color:#999999;
-            .foot-click{
-            color:#4fa2fe;
-            }
-        }
-        img{
-            width: .44rem;
-            height: .44rem;
-            margin-bottom: .04rem;
-        }
-    }
+    // #footer{
+    //     width: 100%;
+    //     position: fixed;
+    //     background-color: #fff;
+    //     bottom: 0;
+    //     display: flex;
+    //     justify-content: center;
+    //     #foot-center{
+    //         width: 2rem;
+    //         height: .9rem;
+    //         display: flex;
+    //         justify-content: space-between;
+    //         img{
+    //             // width: .3rem;
+    //             margin-top: .24rem;
+    //             height:.56rem;
+    //         }
+    //     }
+    // }
 
 
 

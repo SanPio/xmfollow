@@ -366,14 +366,22 @@ export default {
                                     accountsid: this.accountId,    
                                 }   
                             }).then((res) => { 
-                            // console.log(res)
-                            if( res.data.status == 0 ){
+                            console.log(res)
+                             if( res.data.status == 0 ){
                                 //跟随设置
                                 window.location.href=`followsetting.html?optionId=${this.optionId}`;
+
                             }else if( res.data.status == 1 ){
                                 //购买会员
-                                window.location.href=`vip.html`;
+                                window.location.href=`authentication.html`;
                             }else if( res.data.status == 2 ){
+                                //绑定
+                                window.location.href=`vip.html`;
+                            }else if( res.data.status == 3 ){
+                                //绑定
+                                window.location.href=`fivestar.html?optionId=${this.optionId}&name=${this.info.signalName}`;
+                            }
+                            else if( res.data.status == 4 ){
                                 //绑定
                                 window.location.href=`accountmanage.html`;
                             }

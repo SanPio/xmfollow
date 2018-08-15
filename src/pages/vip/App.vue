@@ -13,11 +13,11 @@
                 </button>
                
             </p>
-            <p class="card">
-                <button :class="{'blue':disOnoff}" :disabled="disDisabled" @click="chooseDis">
+            <p class="card" >
+                <button :class="{'blue':disOnoff}" :disabled="disDisabled" @click="chooseDis" v-if="!disDisabled">
                     {{ discount }} 折
                 </button>
-                <button :class="{'blue':reduceOnoff}" :disabled="redDisabled" @click="chooseRed">
+                <button :class="{'blue':reduceOnoff}" :disabled="redDisabled" @click="chooseRed" v-if="!redDisabled">
                     满 {{ full }}  减  {{ reduce }}
                 </button>
                 
@@ -92,7 +92,7 @@ export default {
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
-        
+
         this.$http.get(this.urlTitle+'wx/member/selectDiscount',{ 
             params : { 
                 userId : this.userId,
