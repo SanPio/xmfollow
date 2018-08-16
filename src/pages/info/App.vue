@@ -193,24 +193,55 @@ export default {
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          
         }).then((res) => {
+            console.log( parseFloat(res.data.data.money))
             this.info = res.data.data;
             //主要信息
             this.mianInfo.push(res.data.data.experience);
-            this.mianInfo.push('$' + res.data.data.money);
-            this.mianInfo.push(res.data.data.yield);
+            if( res.data.data.money >= 1000 || res.data.data.money <= -1000){
+              this.mianInfo.push('$' + parseInt( parseFloat(res.data.data.money)/10 )/ 100 + "K")
+            }else{
+                this.mianInfo.push('$' + res.data.data.money);
+            }
+            this.mianInfo.push( parseInt( parseFloat( res.data.data.yield ) * 100 ) / 100 + '%' );
             if(res.data.data.initFunds){
-                this.mianInfo.push( '$' + res.data.data.initFunds);
+                // this.mianInfo.push( '$' + res.data.data.initFunds);
+                    // parseFloat( res.data.data.initFunds )
+                if( parseFloat( res.data.data.initFunds ) >= 1000 || parseFloat( res.data.data.initFunds ) <= -1000){
+                    this.mianInfo.push('$' + parseInt( parseFloat( res.data.data.initFunds )/10 )/ 100 + "K")
+                }else{
+                    this.mianInfo.push('$' + res.data.data.initFunds );
+                }
             }else{
                 this.mianInfo.push(0)
             }
+            if( parseFloat( res.data.data.profitNo ) >= 1000 || parseFloat( res.data.data.profitNo ) <= -1000){
+                this.mianInfo.push( parseInt( parseFloat( res.data.data.profitNo )/10 )/ 100 + "K")
+            }else{
+                this.mianInfo.push( res.data.data.initFunds );
+            }
             
-            this.mianInfo.push(res.data.data.profitNo);
-            this.mianInfo.push(res.data.data.followerNumber);
+            if(  res.data.data.followerNumber ){
+                if( parseFloat( res.data.data.followerNumber ) >= 1000 || parseFloat( res.data.data.followerNumber ) <= -1000){
+                    this.mianInfo.push( parseInt( parseFloat( res.data.data.followerNumber )/10 )/ 100 + "K")
+                }else{
+                    this.mianInfo.push( res.data.data.followerNumber );
+                }
+            }else{
+                this.mianInfo.push( 0 );
+            }
             this.mianInfo.push(res.data.data.firstOrder);
             //次要信息
-            this.secInfo.push(res.data.data.avgHandleTime);
-            this.secInfo.push(res.data.data.maxWinNo);
-            this.secInfo.push(res.data.data.maxFailNo);
+            this.secInfo.push( res.data.data.avgHandleTime + ' 小时 ' );
+            if( parseFloat( res.data.data.maxWinNo ) >= 1000 || parseFloat( res.data.data.maxWinNo ) <= -1000){
+                this.secInfo.push( parseInt( parseFloat( res.data.data.maxWinNo )/10 )/ 100 + "K")
+            }else{
+                this.secInfo.push( res.data.data.maxWinNo );
+            }
+            if( parseFloat( res.data.data.maxFailNo ) >= 1000 || parseFloat( res.data.data.maxFailNo ) <= -1000){
+                this.secInfo.push( parseInt( parseFloat( res.data.data.maxFailNo )/10 )/ 100 + "K")
+            }else{
+                this.secInfo.push( res.data.data.maxFailNo );
+            }
             this.secInfo.push(res.data.data.maxLots + '标准手');
             this.secInfo.push(res.data.data.minLots + '标准手');
             //交易原则

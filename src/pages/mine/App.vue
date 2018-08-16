@@ -82,7 +82,7 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>历史收益</dt>
-                                <dd>${{ item.bigDecimal }}</dd>
+                                <dd>${{ item.bigDecimal | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
@@ -90,15 +90,15 @@
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
-                                <dd>${{ item.bigDecimalyu }}</dd>
+                                <dd>${{ item.bigDecimalyu | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>已用保证金</dt>
-                                <dd>${{ item.margin }}</dd>
+                                <dd>${{ item.margin | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>可用保证金</dt>
-                                <dd>${{ item.free_margin }}</dd>
+                                <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
@@ -119,15 +119,15 @@
                             </dl>
                             <dl>
                                 <dt>持仓浮亏</dt>
-                                <dd>${{ item.sumprofitli }}</dd>
+                                <dd>${{ item.sumprofitli | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>上周获利点数</dt> 
-                                <dd>{{ item.zhousymbol }}</dd>
+                                <dd>{{ item.zhousymbol | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>上月获利点数</dt>
-                                <dd>{{ item.yuesymbol }}</dd>
+                                <dd>{{ item.yuesymbol | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
@@ -140,11 +140,11 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>累计跟随</dt>
-                                <dd>{{ item.countoption }}</dd>
+                                <dd>{{ item.countoption | numPuls}}</dd>
                             </dl>
                             <dl>
                                 <dt>盈利单数</dt>
-                                <dd>{{ item.countorder }}</dd>
+                                <dd>{{ item.countorder | numPuls}}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn" @click="toFollowmange(ind)">跟随管理&nbsp;>></dt>    
@@ -179,7 +179,7 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>历史收益</dt>
-                                <dd>${{ item.bigDecimal }}</dd>
+                                <dd>${{ item.bigDecimal | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>收益率</dt>
@@ -187,15 +187,15 @@
                             </dl>
                             <dl>
                                 <dt>当前余额</dt>
-                                <dd>${{ item.bigDecimalyu }}</dd>
+                                <dd>${{ item.bigDecimalyu | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>已用保证金</dt>
-                                <dd>${{ item.margin }}</dd>
+                                <dd>${{ item.margin | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>可用保证金</dt>
-                                <dd>${{ item.free_margin }}</dd>
+                                <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
@@ -208,23 +208,23 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>持仓单量</dt>
-                                <dd>{{ item.countOrderid }}</dd>
+                                <dd>{{ item.countOrderid | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>持仓手数</dt>
-                                <dd>{{ item.sumlots }}</dd>
+                                <dd>{{ item.sumlots | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>持仓浮亏</dt>
-                                <dd>${{ item.sumprofitli }}</dd>
+                                <dd>${{ item.sumprofitli | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>上周获利点数</dt> 
-                                <dd>{{ item.zhousymbol }}</dd>
+                                <dd>{{ item.zhousymbol | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt>上月获利点数</dt>
-                                <dd>{{ item.yuesymbol }}</dd>
+                                <dd>{{ item.yuesymbol | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
@@ -237,11 +237,11 @@
                         <div class="con-box-bot clearfix">
                             <dl>
                                 <dt>累计跟随</dt>
-                                <dd>{{ item.countoption }}</dd>
+                                <dd>{{ item.countoption | numPuls}}</dd>
                             </dl>
                             <dl>
                                 <dt>盈利单数</dt>
-                                <dd>{{ item.countorder }}</dd>
+                                <dd>{{ item.countorder | numPuls }}</dd>
                             </dl>
                             <dl>
                                 <dt class="con-box-bot-btn" @click="toFollowmangeIss">跟随管理&nbsp;>></dt>    
@@ -294,7 +294,7 @@
             </li>
         </ul>
         <!-- 次div为空，做占位用，返回按钮占56px高度 -->
-        <div style="height:56px"></div>
+        <div style="height:2rem"></div>
     </div>
 </template>
 <script>
@@ -343,6 +343,16 @@ export default {
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
+         let haveiss = sessionStorage.getItem('iss');
+        if(haveiss == 1){
+            this.contentShow = false;
+            this.iss = true;
+            this.swi = true;
+        }else{
+            this.contentShow = true;
+            this.iss = false;
+            this.swi = false;
+        }
         //初始化数据请求
         let postData = this.$qs.stringify({
             userid:  this.userId
@@ -356,7 +366,7 @@ export default {
             console.log(res)
             this.info = res.data.data;
             this.accInfo = res.data.data.account;
-           this.issAccInfo = res.data.data.accountsmoni;
+            this.issAccInfo = res.data.data.accountsmoni;
             console.log(this.accInfo)
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
@@ -387,6 +397,18 @@ export default {
 
 
 
+    },
+    filters: {
+        numPuls(val){
+            if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
+                return parseInt( val / 10000 ) / 100 + 'M'
+            }else if ( parseFloat( val ) >=1000 || parseFloat( val ) <= -1000 ){
+                return parseInt( val / 10 ) / 100 + 'K'
+            }else{
+                return val
+            }
+            
+        }
     },
     mounted(){
     //     //Header组件缩放
@@ -695,34 +717,6 @@ export default {
             }
         }
     }
-    //模拟状态
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //状态切换
 

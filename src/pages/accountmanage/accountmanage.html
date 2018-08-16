@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="msapplication-tap-highlight" content="no">
     <title>账号管理</title>
     <style>
         @media screen and (max-width: 350px){
@@ -85,7 +88,16 @@
             color:#fff;
             background-color: #4fa2fe;
         }
-
+        *{ 
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+          -webkit-tap-highlight-color: transparent; 
+        }
+        select{
+          appearance:none;
+          -moz-appearance:none;
+          -webkit-appearance:none;
+          border:none;
+        }
 
 
 

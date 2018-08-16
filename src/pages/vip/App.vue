@@ -123,6 +123,8 @@ export default {
         //时间选择
         choseTimd(ind){
             this.timeColor = ind;
+            this.disOnoff = false;
+            this.reduceOnoff = false;
             if ( ind == 0) {
                 this.time = 1;
             }else if ( ind == 1) {

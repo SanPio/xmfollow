@@ -240,7 +240,27 @@ export default {
             if( this.iss == 1 && val >1){
                this.followNum = 1
             }
+        },
+        takeProfits(val){
+            var s= "" + val;
+            var regex=/^[0]+/
+            var a=s.replace(regex,"");
+            this.takeProfits = Number(a)
+        },
+        stopLoss(val){
+            var s= "" + val;
+            var regex=/^[0]+/
+            var a=s.replace(regex,"");
+            this.stopLoss = Number(a)
+        },
+        followNum(val){
+            var s= "" + val;
+            var regex=/^[0]+/
+            var a=s.replace(regex,"");
+            this.followNum = Number(a)
         }
+
+
     },
     methods: {
         ////接受跳转参数
@@ -283,7 +303,21 @@ export default {
                     }).then((res)=>{
                         console.log(res)
                         if(res.data.success == true){
-                            MessageBox('提示', '已取消跟随');
+                            MessageBox({
+                                
+                                confirmButtonText:'确定',
+                                title: '提示',
+                                message: '已取消跟随',
+                                showConfirmButton:true,
+                           
+                            }).then(action => { 
+                             
+                                if (action == 'confirm') {     //确认的回调
+                                    window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                                }
+                            })
+                            // MessageBox('提示', '已取消跟随');
+                            
                         }else{
                             MessageBox('提示', res.data.message);
                         }
@@ -437,12 +471,14 @@ export default {
                 url: this.urlTitle+'wx/order/member/followSetting',
                 data:postData
             }).then((res)=>{
-                console.log(res.data.success)
-                if(res.data.success == true){
+                console.log(res)
+                if(res.data.code == 1){
                     //   1.0版本以后跳转到跟随管理
-                    // window.location.href=`followsetting.html?optionId=${this.optionId}`;
-                    //   1.0版本回到主页
-                    window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                    window.location.href=`followmange.html?accountsid=${this.accountId}`;
+                    // //   1.0版本回到主页
+                    // window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                }else{
+                    MessageBox('提示', '保存失败');
                 }
             }).catch((err) => {
                 console.log(err)

@@ -48,13 +48,13 @@
                                     <p >
                                         <span>当前持仓</span>
                                         <span class="hold">
-                                            {{ item.optiondetail }}
+                                            {{ item.optiondetail | numPuls}}
                                         </span>
                                     </p>
                                     <p>
                                         <span>当前获利</span>
                                         <span :class="profit ? 'profit-blue' : 'profit-red' ">
-                                            $ {{ item.nowProfits }}
+                                            $ {{ item.nowProfits | numPuls}}
                                         </span>
                                     </p>
                                 </div>
@@ -66,7 +66,7 @@
                                 <button @click="toFollowSetting(ind)">跟随设置</button> -->
                                 <button @click="boxMsg">一键平仓</button>
                                 <button @click="boxMsg">订单管理</button>
-                                <button @click="boxMsg">跟随设置</button>
+                                <button @click="toFollowSetting(ind)">跟随设置</button>
                             </p>  
                         </div>
                     </mt-loadmore>
@@ -239,6 +239,8 @@ export default {
                 iss : this.iss
             }   
         }).then((res) => { 
+            console.log(res.data.data.followedReCordRespDtoList)
+            console.log(this.nowArr)
             //结束加载图
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
@@ -276,6 +278,18 @@ export default {
         }).catch((err) => {
             console.log(err)
         });
+    },
+    filters: {
+        numPuls(val){
+            if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
+                return parseInt( parseFloat( val ) / 100000 ) / 100 + 'M'
+            }else if ( parseFloat( val ) >=1000 || parseFloat( val ) <= -1000 ){
+                return parseInt( parseFloat( val ) / 10 ) / 100 + 'K'
+            }else{
+                return val
+            }
+            
+        }
     },
     methods: {
         //1.0版本弹出建设中
@@ -334,6 +348,9 @@ export default {
         },
         //正在跟随点击展开
         listShow(ind){
+            for(var i = 0; i < this.nowOpen.length; i++){
+                this.$set(this.nowOpen,i,false)
+            }
             this.$set(this.nowOpen,ind,!this.nowOpen[ind])
 
         },
@@ -384,11 +401,15 @@ export default {
             })
         },
         toFollowSetting(ind){
-            window.location.href="followsetting.html";
+            
+            window.location.href=`followsetting.html?optionId=${this.nowArr[ind].optionId}`;
         },
 
         //跟随记录
         recordListShow(ind){
+            for(var i = 0; i < this.recordOpen.length; i++){
+                this.$set(this.recordOpen,i,false)
+            }
             this.$set(this.recordOpen,ind,!this.recordOpen[ind])
         },
         //返回到index主页（交易领航）
@@ -478,7 +499,10 @@ export default {
                 }
             }
             .liright{
+                width: 3rem;
                 p{
+                    display: flex;
+                    justify-content: space-between;
                     text-align: left;
                     font-size: .2rem;
                     line-height: .32rem;
@@ -554,7 +578,10 @@ export default {
                 }
             }
             .listright{
+                width: 3rem;
                 p{
+                    display: flex;
+                    justify-content: space-between;
                     text-align: left;
                     font-size: .2rem;
                     line-height: .32rem;
