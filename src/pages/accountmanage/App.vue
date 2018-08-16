@@ -143,9 +143,9 @@ export default {
             }
             var length = res.data.data.userOrderHistoryManageReponseList.length;
             for(let i = 0; i < length; i++){
-                if ( res.data.data.userOrderHistoryManageReponseList[i].issimulated == 0) {
+      
                     this.infoArr.push(res.data.data.userOrderHistoryManageReponseList[i])
-                }
+                
             }
             // this.infoArr = res.data.data.userOrderHistoryManageReponseList
             console.log(this.infoArr)   

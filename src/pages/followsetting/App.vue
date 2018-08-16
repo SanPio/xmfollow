@@ -263,7 +263,7 @@ export default {
                 cancelButtonText:'确定',
                 confirmButtonText:'取消',
                 title: '跟随管理',
-                message: this.holdState? '您是否确定取消跟随？' : '您跟随此交易员有未平仓单，停止跟随后此平仓单将在交易员平仓后自动平仓。是否确定取消跟随？',
+                message: '您是否确定取消跟随？',
                 showConfirmButton:true,
                 showCancelButton:true
             }).then(action => { 
@@ -282,9 +282,12 @@ export default {
                         data:postData
                     }).then((res)=>{
                         console.log(res)
-                        if(res.data.data.success == true){
-                            
+                        if(res.data.success == true){
+                            MessageBox('提示', '已取消跟随');
+                        }else{
+                            MessageBox('提示', res.data.message);
                         }
+                        
                     }).catch((err) => {
                         
                     });
@@ -318,8 +321,11 @@ export default {
                         url: this.urlTitle+'wx/order/member/followStop',
                         data:postData
                     }).then((res)=>{
-                        if(res.data.data.success == true){
-                            window.location.href='index.html';
+                        console.log(res.data.success)
+                        if(res.data.success == true){
+                            MessageBox('提示', '持仓已全平');
+                        }else{
+                            MessageBox('提示', '平仓失败');
                         }
                     }).catch((err) => {
                     

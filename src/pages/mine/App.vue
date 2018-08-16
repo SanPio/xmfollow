@@ -118,7 +118,7 @@
                                 <dd>{{ item.sumlots }}</dd>
                             </dl>
                             <dl>
-                                <dt>获利</dt>
+                                <dt>持仓浮亏</dt>
                                 <dd>${{ item.sumprofitli }}</dd>
                             </dl>
                             <dl>
@@ -215,7 +215,7 @@
                                 <dd>{{ item.sumlots }}</dd>
                             </dl>
                             <dl>
-                                <dt>获利</dt>
+                                <dt>持仓浮亏</dt>
                                 <dd>${{ item.sumprofitli }}</dd>
                             </dl>
                             <dl>
