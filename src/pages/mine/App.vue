@@ -34,9 +34,9 @@
         <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
-                <dd v-if="ind==0">${{titleInfo[0]}}</dd>
+                <dd v-if="ind==0">{{ '$' +titleInfo[0]}}</dd>
                 <dd v-if="ind==1">{{titleInfo[1]}}</dd>
-                <dd v-if="ind==2">${{titleInfo[2]}}</dd>
+                <dd v-if="ind==2">{{ '$' + titleInfo[2]}}</dd>
             </dl>
         </div>
         <!--Center 跳转部分 -->
@@ -147,7 +147,7 @@
                                 <dd>{{ item.countorder }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn" @click="toFollowmange">跟随管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toFollowmange(ind)">跟随管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -251,36 +251,6 @@
                 </ul>
             </li>
         </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="switch clearfix" >
                 <p class="left sw-le" v-if="swi">
                     <span class="">
@@ -374,10 +344,7 @@ export default {
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
         //初始化数据请求
-
-
         let postData = this.$qs.stringify({
-         
             userid:  this.userId
         });
         console.log(postData)
@@ -407,10 +374,6 @@ export default {
             }else {
                 this.titleInfo.push(res.data.data.sumUserprofitYu);
             }
-
-
-
-
             for(let i = 0; i < res.data.data.account.length-1; i++){
                 this.accNumArr.push(false)
                 // this.$set(this.accNumArr,i,false)
@@ -455,7 +418,13 @@ export default {
         },
         //返回到index主页（交易领航）
         toIndex(){
-            window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+            let haveiss = sessionStorage.getItem('iss');
+            if( haveiss == 1){
+                window.location.href=`index.html?accountsid=${this.issAccInfo[0].accountid}&userid=${this.userId}`;
+            }else{
+                window.location.href=`index.html?accountsid=${this.accInfo[0].accountid}&userid=${this.userId}`; 
+            }
+
         },
         //跳转到个人信息页
         toPersonInfo(){
@@ -463,12 +432,12 @@ export default {
         },
       
         //跳转到账号管理
-        toAccount(){
-            window.location.href="accountmanage.html";
+        toAccount(){  
+               window.location.href="accountmanage.html";         
         },
 
         toFollowmangeIs(){
-           let haveiss = localStorage.getItem('iss');
+           let haveiss = sessionStorage.getItem('iss');
             if( haveiss == 1){
                 window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
             }else{
@@ -500,17 +469,17 @@ export default {
 
         //切换状态
         swiChange(){
-            //  localStorage.removeItem('iss');
+           
             this.swi = !this.swi;
             if(this.swi == true){
-                localStorage.setItem('iss', 1);
+                sessionStorage.setItem('iss', 1);
                 this.contentShow = false;
                 this.iss = true;
 
 
             } 
             if( this.swi == false ){
-                localStorage.removeItem('iss');
+                sessionStorage.removeItem('iss');
                 this.contentShow = true;
                 this.iss = false;
             }

@@ -144,8 +144,8 @@
         <!-- 底部返回 -->
         <ul class="footer">
                 <li class="foot-left">
-                    <!-- <dl @click="toIndex"> -->
-                        <dl >
+                    <dl @click="toIndex">
+                        
                         <dt>
                             <img :src="leftBtnSrc" alt="">
                         </dt>
@@ -155,9 +155,9 @@
             <li class="foot-right">
                 <dl>
                     <dt>
-                        <img :src="rightBtnSrc" alt="">
+                        <img :src="rightBtnSrc" alt="" @click="toMine">
                     </dt>
-                    <dd >我的</dd>
+                    <dd  @click="toMine">我的</dd>
                 </dl>
             </li>
         </ul>
@@ -201,7 +201,7 @@ export default {
             nowOpen: [false,false],
             // 跟随记录
             hisProfit: false,
-            recordList:["a", "b"],
+            recordList:[],
             recordOpen: [false,false],
             urlTitle:"",
             userId: 1,
@@ -209,20 +209,25 @@ export default {
             nowPageNum: 1,
             hisPageNum: 1,
             nowallLoaded: false,
-            hisallLoaded: false
+            hisallLoaded: false,
+            iss: ''
         }
     },
     created(){
-        let haveiss = localStorage.getItem('iss');
+        let haveiss = sessionStorage.getItem('iss');
         if(haveiss == 1){
             document.title = '跟随管理(模拟)';
+            this.iss = haveiss
         }else{
             document.title = '跟随管理';
+            this.iss = ''
         }
-        
+        var a=this.GetRequest();
+        var index_1=a['accountsid'];
+        this.accountId = index_1;
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId') ;
-        this.accountId = localStorage.getItem('accountId');
+        // this.accountId = localStorage.getItem('accountId');
         //初始化数据请求
                 //正在跟随初始化
         this.$http.get(this.urlTitle+'wx/order/member/followingList',{ 
@@ -230,7 +235,8 @@ export default {
                 accountsId : this.accountId, 
                 userId : this.userId,
                 pageNum: 1,
-                pageSize: 10
+                pageSize: 10,
+                iss : this.iss
             }   
         }).then((res) => { 
             //结束加载图
@@ -254,7 +260,8 @@ export default {
                 accountSid : this.accountId, 
                 pageNum: 1,
                 pageSize: 10,
-                userId : this.userId
+                userId : this.userId,
+                iss : this.iss
             }   
         }).then((res) => { 
             //结束加载图
@@ -285,6 +292,7 @@ export default {
                     userId : this.userId,
                     pageNum: this.nowPageNum,
                     pageSize: 10,
+                    iss : this.iss
                 }   
             }).then((res) => { 
                 //结束加载图
@@ -308,8 +316,8 @@ export default {
                 accountSid : this.accountId, 
                 pageNum: this.hisPageNum,
                 pageSize: 10,
-                userId : this.userId
-
+                userId : this.userId,
+                iss: this.iss
             }   
         }).then((res) => { 
             this.$refs.loadmore.onBottomLoaded();
@@ -382,7 +390,26 @@ export default {
         //跟随记录
         recordListShow(ind){
             this.$set(this.recordOpen,ind,!this.recordOpen[ind])
+        },
+        //返回到index主页（交易领航）
+        toIndex(){
+                window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+        },
+        toMine(){
+            window.location.href="mine.html";
+        },
+        GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+             var  strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+            }
         }
+        return theRequest;
+    },
     }
 }
 </script>

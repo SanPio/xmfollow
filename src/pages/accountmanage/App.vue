@@ -105,19 +105,28 @@ export default {
             infoArr: [],
             pageNum: 1,
             allLoaded: false,
-            bindtype : 1
+            bindtype : 1,
+            iss: ''
         }
     },
     created(){
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         // this.accountId = Number( JSON.parse(localStorage.getItem('accountId')));
-        
+        let haveiss = sessionStorage.getItem('iss');
+        if(haveiss == 1){
+            document.title = '账号管理(模拟)';
+            this.iss = haveiss
+        }else{
+            document.title = '账号管理';
+            this.iss = ''
+        }
         //初始化数据请求
         let postData = this.$qs.stringify({
             userId:this.userId,
             pageNum:1,
-            pageSize:10
+            pageSize:10,
+            iss: this.iss
         });
         this.$http({
           method: 'post',

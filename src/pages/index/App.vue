@@ -171,12 +171,17 @@ export default {
     }
   },
   created(){
-
+    let haveiss = sessionStorage.getItem('iss');
+    if(haveiss == 1){
+        document.title = '交易领航(模拟)';
+        this.iss = haveiss
+    }else{
+        document.title = '交易领航';
+        this.iss = ''
+    }
     var a=this.GetRequest();
     var index_1=a['accountsid'];
-    var index_2=a['userid'];
-    // //  alert("accountsid:"+ index_1 +'userID:'+ index_2 )
-   
+    var index_2=a['userid']; 
       this.accountId = index_1;
       this.userId = index_2;
       //储存userId
@@ -185,10 +190,6 @@ export default {
       localStorage.setItem('accountId', this.accountId);
       //储存域名端口
       localStorage.setItem('urlTitle', this.urlTitle);
-      
-
-      
-    
     //初始化数据请求   
        
     },

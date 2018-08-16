@@ -171,10 +171,19 @@ export default {
             info : {},
             hisArr : [],
             holdArr:[],
-            urlTitle:""
+            urlTitle:"",
+            iss: ''
         }
     },
     created(){
+        let haveiss = sessionStorage.getItem('iss');
+        if(haveiss == 1){
+            document.title = '交易员信息(模拟)';
+            this.iss = haveiss
+        }else{
+            document.title = '交易员信息';
+            this.iss = ''
+        }
         var v = this.parseUrl();//解析所有参数
         this.optionId = v['optionId'];
         this.urlTitle = localStorage.getItem('urlTitle');
@@ -345,10 +354,6 @@ export default {
             }
             return arr2;
         },
- 
-
-
-
 
         //
         ellIfShow(){

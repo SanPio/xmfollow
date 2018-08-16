@@ -157,10 +157,19 @@ export default {
             lotsType: '',
             stopLoss:0,//止损点
             takeProfits: 0,//止盈点
-            urlTitle:"" 
+            urlTitle:"",
+            iss: '' 
         }
     },
     created(){
+        let haveiss = sessionStorage.getItem('iss');
+        if(haveiss == 1){
+            document.title = '跟随设置(模拟)';
+            this.iss = haveiss
+        }else{
+            document.title = '跟随设置';
+            this.iss = ''
+        }
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
@@ -225,6 +234,13 @@ export default {
     },
     mounted(){
          
+    },
+    watch: {
+        followNum(val){
+            if( this.iss == 1 && val >1){
+               this.followNum = 1
+            }
+        }
     },
     methods: {
         ////接受跳转参数
