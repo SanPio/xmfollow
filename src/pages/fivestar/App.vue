@@ -70,61 +70,63 @@ export default {
             cardshow:false,
             time: 1,
             msgbox: 1,
-            pay: 1000,
-            money : 1000,
+            pay: 998,
+            money : 998,
             fullSubtractionId: '',
             optionId: '',
             name: '',
             fullSubtractionMin: '',
-            fullSubtractionValue: ''
-
+            fullSubtractionValue: '',
+            price: ''
         }
     },
     watch : {
         time : function(val){
-            this.pay = val *1000;
-            this.money = val *1000; 
+            this.pay = val * this.price;
+            this.money = val * this.price; 
             if( this.money >= this.fullSubtractionMin ){
-                this.dis = false
-            
+                this.dis = false;
             }else{
-                this.dis = true
+                this.dis = true;
             }
         }
     },
     created(){
-
         var a=this.GetRequest();
         var index_1=a['optionId'];
         var index_2=a['name'];
         this.name = index_2;
         this.optionId = index_1;
-        console.log(index_2)
-
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
-         this.$http.get(this.urlTitle+'wx/member/selectDiscount',{ 
+        this.$http.get(this.urlTitle+'wx/member/selectOptionPrice',{ 
+            params : { 
+                optionId:this.optionId  
+            }
+        }).then((res) => { 
+            console.log( res.data.data.memberprice);
+            this.price = res.data.data.memberpric;
+            this.pay = res.data.data.memberprice;
+            this.money = res.data.data.memberprice;
+        }).catch( (err) => {
+            console.log(err)
+        })
+        this.$http.get(this.urlTitle+'wx/member/selectDiscount',{ 
             params : { 
                 userId : this.userId,
                 optionId:this.optionId  
             }
         }).then((res) => { 
-                console.log(res)
-                if ( res.data.data.fullSubtraction == "TRUE" ) {
-                    this.dis = false;
-                    this.cardshow = true;
-                    this.fullSubtractionId = res.data.data.fullSubtractionId;
-                    this.fullSubtractionMin = res.data.data.fullSubtractionMin;
-                    this.fullSubtractionValue = res.data.data.fullSubtractionValue;
-                }else{
-                    this.dis = true;
-                    this.cardshow = false;
-                }
-
-
-
-         
-              
+            if ( res.data.data.fullSubtraction == "TRUE" ) {
+                this.dis = false;
+                this.cardshow = true;
+                this.fullSubtractionId = res.data.data.fullSubtractionId;
+                this.fullSubtractionMin = res.data.data.fullSubtractionMin;
+                this.fullSubtractionValue = res.data.data.fullSubtractionValue;
+            }else{
+                this.dis = true;
+                this.cardshow = false;
+            } 
         }).catch((err) => {
             console.log(err)
         })
@@ -134,11 +136,7 @@ export default {
             this.haveClick = !this.haveClick;
         },
         cardClick(){
-            console.log(this.money)
-        
             this.blueColor = !this.blueColor;
-           
-
             if(this.blueColor == true){
                 this.pay = this.money - this.fullSubtractionValue
             }else {
@@ -147,27 +145,22 @@ export default {
         },   
         //点击购买
         vipPay(){
-        
-                if ( this.dis == false && this.msgbox == 1 && this.blueColor==false ) {
-                    MessageBox('提示', '你还有兑换券没有使用');
-                    this.msgbox++ ;
-                }else {
-                    
-                    if (typeof WeixinJSBridge == "undefined"){
-                        if( document.addEventListener ){
-                            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-                        }else if (document.attachEvent){  
-                            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);                 
-                            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);             
-                        }
-                    }else{
-                        //暂不使用   微信功能 ，后期开放
-                        this.onBridgeReady();
+            if ( this.dis == false && this.msgbox == 1 && this.blueColor==false ) {
+                MessageBox('提示', '你还有兑换券没有使用');
+                this.msgbox++ ;
+            }else { 
+                if (typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                    }else if (document.attachEvent){  
+                        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);                 
+                        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);             
                     }
+                }else{
+                    //暂不使用   微信功能 ，后期开放
+                    this.onBridgeReady();
                 }
-
-            
-                 
+            }        
         },
         onBridgeReady(){
             var discountId = '';
@@ -176,8 +169,6 @@ export default {
             }else{
                 discountId = ''
             }
-
-
             this.$http.get(this.urlTitle+'wechat/unifiedOrder',{ 
                 params : { 
                     //需要支付的钱是paymoney 
@@ -188,8 +179,6 @@ export default {
                     time: this.time,
                     discountType: 1,
                     discountId: discountId
-
-
                 }
             }).then((res) => { 
                 WeixinJSBridge.invoke(
@@ -203,8 +192,7 @@ export default {
                     },function(res){
                         console.log(res.err_msg)
                         if(res.err_msg == "get_brand_wcpay_request:ok"){
-                          
-                            	location.href="mine.html";//支付成功跳转到指定页面
+                            location.href="mine.html";//支付成功跳转到指定页面
                         }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
                             Toast("支付取消")
                         }else{
