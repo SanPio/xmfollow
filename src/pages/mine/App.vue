@@ -63,8 +63,8 @@
         </div>
         
         <!-- Content各账号详细内容 -->
-        <ul id="content" v-if="contentShow">
-            <li v-for="(item,ind) in accInfo" :key="ind">
+        <ul id="content" v-if="contentShow" >
+            <li v-for="(item,ind) in accInfo" :key="ind" v-if="item.isSimulated!=2">
                 <!-- 账号标题 -->
                 <div class="con-tit"  @click="conboxOpenClose(ind)">
                     <p class="con-tit-left"> 

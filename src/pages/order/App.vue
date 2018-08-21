@@ -1,6 +1,6 @@
 <template>
     <div id="box">
-        <div id="header" class="clearfix" >
+        <!-- <div id="header" class="clearfix" >
             <div class="left">
                 <img :src="traderImg" alt="">
             </div>
@@ -17,7 +17,7 @@
                     一键平仓
                 </button>
             </div>
-        </div>
+        </div> -->
         <mt-navbar v-model="selected" :fixed='fixed'>
             <mt-tab-item id="info">订单信息</mt-tab-item>
             <mt-tab-item id="history">历史记录</mt-tab-item>
@@ -25,7 +25,7 @@
          <mt-tab-container v-model="selected">
            
             <mt-tab-container-item id="info">
-                <div style="height:92px"></div>
+                <div style="height:.92rem"></div>
                 <div style="overflow-y: scroll;">
                     <mt-loadmore 
                     :bottom-method="loadBottom" 
@@ -181,7 +181,7 @@
 
 
             <mt-tab-container-item id="history">
-                <div style="height:92px"></div>
+                <div style="height:.92rem"></div>
                 <div style="overflow-y: scroll;">
                     <mt-loadmore 
                     :bottom-method="hisloadBottom" 
