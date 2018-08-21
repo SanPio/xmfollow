@@ -234,39 +234,173 @@ export default {
         //解除绑定
         relieve(ind){
             console.log("解除绑定 ")
-            MessageBox({
-                cancelButtonText:'确定',
-                confirmButtonText:'取消',
-                title: '解除绑定',
-                message: '您是否要解除账号绑定',
-                showConfirmButton:true,
-                showCancelButton:true
-            }).then(action => { 
-                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
-                if (action == 'cancel') {     //确认的回调     
-                    let postData = this.$qs.stringify({
+
+
+            let postData = this.$qs.stringify({
                         accountsid:this.infoArr[ind].accountsid,
                         userid:this.userId,
                     });
                     console.log(postData)
                     this.$http({
                     method: 'post',
-                        url: this.urlTitle+'wx/member/delBindAccount',
+                        url: this.urlTitle+'wx/order/trader/selectUntie',
                         data:postData
                     }).then((res)=>{
                         console.log(res)
-                        window.location.reload()
+                        if ( res.data.status == '0') {
+                            MessageBox({
+                                cancelButtonText:'确定',
+                                confirmButtonText:'取消',
+                                title: '解除绑定',
+                                message: '您是否要解除账号绑定',
+                                showConfirmButton:true,
+                                showCancelButton:true
+                            }).then(action => { 
+                                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                                if (action == 'cancel') {     //确认的回调     
+                                    let postData = this.$qs.stringify({
+                                        accountsid:this.infoArr[ind].accountsid,
+                                        userid:this.userId,
+                                    });
+                                    console.log(postData)
+                                    this.$http({
+                                    method: 'post',
+                                        url: this.urlTitle+'wx/member/delBindAccount',
+                                        data:postData
+                                    }).then((res)=>{
+                                        console.log(res)
+                                        // window.location.reload()
+                                    }).catch((err) => {
+                                        console.log(err)
+                                        // window.location.reload()
+                                    });    
+
+                                }
+                                if (action == 'confirm') {     //确认的回调
+                    
+                                }
+                            })
+ 
+                        }else if (res.data.status == '1') {
+                            
+                            MessageBox({
+                                cancelButtonText:'确定',
+                                confirmButtonText:'取消',
+                                title: '解除绑定',
+                                message: '您还有跟随持仓订单，如果解除绑定账号需要将现有持仓订单强行平仓，您确定平仓并解除账号吗？',
+                                showConfirmButton:true,
+                                showCancelButton:true
+                            }).then(action => { 
+                                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                                if (action == 'cancel') {     //确认的回调    
+                                
+                                    let postDataPing = this.$qs.stringify({
+                                        accountId: this.infoArr[ind].accountsid,
+                                        optionId: '',
+                                        type : 0,
+                                        userId : this.userId,
+                                    });
+                                    console.log(postData)
+                                    this.$http({
+                                        method: 'post',
+                                        url: this.urlTitle+'wx/order/member/followStop',
+                                        data:postDataPing
+                                    }).then((res)=>{
+                                        
+                                    })
+                                    let postData = this.$qs.stringify({
+                                        accountsid:this.infoArr[ind].accountsid,
+                                        userid:this.userId,
+                                    });
+                                    console.log(postData)
+                                    this.$http({
+                                    method: 'post',
+                                        url: this.urlTitle+'wx/member/delBindAccount',
+                                        data:postData
+                                    }).then((res)=>{
+                                        console.log(res)
+                                        // window.location.reload()
+                                    }).catch((err) => {
+                                        console.log(err)
+                                        // window.location.reload()
+                                    });    
+
+                                }
+                                if (action == 'confirm') {     //确认的回调
+                    
+                                }
+                            })
+
+
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        // window.location.reload()
                     }).catch((err) => {
                         console.log(err)
-                        window.location.reload()
+                        // window.location.reload()
                     });
+
+
+
+
+
+
+            // MessageBox({
+            //     cancelButtonText:'确定',
+            //     confirmButtonText:'取消',
+            //     title: '解除绑定',
+            //     message: '您是否要解除账号绑定',
+            //     showConfirmButton:true,
+            //     showCancelButton:true
+            // }).then(action => { 
+            //     //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+            //     if (action == 'cancel') {     //确认的回调     
+            //         let postData = this.$qs.stringify({
+            //             accountsid:this.infoArr[ind].accountsid,
+            //             userid:this.userId,
+            //         });
+            //         console.log(postData)
+            //         this.$http({
+            //         method: 'post',
+            //             url: this.urlTitle+'wx/member/delBindAccount',
+            //             data:postData
+            //         }).then((res)=>{
+            //             console.log(res)
+            //             window.location.reload()
+            //         }).catch((err) => {
+            //             console.log(err)
+            //             window.location.reload()
+            //         });
+
+
+
+
+
                     
 
-                }
-                if (action == 'confirm') {     //确认的回调
+            //     }
+            //     if (action == 'confirm') {     //确认的回调
       
-                }
-            })
+            //     }
+            // })
 
 
 
@@ -319,27 +453,30 @@ export default {
             //隐藏遮罩
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
-            let postData = this.$qs.stringify({
-                userId: this.userId,
-                usertradeacts: this.account,
-                usertradepsd: this.password,
-                usertradesvr: this.platform,
-                accountnote: this.remarks
-            });
 
-
-            console.log(postData)
-            this.$http({
-            method: 'post',
-                url: this.urlTitle+'wx/member/insBindAccount',
-            
-                data:postData
-            }).then((res)=>{
-                //刷新页面
-                window.location.reload();
-            }).catch((err) => {
-                console.log(err)
-            });
+            if ( this.account == '' || this.password == '' || this.platform == ''){
+                alert("账号、密码和服务器都不能为空")
+            }else{
+                let postData = this.$qs.stringify({
+                    userId: this.userId,
+                    usertradeacts: this.account,
+                    usertradepsd: this.password,
+                    usertradesvr: this.platform,
+                    accountnote: this.remarks
+                });
+                console.log(postData)
+                this.$http({
+                method: 'post',
+                    url: this.urlTitle+'wx/member/insBindAccount',
+                
+                    data:postData
+                }).then((res)=>{
+                    //刷新页面
+                    window.location.reload();
+                }).catch((err) => {
+                    console.log(err)
+                });
+            }    
         },
         //点击弹窗更新绑定
         confirmUpdate(){

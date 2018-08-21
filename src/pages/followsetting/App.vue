@@ -343,7 +343,7 @@ export default {
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
                 if (action == 'cancel') {     //确认的回调     
-                     let postData = this.$qs.stringify({
+                    let postData = this.$qs.stringify({
                         accountId: this.accountId,
                         optionId: this.optionId,
                         type : 0,
