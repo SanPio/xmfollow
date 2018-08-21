@@ -44,8 +44,14 @@
                   <img :src="imgSrc2" alt="">
                 </div>
                 <dl>
-                  <dt> {{item.signalName}} <span> {{ item.star }}星</span></dt>
-                  <dd>{{item.signalIntroduce}}</dd>
+                  <dt> {{item.signalName}}</dt>
+                  <!-- <dd>{{item.signalIntroduce}}</dd> -->
+                  <dd> 
+                    <img v-for="val in Number(item.star) " :key="val" :src="starImg">
+                    <span v-if="true">正常</span>
+                    <span  v-if="true">警告</span>
+                    <span  v-if="true">收尾</span>
+                  </dd>
                 </dl>
               </div>
               <div class="tit-right">
@@ -147,6 +153,7 @@ export default {
       imgSrc2: require('./assets/Head-portrait.jpg'),
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
+      starImg: require('./assets/Myhomepage-Unclicked@2x.png'),
       boxItem: [],
       bottomDistance: 2,
       autoFill: false,
@@ -484,11 +491,14 @@ export default {
           }else if( res.data.status == 3 ){
               //绑定
               window.location.href=`fivestar.html?optionId=${this.optionId[ind]}&name=${this.boxItem[ind].signalName}`;
-          }
-          else if( res.data.status == 4 ){
+          }else if( res.data.status == 4 ){
               //绑定
               window.location.href=`accountmanage.html`;
+          }else if( res.data.status == 5 ){
+              //模拟账号不能跟随五星
+              MessageBox('提示', '模拟账号不能跟随五星信号员');
           }
+          
 
         console.log(res)
         }).catch((err)=>{
@@ -660,6 +670,10 @@ export default {
         margin-top: .04rem;
         color: #4fa2fe;
         font-size: .24rem;
+        img{
+          width: .24rem;
+          height: .24rem;
+        }
       }
     }
     img{

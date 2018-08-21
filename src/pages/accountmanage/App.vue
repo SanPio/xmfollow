@@ -512,8 +512,7 @@ export default {
                     }else{
                         window.location.reload();
                     }
-                    //刷新页面
-                    // window.location.reload();
+                   
 
                 }).catch((err) => {
                     console.log(err)

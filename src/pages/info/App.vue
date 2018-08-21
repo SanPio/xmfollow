@@ -419,11 +419,14 @@ export default {
                             }else if( res.data.status == 3 ){
                                 //绑定
                                 window.location.href=`fivestar.html?optionId=${this.optionId}&name=${this.info.signalName}`;
-                            }
-                            else if( res.data.status == 4 ){
+                            }else if( res.data.status == 4 ){
                                 //绑定
                                 window.location.href=`accountmanage.html`;
+                            }else if( res.data.status == 5 ){
+                                //模拟账号不能跟随五星
+                                MessageBox('提示', '模拟账号不能跟随五星信号员');
                             }
+                            
                             console.log(res)
                             }).catch((err)=>{
                             console.log(err)
