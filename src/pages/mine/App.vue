@@ -342,7 +342,7 @@ export default {
     created(){
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
-        this.accountId = localStorage.getItem('accountId');
+        // this.accountId = localStorage.getItem('accountId');
          let haveiss = sessionStorage.getItem('iss');
         if(haveiss == 1){
             this.contentShow = false;
@@ -368,6 +368,8 @@ export default {
             this.accInfo = res.data.data.account;
             this.issAccInfo = res.data.data.accountsmoni;
             console.log(this.accInfo)
+            localStorage.setItem('accountId', this.accInfo[0].accountid);
+            this.accountid = this.accInfo[0].accountid
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
                 this.acth = true;
@@ -462,7 +464,7 @@ export default {
            let haveiss = sessionStorage.getItem('iss');
             if( haveiss == 1){
                 window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
-            }else{
+            }else if(this.accInfo[0].isSimulated != 2){
                 window.location.href=`followmange.html?accountsid=${this.accInfo[0].accountid}`; 
             }
         },
@@ -497,13 +499,16 @@ export default {
                 sessionStorage.setItem('iss', 1);
                 this.contentShow = false;
                 this.iss = true;
-
+                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+                this.accountid = this.issAccInfo[0].accountid
 
             } 
             if( this.swi == false ){
                 sessionStorage.removeItem('iss');
                 this.contentShow = true;
                 this.iss = false;
+                localStorage.setItem('accountId', this.accInfo[0].accountid);
+                this.accountid = this.accInfo[0].accountid
             }
         }
         

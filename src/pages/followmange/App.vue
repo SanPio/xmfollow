@@ -239,8 +239,8 @@ export default {
                 iss : this.iss
             }   
         }).then((res) => { 
-            console.log(res.data.data.followedReCordRespDtoList)
-            console.log(this.nowArr)
+            // console.log(res.data.data.followedReCordRespDtoList)
+            // console.log(this.nowArr)
             //结束加载图
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
@@ -266,6 +266,7 @@ export default {
                 iss : this.iss
             }   
         }).then((res) => { 
+            console.log(res)
             //结束加载图
             this.$refs.loadmore.onBottomLoaded();
             if(res.data.data.countoptionids <= 10){

@@ -199,7 +199,7 @@ export default {
                 iss: 1
             }   
         }).then((res) => { 
-            console.log(res)
+            // console.log(res)
             //结束加载图
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
