@@ -276,7 +276,7 @@ export default {
                                     });    
 
                                 }
-                                if (action == 'confirm') {     //确认的回调
+                                if (action == 'confirm') {     
                     
                                 }
                             })
@@ -455,7 +455,7 @@ export default {
             this.popUpShow = false;
 
             if ( this.account == '' || this.password == '' || this.platform == ''){
-                alert("账号、密码和服务器都不能为空")
+                MessageBox('提示', '账号、密码和服务器都不能为空');
             }else{
                 let postData = this.$qs.stringify({
                     userId: this.userId,
@@ -468,11 +468,15 @@ export default {
                 this.$http({
                 method: 'post',
                     url: this.urlTitle+'wx/member/insBindAccount',
-                
                     data:postData
                 }).then((res)=>{
-                    //刷新页面
-                    window.location.reload();
+                    console.log(res)
+                    if(res.data.code == 2){
+                        MessageBox('提示', '账号重复，请重新添加');
+                    }else{
+                        window.location.reload();
+                    }
+                    
                 }).catch((err) => {
                     console.log(err)
                 });
@@ -484,26 +488,41 @@ export default {
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
             console.log('更新绑定')
-            let postData = this.$qs.stringify({
-                accountSid: this.infoArr[this.updataind].accountsid,
-                userId: this.userId,
-                usertradeacts: this.account,
-                usertradepsd: this.password,
-                usertradesvr: this.platform,
-                accountnote: ''
-            });
-            this.$http({
-            method: 'post',
-                url: this.urlTitle+'wx/member/rebindAccount',  
-                data:postData
-            }).then((res)=>{
-                console.log(res)
-                //刷新页面
-                window.location.reload();
 
-            }).catch((err) => {
-                console.log(err)
-            });
+            if ( this.account == '' || this.password == '' || this.platform == ''){
+                 MessageBox('提示', '账号、密码和服务器都不能为空');
+               
+            }else{
+                let postData = this.$qs.stringify({
+                    accountSid: this.infoArr[this.updataind].accountsid,
+                    userId: this.userId,
+                    usertradeacts: this.account,
+                    usertradepsd: this.password,
+                    usertradesvr: this.platform,
+                    accountnote: ''
+                });
+                this.$http({
+                method: 'post',
+                    url: this.urlTitle+'wx/member/rebindAccount',  
+                    data:postData
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 2){
+                        MessageBox('提示', '账号重复，请重新更新');
+                    }else{
+                        window.location.reload();
+                    }
+                    //刷新页面
+                    // window.location.reload();
+
+                }).catch((err) => {
+                    console.log(err)
+                });
+                
+            }
+
+
+           
         },
         //点击弹窗取消按钮
         cancelBtn(){
