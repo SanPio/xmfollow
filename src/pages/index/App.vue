@@ -168,9 +168,9 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.1.11:8080/",
-      urlTitle:"http://192.168.1.101:80/", 
+      // urlTitle:"http://192.168.1.101:80/", 
       // urlTitle:"http://www.0539maj.com/app/",
-      // urlTitle:"http://132.232.44.112:80/app/",
+      urlTitle:"http://132.232.44.112:80/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -202,6 +202,7 @@ export default {
     },
     mounted(){
       this.clickrequest(7,1,10,'',1,1);
+      
     },
     // filters:{  
     //   tofixd(value) {  
