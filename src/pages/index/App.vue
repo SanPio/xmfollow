@@ -48,9 +48,9 @@
                   <!-- <dd>{{item.signalIntroduce}}</dd> -->
                   <dd> 
                     <img v-for="val in Number(item.star) " :key="val" :src="starImg">
-                    <span v-if="true">正常</span>
-                    <span  v-if="true">警告</span>
-                    <span  v-if="true">收尾</span>
+                    <span v-if="item.status == 0" class="blue">正常</span>
+                    <span  v-if="item.status == 1" class="orange">警告</span>
+                    <span  v-if="item.status == 2" class="red">收尾</span>
                   </dd>
                 </dl>
               </div>
@@ -167,10 +167,10 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.1.11:8080/",
-      // urlTitle:"http://192.168.1.101:80/", 
+      urlTitle:"http://192.168.0.103:8080/",
+      // urlTitle:"http://192.168.0.102:80/", 
       // urlTitle:"http://www.0539maj.com/app/",
-      urlTitle:"http://132.232.44.112:80/app/",
+      // urlTitle:"http://132.232.44.112:80/app/",
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -202,7 +202,7 @@ export default {
     },
     mounted(){
       this.clickrequest(7,1,10,'',1,1);
-      
+
     },
     // filters:{  
     //   tofixd(value) {  
@@ -672,8 +672,22 @@ export default {
         color: #4fa2fe;
         font-size: .24rem;
         img{
-          width: .24rem;
-          height: .24rem;
+          width: .26rem;
+          height: .26rem;
+        }
+        span{
+          font-size: .22rem;
+          margin-left: .2rem;
+          line-height: .22rem;
+        }
+        .blue{
+          color: #4fa2fe;
+        }
+        .orange{
+          color: #ff7c2b
+        }
+        .red{
+          color: red;
         }
       }
     }

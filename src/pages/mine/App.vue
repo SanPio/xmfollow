@@ -34,9 +34,9 @@
         <div id="title" v-if="headerOnOff">
             <dl v-for="(item,ind) in titleArr" :key="item">
                 <dt>{{item}}</dt>
-                <dd v-if="ind==0">{{ '$' +titleInfo[0]}}</dd>
-                <dd v-if="ind==1">{{titleInfo[1]}}</dd>
-                <dd v-if="ind==2">{{ '$' + titleInfo[2]}}</dd>
+                <dd v-if="ind==0&&titleInfo.length" >{{ '$' +titleInfo[0]}}</dd>
+                <dd v-if="ind==1&&titleInfo.length"  >{{titleInfo[1]}}</dd>
+                <dd v-if="ind==2&&titleInfo.length"  >{{ '$' + titleInfo[2]}}</dd>
             </dl>
         </div>
         <!--Center 跳转部分 -->
@@ -493,23 +493,27 @@ export default {
 
         //切换状态
         swiChange(){
-           
-            this.swi = !this.swi;
-            if(this.swi == true){
-                sessionStorage.setItem('iss', 1);
-                this.contentShow = false;
-                this.iss = true;
-                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-                this.accountid = this.issAccInfo[0].accountid
+            if ( sessionStorage.getItem('iss') != 1 &&this.issAccInfo[0].endStatus == 0) {
+                MessageBox('提示', '您的模拟账号已到期');
+            }else {
+                    this.swi = !this.swi;
+                    if(this.swi == true){
+                        sessionStorage.setItem('iss', 1);
+                        this.contentShow = false;
+                        this.iss = true;
+                        localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+                        this.accountid = this.issAccInfo[0].accountid
 
-            } 
-            if( this.swi == false ){
-                sessionStorage.removeItem('iss');
-                this.contentShow = true;
-                this.iss = false;
-                localStorage.setItem('accountId', this.accInfo[0].accountid);
-                this.accountid = this.accInfo[0].accountid
+                    } 
+                    if( this.swi == false ){
+                        sessionStorage.removeItem('iss');
+                        this.contentShow = true;
+                        this.iss = false;
+                        localStorage.setItem('accountId', this.accInfo[0].accountid);
+                        this.accountid = this.accInfo[0].accountid
+                    }
             }
+            
         }
         
 
