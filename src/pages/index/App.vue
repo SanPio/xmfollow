@@ -44,10 +44,10 @@
                   <img :src="imgSrc2" alt="">
                 </div>
                 <dl>
-                  <dt> {{item.signalName}} <span> {{ item.star + '星'}}</span> </dt>
+                  <dt> {{item.signalName}} </dt>
                   <!-- <dd>{{item.signalIntroduce}}</dd> -->
                   <dd> 
-                    <!-- <img v-for="val in Number(item.star) " :key="val" :src="starImg"> -->
+                    <img v-for="val in Number(item.star) " :key="val" :src="starImg">
                     
                     <span v-if="item.status == 0" class="blue">正常</span>
                     <span  v-if="item.status == 1" class="orange">警告</span>
@@ -154,7 +154,7 @@ export default {
       imgSrc2: require('./assets/Head-portrait.jpg'),
       imgSrc3: require('./assets/Navigate-click.jpg'),
       imgSrc4: require('./assets/Myhomepage-Unclicked@2x.png'),
-      starImg: require('./assets/Myhomepage-Unclicked@2x.png'),
+      starImg: require('./assets/xing.png'),
       boxItem: [],
       bottomDistance: 2,
       autoFill: false,
@@ -187,15 +187,14 @@ export default {
         document.title = '交易领航';
         this.iss = ''
     }
-    var a=this.GetRequest();
-    var index_1=a['accountsid'];
-    var index_2=a['userid']; 
-      this.accountId = index_1;
-      this.userId = index_2;
-      //储存userId
-      localStorage.setItem('userId', this.userId);
-      //储存accountId
-      localStorage.setItem('accountId', this.accountId);
+    // var a=this.GetRequest();
+    // var index_1=a['accountsid'];
+    // var index_2=a['userid']; 
+    //   this.accountId = index_1;
+    //   this.userId = index_2;
+    this.accountId = localStorage.getItem('accountId');
+    this.userId = localStorage.getItem('userId');
+    
       //储存域名端口
       localStorage.setItem('urlTitle', this.urlTitle);
     //初始化数据请求   

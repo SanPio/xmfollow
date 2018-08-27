@@ -444,9 +444,9 @@ export default {
         toIndex(){
             let haveiss = sessionStorage.getItem('iss');
             if( haveiss == 1){
-                window.location.href=`index.html?accountsid=${this.issAccInfo[0].accountid}&userid=${this.userId}`;
+                window.location.href=`index.html`;
             }else{
-                window.location.href=`index.html?accountsid=${this.accInfo[0].accountid}&userid=${this.userId}`; 
+                window.location.href=`index.html`; 
             }
 
         },

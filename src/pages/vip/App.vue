@@ -125,6 +125,7 @@ export default {
             this.timeColor = ind;
             this.disOnoff = false;
             this.reduceOnoff = false;
+            this.msgbox = 1;
             if ( ind == 0) {
                 this.time = 1;
             }else if ( ind == 1) {
