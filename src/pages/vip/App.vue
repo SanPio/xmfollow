@@ -235,7 +235,7 @@ export default {
                     },function(res){
                         console.log(res.err_msg)
                         if(res.err_msg == "get_brand_wcpay_request:ok"){
-                                window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                                window.location.href=`index.html`;
                             	// location.href="weixinPayResult.html";//支付成功跳转到指定页面
                         }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
                             Toast("支付取消")

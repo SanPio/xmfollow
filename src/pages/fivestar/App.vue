@@ -192,7 +192,7 @@ export default {
                     },function(res){
                         console.log(res.err_msg)
                         if(res.err_msg == "get_brand_wcpay_request:ok"){
-                            location.href="mine.html";//支付成功跳转到指定页面
+                            location.href="index.html";//支付成功跳转到指定页面
                         }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
                             Toast("支付取消")
                         }else{
