@@ -24,7 +24,7 @@
         <!-- 跟单开关 -->
         <div class="content padding clearfix follow-on">
             <span class="con-title left ">跟单开关</span>
-                <mt-switch v-model="followOnOff" class="right"></mt-switch>
+            <mt-switch v-model="followOnOff" class="right"></mt-switch>
         </div>
         <!-- 一键平仓 -->
         <p class="content padding clearfix close-position">
@@ -65,7 +65,7 @@
         </div>
         <!-- 反向跟随提示语 -->
         <p class="proportions">
-            <span >开启后将执行与交易员信号相反的交易</span>
+            <span >开启后将执行与信号源相反的交易</span>
         </p>
         <!-- 止盈 -->
         <p class="content padding clearfix target-profit ">
@@ -236,6 +236,11 @@ export default {
          
     },
     watch: {
+        followOnOff(newval,oldval){  
+            if ( newval == false ) {
+                MessageBox('警告，请注意', '您现在已经暂停跟随此信号源的开仓操作，如果误操作请恢复选项。');
+            }
+        },
         followNum(val){
             if( this.iss == 1 && val >1){
                this.followNum = 1
@@ -313,7 +318,7 @@ export default {
                             }).then(action => { 
                              
                                 if (action == 'confirm') {     //确认的回调
-                                    window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                                    window.location.href=`followmange.html?accountsid=${this.accountId}`;
                                 }
                             })
                             // MessageBox('提示', '已取消跟随');
@@ -337,7 +342,7 @@ export default {
                 cancelButtonText:'确定',
                 confirmButtonText:'取消',
                 title: '一键平仓',
-                message: '您是否确定平掉此信号员的持仓？',
+                message: '您是否确定平掉此信号源的持仓？',
                 showConfirmButton:true,
                 showCancelButton:true
             }).then(action => { 

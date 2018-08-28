@@ -48,8 +48,6 @@
                   <!-- <dd>{{item.signalIntroduce}}</dd> -->
                   <dd> 
                     <img v-for="val in Number(item.star) " :key="val" :src="starImg">
-                    
-                    <span v-if="item.status == 0" class="blue">正常</span>
                     <span  v-if="item.status == 1" class="orange">警告</span>
                     <span  v-if="item.status == 2" class="red">收尾</span>
                   </dd>
@@ -90,7 +88,13 @@
                 </dl>
                 <dl>
                   <dt> 跟随人数 </dt>
-                  <dd> {{item.followerNumber}} </dd>
+                  <dd v-if="item.optionId == 8 "> {{item.followerNumber + 100}} </dd>
+                  <dd v-if="item.optionId == 1 "> {{item.followerNumber + 70}} </dd>
+                  <dd v-if="item.optionId == 2 "> {{item.followerNumber + 10}} </dd>
+                  <dd v-if="item.optionId == 3 "> {{item.followerNumber + 60}} </dd>
+                  <dd v-if="item.optionId == 5 "> {{item.followerNumber + 67}} </dd>
+                  <dd v-if="item.optionId == 6 "> {{item.followerNumber + 20}} </dd>
+                  <dd v-if="item.optionId == 7 "> {{item.followerNumber + 31}} </dd>
                 </dl>
               </div>
 
@@ -168,10 +172,10 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      urlTitle:"http://192.168.0.103:8080/",
+      // urlTitle:"http://192.168.0.103:8080/",
       // urlTitle:"http://192.168.0.111:80/", 
       // urlTitle:"http://www.0539maj.com/app/",
-      // urlTitle:"http://132.232.44.112:80/app/", 
+      urlTitle:"http://132.232.44.112:80/app/", 
       // urlTitle:"http://121.196.208.147:80/",
     
       allLoaded: false,
@@ -497,7 +501,7 @@ export default {
               window.location.href=`accountmanage.html`;
           }else if( res.data.status == 5 ){
               //模拟账号不能跟随五星
-              MessageBox('提示', '模拟账号不能跟随五星信号员');
+              MessageBox('提示', '模拟账号不能跟随五星信号源');
           }
           
 

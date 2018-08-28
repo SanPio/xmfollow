@@ -163,19 +163,6 @@
         </ul>
         <!-- 次div为空，做占位用，返回按钮占56px高度 -->
         <div style="height:56px"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
 </template>
 <script>
@@ -388,7 +375,7 @@ export default {
                 cancelButtonText:'确定',
                 confirmButtonText:'取消',
                 title: '清空',
-                message: '您是否确定平掉此信号员的持仓？',
+                message: '您是否确定平掉此信号源的持仓？',
                 showConfirmButton:true,
                 showCancelButton:true
             }).then(action => { 

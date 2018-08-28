@@ -193,7 +193,8 @@ export default {
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          
         }).then((res) => {
-            console.log( parseFloat(res.data.data.money))
+            
+            console.log(res)
             this.info = res.data.data;
             //主要信息
             this.mianInfo.push(res.data.data.experience);
@@ -221,10 +222,28 @@ export default {
             }
             
             if(  res.data.data.followerNumber ){
-                if( parseFloat( res.data.data.followerNumber ) >= 1000 || parseFloat( res.data.data.followerNumber ) <= -1000){
-                    this.mianInfo.push( parseInt( parseFloat( res.data.data.followerNumber )/10 )/ 100 + "K")
+                var followNum = parseInt( res.data.data.followerNumber ) 
+                if(res.data.data.optionId == 8){
+                    followNum += 100
+                }else if(res.data.data.optionId == 1){
+                    followNum += 70
+                }else if(res.data.data.optionId == 2){
+                    followNum += 10
+                }else if(res.data.data.optionId == 3){
+                    followNum += 60
+                }else if(res.data.data.optionId == 5){
+                    followNum += 67
+                }else if(res.data.data.optionId == 6){
+                    followNum += 20
+                }else if(res.data.data.optionId == 7){
+                    followNum += 31
+                }
+
+
+                if( followNum >= 1000){
+                    this.mianInfo.push( parseInt( followNum / 10 ) / 100 + "K")
                 }else{
-                    this.mianInfo.push( res.data.data.followerNumber );
+                    this.mianInfo.push( followNum );
                 }
             }else{
                 this.mianInfo.push( 0 );
@@ -424,7 +443,7 @@ export default {
                                 window.location.href=`accountmanage.html`;
                             }else if( res.data.status == 5 ){
                                 //模拟账号不能跟随五星
-                                MessageBox('提示', '模拟账号不能跟随五星信号员');
+                                MessageBox('提示', '模拟账号不能跟随五星信号源');
                             }
                             
                             console.log(res)

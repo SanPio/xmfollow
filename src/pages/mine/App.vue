@@ -251,17 +251,17 @@
                 </ul>
             </li>
         </ul>
-        <div class="switch clearfix" >
-                <p class="left sw-le" v-if="swi">
+        <div class="switch clearfix"  @click="swiChange">
+                <p class="left sw-le" v-if="swi" :class="{'bgcblue':swi}">
                     <span class="">
                         当前状态：
                     </span>
-                    <span class="blue">
+                    <span >
                         模拟账号
                     </span>
                 </p>
-                <p class="left sw-cen" @click="swiChange">
-                    <span class="blue" >
+                <p class="left sw-cen" :class="{'bgcblue':!swi}" >
+                    <span  >
                         点击切换
                     </span>
                 </p>
@@ -269,7 +269,7 @@
                     <span>
                         当前状态：
                     </span>
-                    <span class="blue">
+                    <span >
                         真实账号
                     </span>
                 </p>
@@ -390,15 +390,10 @@ export default {
                 this.accNumArr.push(false)
                 // this.$set(this.accNumArr,i,false)
             }
-
             // console.log(this.accNumArr)
-
         }).catch((err) => {
             console.log(err)
         })
-
-
-
     },
     filters: {
         numPuls(val){
@@ -408,8 +403,7 @@ export default {
                 return parseInt( val / 10 ) / 100 + 'K'
             }else{
                 return val
-            }
-            
+            }    
         }
     },
     mounted(){
@@ -422,15 +416,13 @@ export default {
     //         }else{
     //             _this.headerOnOff = true; //Header展开
     //         }
-    //    })
-        
+    //    })       
     },
     methods: {
         toauthentication(){
             if(this.acth == false){
                  window.location.href=`authentication.html`;
-            }
-           
+            } 
         },
         //账号列表内容展开收缩控制
         conboxOpenClose(ind){
@@ -448,13 +440,11 @@ export default {
             }else{
                 window.location.href=`index.html`; 
             }
-
         },
         //跳转到个人信息页
         toPersonInfo(){
             window.location.href="personInfo.html";
         },
-      
         //跳转到账号管理
         toAccount(){  
                window.location.href="accountmanage.html";         
@@ -480,9 +470,7 @@ export default {
           MessageBox('提示', '建设中');
         // window.location.href="vip.html";
         },
-
-        //计算会员到期时间
-        
+        //计算会员到期时间   
         dateMinus(sDate){
             var sdate = new Date(sDate.replace(/-/g, "/"));
             var now = new Date();
@@ -490,46 +478,28 @@ export default {
             var day = parseInt(days / (1000 * 60 * 60 * 24));
             this.day = day + 1;
         },
-
         //切换状态
         swiChange(){
             if ( sessionStorage.getItem('iss') != 1 &&this.issAccInfo[0].endStatus == 0) {
                 MessageBox('提示', '您的模拟账号已到期');
             }else {
-                    this.swi = !this.swi;
-                    if(this.swi == true){
-                        sessionStorage.setItem('iss', 1);
-                        this.contentShow = false;
-                        this.iss = true;
-                        localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-                        this.accountid = this.issAccInfo[0].accountid
-
-                    } 
-                    if( this.swi == false ){
-                        sessionStorage.removeItem('iss');
-                        this.contentShow = true;
-                        this.iss = false;
-                        localStorage.setItem('accountId', this.accInfo[0].accountid);
-                        this.accountid = this.accInfo[0].accountid
-                    }
+                this.swi = !this.swi;
+                if(this.swi == true){
+                    sessionStorage.setItem('iss', 1);
+                    this.contentShow = false;
+                    this.iss = true;
+                    localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+                    this.accountid = this.issAccInfo[0].accountid
+                } 
+                if( this.swi == false ){
+                    sessionStorage.removeItem('iss');
+                    this.contentShow = true;
+                    this.iss = false;
+                    localStorage.setItem('accountId', this.accInfo[0].accountid);
+                    this.accountid = this.accInfo[0].accountid
+                }
             }
-            
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }       
 }
 </script>
@@ -738,7 +708,7 @@ export default {
         border-top: 1px solid #c9c9c9;
         border-bottom: 1px solid #c9c9c9;
         line-height: .98rem;
-        color: #666;
+        color: #4fa2fe;
         font-size: .3rem;
         font-weight: bold;
         background-color: #fff;
@@ -753,36 +723,11 @@ export default {
             width: 4.8rem;
             border-left: .01rem solid #c9c9c9;
         }
-        .blue{
-            color: #4fa2fe;
+        .bgcblue{
+            background-color: #4fa2fe;
+            color: #fff;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //底部导航按钮
     .footer{
         width: 100%;
