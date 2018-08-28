@@ -110,7 +110,7 @@
                         </div>
                         <!-- 记录内容 -->
                         <div class="listbot clearfix" v-if="recordOpen[ind]">
-                            <div class="listbot-left left">
+                            <!-- <div class="listbot-left left">
                                 <p>
                                     <span>当前跟单数量</span>
                                     <span> {{ item.countoptionid }}</span>
@@ -119,11 +119,11 @@
                                     <span>当前获利</span>
                                     <span>${{ item.leiji }}</span>
                                 </p>
-                                <!-- <p>
+                                <p>
                                     <span>开始跟随时间</span>
                                     <span>2018-01-13</span>
-                                </p> -->
-                            </div>
+                                </p>
+                            </div> -->
                             <div class="listbot-right right">
                                 <p>
                                     <span>累计跟单数量</span>
