@@ -44,8 +44,8 @@
         </p>
         <!-- 跟单方式下提示语 -->
         <p class="proportions">
-            <span v-if="clickBtn">比例跟随：下单的手数=交易员下单的手数*跟随比例</span>
-            <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与交易员手数无关</span>
+            <span v-if="clickBtn">比例跟随：下单的手数=信号源下单的手数*跟随比例</span>
+            <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与信号源手数无关</span>
         </p>
         <!-- 跟随数值 -->
         <div class="clearfix follow-num" style="border-bottom:1px solid #e5e5e5">

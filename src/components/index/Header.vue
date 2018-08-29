@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       time : "近一周有交易",
-      ability : '交易员能力由高到低',
+      ability : '信号源能力由高到低',
       leftList : ["最近一周有交易","最近两周有交易","最近一月有交易"],
       rightList : ['操盘经验','收益率','近一周盈亏点数','余额','起始资金','跟随人数'],
       btnnormal : true,
@@ -82,7 +82,7 @@ export default {
       this.actLeft =ind;
       this.actRight = -1;
       if(ind==0){
-        this.ability = "交易员能力由高到低";
+        this.ability = "信号源能力由高到低";
       }else if(ind==1){
         this.ability = "交易单数由高到低";
       }else if(ind==2){
@@ -101,7 +101,7 @@ export default {
       this.actRight =ind;
       this.actLeft = -1;
       if(ind==0){
-        this.ability = "交易员能力由低到高";
+        this.ability = "信号源能力由低到高";
       }else if(ind==1){
         this.ability = "交易单数由低到高";
       }else if(ind==2){

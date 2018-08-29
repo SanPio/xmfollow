@@ -6,7 +6,7 @@
             </div>
             <dl class="left">
                 <dt>
-                    信号员
+                    信号源
                 </dt>
                 <dd>
                     杭州信号实业有限公司
@@ -335,28 +335,64 @@
         <!-- 弹窗 -->
         <div ref="back" class="back" ></div>
         <div class="popup" v-if="popUpShow">
-            <ul class="poptop">
-                <li>
-                    <span>登录平台</span>
-                    <input type="text" placeholder="请输入账号" >
-                   
-                    <ul></ul>
-                </li>
-                <li>
-                    <span>登录账号</span>
-                    <input type="text" placeholder="请输入账号">
-                    
-                </li>
-                <li>
-                    <span>登录密码</span>
-                    <input type="password" placeholder="请输入密码">
+            <ul class="poptop">  
+               <li class="litop">
+                   <span class="pair-en">
+                       USDCHF
+                   </span>
+                   <span class="pair-ch">
+                       美元/瑞郎                  
+                   </span>
+               </li>
+               <li class="licen">
+                   <p>
+                       买
+                       <span>
+                           0.01
+                       </span>
+                       手
                 
-                </li>
-                <li>
-                    <span>账号备注</span>
-                    <input type="text" placeholder="请输入备注名称">
-            
-                </li>
+                   <p>
+                       开仓价
+                       <span>
+                           15.955
+                       </span>
+                   </p>
+                   <p>
+                       当前价
+                       <span class="red">
+                           15.962
+                       </span>
+                   </p>
+               </li>
+               <li class="libot">
+                   <p v-if="false">
+                       <span>
+                           止盈
+                       </span>
+                       <span>
+                           &gt;15.962
+                       </span>
+                   </p>
+                   <p>
+                       <span>
+                           止损
+                       </span>
+                       <span>
+                           &lt;15.962
+                       </span>
+                   </p>
+                   
+                   <p>
+                       <button>
+                          -
+                       </button>
+                       <input type="text">
+                       <button>
+                           +
+                       </button>
+                   </p>
+               </li>
             </ul>
             <div class="popbot">
                 <!-- 止损 -->
@@ -381,10 +417,10 @@ export default {
     name: 'App', 
     data(){
         return {
-            //Header交易员信息  
+            //Header信号源信息  
             traderImg: require('./assets/img2.jpg'),
-
-            selected: 'history',
+            iss: '',
+            selected: 'info',
             fixed: true,
             //订单信息页
             colorShow: true,//数字蓝色还是红色
@@ -446,20 +482,16 @@ export default {
 
         }
     },
-    // created(){
-    //     // if(headerShow){
-    //     //     this.$refs.title.style.top='44'
-    //     // }
-    //     //初始化数据请求
-    //     this.$http.post('',{    
-    //         name:"virus"  
-    //     }).then(function(res){
-    //         // console.log(res)
-    //     }).catch(function(err){
-        
-    //         // console.log(err)
-    //     })
-    // },
+    created(){
+        let haveiss = sessionStorage.getItem('iss');
+        if(haveiss == 1){
+            document.title = '订单管理(模拟)';
+            this.iss = haveiss
+        }else{
+            document.title = '订单管理';
+            this.iss = ''
+        }
+    },
     mounted(){
         
         this.calculationHeight();
@@ -516,15 +548,18 @@ export default {
         calculationHeight(){
             let winHeight = 0;
             if (window.innerHeight){
-                winHeight = window.innerHeight-80;
+                winHeight = window.innerHeight-49;
             }else if((document.body) && (document.body.clientHeight)){
-                winHeight = document.body.clientHeight-80; 
+                winHeight = document.body.clientHeight-49; 
             }
             this.$refs.mybox.style.minHeight=`${winHeight}px`;
             this.$refs.myboxes.style.minHeight=`${winHeight}px`
         },
             //点击标题显示内容收缩
         infoBotOnOff(ind){
+            for ( let i = 0; i < this.infoBotShow.length; i ++) {
+                this.infoBotShow[i] = false;
+            }
             this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
         },
 
@@ -611,7 +646,10 @@ export default {
         //历史记录页
             //点击标题显示内容收缩
         hisBotOnOff(ind){
-            this.$set(this.hisBotShow,ind,!this.hisBotShow[ind])
+            for ( let i = 0; i < this.hisBotShow.length; i ++ ) {
+                this.hisBotShow[i] = false;
+            };
+            this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
         },
             //上拉加载
         hisloadBottom(){
@@ -627,7 +665,7 @@ export default {
     #box{
         background-color: #fff;
     }
-    //Header交易员信息
+    //Header信号源信息
     #header{
         position: fixed;
         top: 0;
@@ -822,58 +860,89 @@ export default {
 
     .popup{
         position: absolute;
-        left: .8rem;
+        left: .65rem;
         top: 1.6rem;
         z-index: 3;
         opacity: 1;
-        padding: .28rem .3rem;
+        width: 6.2rem;
+        height: 3.6rem;
         background-color: #fff;
         border-radius: .28rem;
         .poptop{
-            li{
-                text-align: left;
-                width: 5.1rem;
-                height: .64rem;
-                padding: .16rem .2rem;
-                border-bottom: 1px solid #c9c9c9;
-                span{
-                    font-weight: 900;
+            .litop{
+                height: .7rem;
+                border-bottom: 1px solid #999;
+                .pair-en{
                     font-size: .26rem;
-                    line-height: .26rem;
+                    font-weight: bold;
+                    line-height: .7rem;
+                }
+                .pair-ch{
+                   font-size: .22rem;
+                   line-height: .7rem;
+                    color: #999;
+                    
+                }
+            }
+            .licen{
+                display: flex;
+                justify-content: center;
+                color: #999;
+                height: .62rem;
+                line-height: .62rem;
+                p{
                     margin-right: .2rem;
                 }
-                input{
-                    width: 3rem;
-                    height: .34rem;
-                    padding-left: .2rem;
-                    border: none;
-                    outline: none;
-                    border-left: 1px solid #e5e5e5;
+                span{
+                    color: #000;
                 }
-                img{
-                    width: .32rem;
+                .red{
+                    color: #fe0000;
+                }
+            }
+            .libot{
+                display: flex;
+                justify-content: space-around;
+                input{
+                    width: .4rem;
+                    border: none;
+                    font-size: .34rem;
+                    line-height: .34rem;
+                    text-align: center;
+                }
+                button{
+                    width: .34rem;
+                    height: .34rem;
+                    line-height: .34rem;
+                    border: 1px solid #e6e6e6;
+                    border-radius: 50%;
+                    font-size: .32rem;
+                    background: none;
+                    // font-weight: 900;
+                    outline: none; 
                 }
             }
         }
         .popbot{
-            display: flex;
-            justify-content: space-around;
-            button{
-                width: 1.8rem;
-                height: .64rem;
-                font-size: .64rem;
-                font-weight: 900;
-                border: 1px solid #4fa2fe;
-                border-radius: .12rem;
-                color: #4fa2fe;
-                margin-top: .4rem;
-                margin-bottom: .12rem;
-                background: #fff;
-            }
-            .confirm{
-                background: #4fa2fe;
-                color: #fff;
-            }
+            // display: flex;
+            // justify-content: space-around;
+            // button{
+            //     width: 1.8rem;
+            //     height: .64rem;
+            //     font-size: .32rem;
+            //     font-weight: 900;
+            //     border: 1px solid #4fa2fe;
+            //     border-radius: .12rem;
+            //     color: #4fa2fe;
+            //     margin-top: .4rem;
+            //     margin-bottom: .12rem;
+            //     background: #fff;
+            // }
+            // .confirm{
+            //     background: #4fa2fe;
+            //     color: #fff;
+                
+            // }
         }
     }
 </style>

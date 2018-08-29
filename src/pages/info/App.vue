@@ -178,10 +178,10 @@ export default {
     created(){
         let haveiss = sessionStorage.getItem('iss');
         if(haveiss == 1){
-            document.title = '交易员信息(模拟)';
+            document.title = '信号源信息(模拟)';
             this.iss = haveiss
         }else{
-            document.title = '交易员信息';
+            document.title = '信号源信息';
             this.iss = ''
         }
         var v = this.parseUrl();//解析所有参数

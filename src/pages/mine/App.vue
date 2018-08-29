@@ -130,7 +130,7 @@
                                 <dd>{{ item.yuesymbol | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toOrder">订单管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -227,7 +227,7 @@
                                 <dd>{{ item.yuesymbol | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">订单管理&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toOrder">订单管理&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -467,8 +467,7 @@ export default {
         },
         //跳转到订单管理
         toOrder(ind){   
-          MessageBox('提示', '建设中');
-        // window.location.href="vip.html";
+            window.location.href="order.html";
         },
         //计算会员到期时间   
         dateMinus(sDate){
