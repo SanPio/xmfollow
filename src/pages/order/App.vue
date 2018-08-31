@@ -29,6 +29,7 @@
                 <div style="overflow-y: scroll;">
                     <mt-loadmore 
                     :bottom-method="loadBottom" 
+                    :bottom-all-loaded="infoAllLoaded"
                     :autoFill="false" ref="loadmores">
                         <div ref="mybox">
                             <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
@@ -36,7 +37,7 @@
                                     <div class="left">
                                         <p>
                                             <span>
-                                                USD/CHF
+                                                {{ item.symbol }}
                                             </span>
                                             <button class="colorbtn buybtn" v-if="item.type==0">
                                                 买
@@ -48,7 +49,7 @@
                                                 挂
                                             </button>
                                             <span>
-                                                0.5
+                                                {{ item.lots }}
                                             </span>
                                             <span>
                                                 标准手
@@ -61,8 +62,8 @@
                                             </button >
                                         </p>
                                         <p>
-                                            <span>
-                                                美元/瑞郎
+                                            <span>  
+                                                {{ item.symbolStr }}
                                             </span>
                                             <span>
                                                 0.99380
@@ -185,6 +186,7 @@
                 <div style="overflow-y: scroll;">
                     <mt-loadmore 
                     :bottom-method="hisloadBottom" 
+                    :bottom-all-loaded="hisAllLoaded" 
                     :autoFill="false" ref="loadmore">
                         <div ref="myboxes">
                             <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
@@ -330,7 +332,28 @@
                 </div>
             </mt-tab-container-item>
         </mt-tab-container>
-
+        <!-- 底部返回 -->
+        <ul class="footer">
+                <li class="foot-left">
+                    <dl @click="toIndex">
+                        
+                        <dt>
+                            <img :src="leftBtnSrc" alt="">
+                        </dt>
+                        <dd >投资领航</dd>
+                    </dl>
+                </li>
+            <li class="foot-right">
+                <dl>
+                    <dt>
+                        <img :src="rightBtnSrc" alt="" @click="toMine">
+                    </dt>
+                    <dd  @click="toMine">我的</dd>
+                </dl>
+            </li>
+        </ul>
+        <!-- 次div为空，做占位用，返回按钮占56px高度 -->
+        <div style="height:1.12rem"></div>
 
         <!-- 弹窗 -->
         <div ref="back" class="back" ></div>
@@ -377,7 +400,8 @@
                     </p>
                     
                     <p>
-                        <img :src="reduceImg" alt="" @click="stopLossNumReduce">
+                        <img :src="reduceImg" alt="" @click="targetProfitNumReduce">
+                        <!-- <input v-model="targetProfitNum" onblur="b=this.value;b=(b+'').replace(/^0+\./g,'0.');b.match(/^0+[1-9]+/)?b=b.replace(/^0+/g,''):b;this.value=Number(b)?b:0;"> -->
                         <input type="number" v-model="targetProfitNum" @blur="decimal">
                         <img :src="plusImg" alt="" @click="targetProfitNumPlus">
                     </p>
@@ -394,8 +418,8 @@
                     </p>
                     <p>
                         <img :src="reduceImg" alt="" @click="stopLossNumReduce">
-                        <input type="number" v-model="stopLossNum" @blur="decimal">
-                        <button></button>
+                        <!-- <input type="number" v-model="stopLossNum" @blur="decimal"> -->
+                         <input v-model="stopLossNum"  type="number">
                         <img :src="plusImg" alt="" @click="stopLossNumPlus">
                         
                     </p>
@@ -428,34 +452,22 @@ export default {
             traderImg: require('./assets/img2.jpg'),
             plusImg: require('./assets/plus@2x.png'),
             reduceImg: require('./assets/reduce@2x.png'),
+            leftBtnSrc : require('./assets/Navigate-Unclicked.jpg'),
+            rightBtnSrc : require('./assets/Myhomepage-Unclicked@2x.png'),
+            infoAllLoaded: false,
+            hisAllLoaded: false,
             iss: '',
             selected: 'info',
             fixed: true,
             //订单信息页
             colorShow: true,//数字蓝色还是红色
-            infoArr : [
-                {
-                    name: 'USD/CHF',
-                    type: 0
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 1
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 2
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 3
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 4
-                }
-            ],
-
+            urlTitle: '',
+            userId: '',
+            optionId: '',
+            infoPageNum : 1,
+            hisPagNum:1,
+            pageSize: 10,
+            infoArr : [],
             infoBotShow:[ false,false,false,false,false],
             //历史记录页
             historyArr : [
@@ -490,16 +502,13 @@ export default {
                 
             },
             stopLossNum: 0.001,
-            targetProfitNum: 0.5,
+            targetProfitNum: 18.02,
             hisBotShow: [ false,false,false,false,false],
 
 
             //弹窗
             popUpShow: false,//弹窗是否显示
             stopLossShow: true,//止损按钮是否显示
-
-
-
 
         }
     },
@@ -512,6 +521,54 @@ export default {
             document.title = '订单管理';
             this.iss = ''
         }
+        var a=this.GetRequest();
+        this.optionId=a['optionId'];
+   
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId');
+        console.log(this.optionId)
+        //  初始化数据请求
+        this.$http.get(this.urlTitle+'/wx/order/member/holdingOrderList',{ //订单信息
+            params : {
+                accountsId : 154, 
+                userId : this.userId,
+                pageNum : 1,
+                pageSize: 10,
+                optionId : 0,
+                ud:0
+            }   
+        }).then((res) => { 
+            console.log(res.data.data)
+            this .infoArr = res.data.data;
+
+
+
+
+
+
+
+
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        // //  初始化数据请求
+        // this.$http.get(this.urlTitle+'/wx/order/member/holdOrderHistoryList',{ //订单记录
+        //     params : {
+        //         accountsId : 154, 
+        //         userId : this.userId,
+        //         pageNum : 1,
+        //         pageSize: 10,
+        //         optionId : 0,
+        //         ud: 1
+                
+        //     }   
+        // }).then((res) => { 
+        //     console.log(res)
+        // }).catch((err) => {
+        //     console.log(err)
+        // })
+
     },
     mounted(){
         
@@ -522,9 +579,16 @@ export default {
     watch : {
         stopLossNum(val){
             // var s= "" + val;
-            // var regex=/^[0]+/
-            // var a=s.replace(regex,"");
-            // this.stopLossNum = Number(a);
+            // s=(s+'').replace(/^0+\./g,'0.');
+            // s.match(/^0+[1-9]+/)?s=s.replace(/^0+/g,''):b;
+            // this.value=Number(s)?s:0;
+
+            var s= "" + val;
+            console.log(s)
+            var regex=/^[0]+([1-9]\d*\.\d*|0\.\d*[1-9]\d*$)/
+           
+            var a=s.replace(regex,"");
+            this.stopLossNum = Number(a);
             if(val > this.popInfo.now){
                 this.stopLossNum =  this.popInfo.now
             }
@@ -540,7 +604,6 @@ export default {
         }
     },
     methods: {
-
          //一键平仓(平掉所有)
         allClose(){
             MessageBox({
@@ -560,7 +623,6 @@ export default {
                 }
             })
         },
-
         //计算窗口
         calculation(){
             let winWidth = 0;
@@ -581,10 +643,6 @@ export default {
             this.$refs.back.style.width=`${winWidth}px`;
             this.$refs.back.style.height=`${winHeight}px`;
         },
-
-
-
-
         //订单信息页
             //设定上拉下拉区域为窗口高度
         calculationHeight(){
@@ -659,29 +717,46 @@ export default {
 
             //上拉加载
         loadBottom(){
-            console.log('上拉加载');
-            this.infoArr.push(
-                {
-                    name: 'USD/CHF',
-                    type: 0
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 1
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 2
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 3
-                },
-                {
-                    name: 'USD/CHF',
-                    type: 4
+            this.infoPageNum ++;
+            this.$http.get(this.urlTitle+'wx/order/member/followingList',{ //订单信息
+                params : {
+                    accountsId : this.accountId, 
+                    userId : this.userId,
+                    pageNum : 1,
+                    pageSize: 10,
+                    optionId : this.optionId
+                }   
+            }).then((res) => { 
+                console.log(res)
+                this.$refs.loadmores.onBottomLoaded();
+                if(res.data.data.countoptionids <= this.infoPageNum *10){
+                    this.infoAllLoaded = true;
                 }
-            );
+            }).catch((err) => {
+                console.log(err)
+            })
+            // this.infoArr.push(
+            //     {
+            //         name: 'USD/CHF',
+            //         type: 0
+            //     },
+            //     {
+            //         name: 'USD/CHF',
+            //         type: 1
+            //     },
+            //     {
+            //         name: 'USD/CHF',
+            //         type: 2
+            //     },
+            //     {
+            //         name: 'USD/CHF',
+            //         type: 3
+            //     },
+            //     {
+            //         name: 'USD/CHF',
+            //         type: 4
+            //     }
+            // );
         },
         // 比例跟随数值填写失焦 取两位小数
         decimal(){
@@ -847,23 +922,161 @@ export default {
         },
         // 止损点数减
         stopLossNumReduce(){
-            if( this.followNum > 0){ //大于0时执行
-                if(  parseInt( this.followNum ) == parseFloat(this.followNum) && this.followNum > 1 ){//判断是否为大于一的整数
-                    this.followNum  = parseInt(this.followNum) - 1      //如果为大于一的整数 减1
-                }else if( ( parseInt( this.followNum * 10 ) == parseFloat(this.followNum * 10) || this.followNum == 1) && this.followNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
-                    this.followNum = ( parseInt(this.followNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
-                }else{
-                    this.followNum = ( Math.floor(this.followNum * 100) - 1)/100 // 如果是0.1或者有两位小数 减0.01
+            if( this.popInfo.rate == 10 ){
+                if( this.stopLossNum > 0){ //大于0时执行
+                    if(  parseInt( this.stopLossNum ) == parseFloat(this.stopLossNum) && this.stopLossNum > 1 ){//判断是否为大于一的整数
+                        this.stopLossNum  = parseInt(this.stopLossNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.stopLossNum * 10 ) == parseFloat(this.stopLossNum * 10) || this.stopLossNum == 1) && this.stopLossNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }
+                }else{//如果是负数，赋值为0
+                    this.stopLossNum = 0;
                 }
-            }else{//如果是负数，赋值为0
-                this.followNum = 0;
+            }else if( this.popInfo.rate == 100 ){
+                if( this.stopLossNum > 0){ //大于0时执行
+                    if(  parseInt( this.stopLossNum ) == parseFloat(this.stopLossNum) && this.stopLossNum > 1 ){//判断是否为大于一的整数
+                        this.stopLossNum  = parseInt(this.stopLossNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.stopLossNum * 10 ) == parseFloat(this.stopLossNum * 10) || this.stopLossNum == 1) && this.stopLossNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.stopLossNum = ( Math.floor(this.stopLossNum * 100) - 1)/100 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.stopLossNum = 0;
+                }
+            }else if( this.popInfo.rate == 1000 ){
+                if( this.stopLossNum > 0){ //大于0时执行
+                    if(  parseInt( this.stopLossNum ) == parseFloat(this.stopLossNum) && this.stopLossNum > 1 ){//判断是否为大于一的整数
+                        this.stopLossNum  = parseInt(this.stopLossNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.stopLossNum * 10 ) == parseFloat(this.stopLossNum * 10) || this.stopLossNum == 1) && this.stopLossNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 100 ) == parseFloat(this.stopLossNum * 100) || this.stopLossNum == 1) && this.stopLossNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.stopLossNum = ( Math.floor(this.stopLossNum * 1000) - 1)/1000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.stopLossNum = 0;
+                }
+            }else if( this.popInfo.rate == 10000 ){
+                if( this.stopLossNum > 0){ //大于0时执行
+                    if(  parseInt( this.stopLossNum ) == parseFloat(this.stopLossNum) && this.stopLossNum > 1 ){//判断是否为大于一的整数
+                        this.stopLossNum  = parseInt(this.stopLossNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.stopLossNum * 10 ) == parseFloat(this.stopLossNum * 10) || this.stopLossNum == 1) && this.stopLossNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 100 ) == parseFloat(this.stopLossNum * 100) || this.stopLossNum == 1) && this.stopLossNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 1000 ) == parseFloat(this.stopLossNum * 1000) || this.stopLossNum == 1) && this.stopLossNum > 0.001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 1000) - 1)/1000 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.stopLossNum = ( Math.floor(this.stopLossNum * 10000) - 1)/10000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.stopLossNum = 0;
+                }
+            }else if( this.popInfo.rate == 100000 ){
+                if( this.stopLossNum > 0){ //大于0时执行
+                    if(  parseInt( this.stopLossNum ) == parseFloat(this.stopLossNum) && this.stopLossNum > 1 ){//判断是否为大于一的整数
+                        this.stopLossNum  = parseInt(this.stopLossNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.stopLossNum * 10 ) == parseFloat(this.stopLossNum * 10) || this.stopLossNum == 1) && this.stopLossNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 100 ) == parseFloat(this.stopLossNum * 100) || this.stopLossNum == 1) && this.stopLossNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 1000 ) == parseFloat(this.stopLossNum * 1000) || this.stopLossNum == 1) && this.stopLossNum > 0.001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 1000) - 1)/1000 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.stopLossNum * 10000 ) == parseFloat(this.stopLossNum * 10000) || this.stopLossNum == 1) && this.stopLossNum > 0.0001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.stopLossNum = ( parseInt(this.stopLossNum * 10000) - 1)/10000 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.stopLossNum = ( Math.floor(this.stopLossNum * 100000) - 1)/100000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.stopLossNum = 0;
+                }
             }
+           
         },
-
-        puls(val){
-
+        // 止盈点数减
+        targetProfitNumReduce(){
+            if( this.popInfo.rate == 10 ){
+                if( this.targetProfitNum > 0){ //大于0时执行
+                    if(  parseInt( this.targetProfitNum ) == parseFloat(this.targetProfitNum) && this.targetProfitNum > 1 ){//判断是否为大于一的整数
+                        this.targetProfitNum  = parseInt(this.targetProfitNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.targetProfitNum * 10 ) == parseFloat(this.targetProfitNum * 10) || this.targetProfitNum == 1) && this.targetProfitNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }
+                }else{//如果是负数，赋值为0
+                    this.targetProfitNum = 0;
+                }
+            }else if( this.popInfo.rate == 100 ){
+                if( this.targetProfitNum > 0){ //大于0时执行
+                    if(  parseInt( this.targetProfitNum ) == parseFloat(this.targetProfitNum) && this.targetProfitNum > 1 ){//判断是否为大于一的整数
+                        this.targetProfitNum  = parseInt(this.targetProfitNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.targetProfitNum * 10 ) == parseFloat(this.targetProfitNum * 10) || this.targetProfitNum == 1) && this.targetProfitNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.targetProfitNum = ( Math.floor(this.targetProfitNum * 100) - 1)/100 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.targetProfitNum = 0;
+                }
+            }else if( this.popInfo.rate == 1000 ){
+                if( this.targetProfitNum > 0){ //大于0时执行
+                    if(  parseInt( this.targetProfitNum ) == parseFloat(this.targetProfitNum) && this.targetProfitNum > 1 ){//判断是否为大于一的整数
+                        this.targetProfitNum  = parseInt(this.targetProfitNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.targetProfitNum * 10 ) == parseFloat(this.targetProfitNum * 10) || this.targetProfitNum == 1) && this.targetProfitNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 100 ) == parseFloat(this.targetProfitNum * 100) || this.targetProfitNum == 1) && this.targetProfitNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.targetProfitNum = ( Math.floor(this.targetProfitNum * 1000) - 1)/1000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.targetProfitNum = 0;
+                }
+            }else if( this.popInfo.rate == 10000 ){
+                if( this.targetProfitNum > 0){ //大于0时执行
+                    if(  parseInt( this.targetProfitNum ) == parseFloat(this.targetProfitNum) && this.targetProfitNum > 1 ){//判断是否为大于一的整数
+                        this.targetProfitNum  = parseInt(this.targetProfitNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.targetProfitNum * 10 ) == parseFloat(this.targetProfitNum * 10) || this.targetProfitNum == 1) && this.targetProfitNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 100 ) == parseFloat(this.targetProfitNum * 100) || this.targetProfitNum == 1) && this.targetProfitNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 1000 ) == parseFloat(this.targetProfitNum * 1000) || this.targetProfitNum == 1) && this.targetProfitNum > 0.001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 1000) - 1)/1000 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.targetProfitNum = ( Math.floor(this.targetProfitNum * 10000) - 1)/10000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.targetProfitNum = 0;
+                }
+            }else if( this.popInfo.rate == 100000 ){
+                if( this.targetProfitNum > 0){ //大于0时执行
+                    if(  parseInt( this.targetProfitNum ) == parseFloat(this.targetProfitNum) && this.targetProfitNum > 1 ){//判断是否为大于一的整数
+                        this.targetProfitNum  = parseInt(this.targetProfitNum) - 1      //如果为大于一的整数 减1
+                    }else if( ( parseInt( this.targetProfitNum * 10 ) == parseFloat(this.targetProfitNum * 10) || this.targetProfitNum == 1) && this.targetProfitNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10) - 1)/10 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 100 ) == parseFloat(this.targetProfitNum * 100) || this.targetProfitNum == 1) && this.targetProfitNum > 0.01){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 100) - 1)/100 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 1000 ) == parseFloat(this.targetProfitNum * 1000) || this.targetProfitNum == 1) && this.targetProfitNum > 0.001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 1000) - 1)/1000 //如果含有一位小数或者为1  减0.1
+                    }else if( ( parseInt( this.targetProfitNum * 10000 ) == parseFloat(this.targetProfitNum * 10000) || this.targetProfitNum == 1) && this.targetProfitNum > 0.0001){ //判断是否含有一位小数或者为1 并且大于0.1
+                        this.targetProfitNum = ( parseInt(this.targetProfitNum * 10000) - 1)/10000 //如果含有一位小数或者为1  减0.1
+                    }else{
+                        this.targetProfitNum = ( Math.floor(this.targetProfitNum * 100000) - 1)/100000 // 如果是0.1或者有两位小数 减0.01
+                    }
+                }else{//如果是负数，赋值为0
+                    this.targetProfitNum = 0;
+                }
+            }
+           
         },
-
+        //返回到index主页（交易领航）
+        toIndex(){
+                window.location.href=`index.html`;
+        },
+        toMine(){
+            window.location.href="mine.html";
+        },
         //历史记录页
             //点击标题显示内容收缩
         hisBotOnOff(ind){
@@ -875,7 +1088,19 @@ export default {
             //上拉加载
         hisloadBottom(){
             console.log("上拉加载")
-        }
+        },
+        GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                var  strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        },
 
 
 
@@ -1065,7 +1290,31 @@ export default {
         }
     }
 
-
+    //底部导航按钮
+    .footer{
+        width: 100%;
+        height: 1rem;
+        padding-top: .12rem;
+        background-color:#ffffff;
+        position: fixed;
+        bottom:0;
+        display: flex;
+        justify-content: space-around;
+        font-size: .2rem;
+        dl{
+            width: 1rem;
+            text-align: center;
+            color:#999999;
+            .foot-click{
+            color:#4fa2fe;
+            }
+        }
+        img{
+            width: .44rem;
+            height: .44rem;
+            margin-bottom: .04rem;
+        }
+    }
 
 
     //弹窗

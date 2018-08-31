@@ -65,7 +65,7 @@
                                 <button>订单管理</button>
                                 <button @click="toFollowSetting(ind)">跟随设置</button> -->
                                 <button @click="boxMsg">一键平仓</button>
-                                <button @click="boxMsg">订单管理</button>
+                                <button @click="toOrder(ind)">订单管理</button>
                                 <button @click="toFollowSetting(ind)">跟随设置</button>
                             </p>  
                         </div>
@@ -162,7 +162,7 @@
             </li>
         </ul>
         <!-- 次div为空，做占位用，返回按钮占56px高度 -->
-        <div style="height:56px"></div>
+        <div style="height:1.12rem"></div>
     </div>
 </template>
 <script>
@@ -244,7 +244,7 @@ export default {
         
                 //跟随记录初始化
             
-        this.$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
+        this .$http.get(this.urlTitle+'wx/order/member/followHistoryList',{ 
             params : {
                 accountSid : this.accountId, 
                 pageNum: 1,
@@ -389,8 +389,10 @@ export default {
             })
         },
         toFollowSetting(ind){
-            
             window.location.href=`followsetting.html?optionId=${this.nowArr[ind].optionId}`;
+        },
+        toOrder(ind){
+            window.location.href=`order.html?optionId=${this.nowArr[ind].optionId}`;
         },
 
         //跟随记录
@@ -402,7 +404,7 @@ export default {
         },
         //返回到index主页（交易领航）
         toIndex(){
-                window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
+                window.location.href=`index.html`;
         },
         toMine(){
             window.location.href="mine.html";
