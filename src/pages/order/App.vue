@@ -1,23 +1,5 @@
 <template>
     <div id="box">
-        <!-- <div id="header" class="clearfix" >
-            <div class="left">
-                <img :src="traderImg" alt="">
-            </div>
-            <dl class="left">
-                <dt>
-                    信号源
-                </dt>
-                <dd>
-                    杭州信号实业有限公司
-                </dd>
-            </dl>
-            <div class="right">
-                <button @click="allClose">
-                    一键平仓
-                </button>
-            </div>
-        </div> -->
         <mt-navbar v-model="selected" :fixed='fixed'>
             <mt-tab-item id="info">订单信息</mt-tab-item>
             <mt-tab-item id="history">历史记录</mt-tab-item>
@@ -39,13 +21,13 @@
                                             <span>
                                                 {{ item.symbol }}
                                             </span>
-                                            <button class="colorbtn buybtn" v-if="item.type==0">
+                                            <button class="colorbtn buybtn" v-if="item.type == 0">
                                                 买
                                             </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type==1">
+                                            <button class="colorbtn cellbtn" v-if="item.type == 1">
                                                 卖
                                             </button >
-                                            <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4">
+                                            <button class="colorbtn hangbtn" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5">
                                                 挂
                                             </button>
                                             <span>
@@ -54,10 +36,10 @@
                                             <span>
                                                 标准手
                                             </span> 
-                                            <button class="colorbtn buybtn" v-if="item.type==3">
+                                            <button class="colorbtn buybtn" v-if="item.type == 2 || item.type == 4">
                                                 买
                                             </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type==4">
+                                            <button class="colorbtn cellbtn" v-if="item.type == 3 || item.type == 5">
                                                 卖
                                             </button >
                                         </p>
@@ -65,29 +47,53 @@
                                             <span>  
                                                 {{ item.symbolStr }}
                                             </span>
-                                            <span>
-                                                0.99380
-                                            </span>
+                                            <span v-if="item.type == 0">
+                                                {{ item.nowprice }}
+                                               
+                                            </span> 
+                                            <span v-if="item.type == 1">
+                                                {{ item.openPrice}}
+                                            </span> 
                                             <span>
                                                 -
                                             </span>
-                                            <span>
-                                                0.99394
-                                            </span>
+                                            <span v-if="item.type == 0">
+                                                {{ item.openPrice }}
+                                               
+                                            </span> 
+                                            <span v-if="item.type == 1">
+                                                {{ item.nowprice }}
+                                            </span> 
                                         </p>
                                     </div>
                                     <div class="right clearfix">
                                         <div class="left">
                             
-                                            <p :class="colorShow ? 'bulecolor' : 'redcolor' ">
-                                                $70.00
+                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 ">
+                                                {{'$'+ item.profit}}   
                                             </p>
-                                            <p>
+                                            <p v-if="item.type == 0 || item.type == 1 ">
                                                 <span>
-                                                    1.40
+                                                   {{ item.spreads }}
                                                 </span>
                                                 <span>
                                                     点
+                                                </span>
+                                            </p>
+                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                <span>
+                                                    委托
+                                                </span>
+                                                <span>
+                                                    {{ item.openPrice}}
+                                                </span>
+                                            </p>
+                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                <span>
+                                                    当前
+                                                </span>
+                                                <span>
+                                                    {{ item.nowprice}}
                                                 </span>
                                             </p>
                                         </div>
@@ -106,7 +112,7 @@
                                                 订单号
                                             </span>
                                             <span>
-                                                1436925
+                                                {{ item.orderId }}
                                             </span>
                                         </li>
                                         <li>
@@ -114,7 +120,7 @@
                                                 止损
                                             </span>
                                             <span>
-                                                0.36925
+                                               {{ item.stopLoss }} 
                                             </span>
                                         </li>
                                         <li>
@@ -122,7 +128,7 @@
                                                 止盈
                                             </span>
                                             <span>
-                                                0.99999
+                                               {{ item.takeProfits }} 
                                             </span>
                                         </li>
                                         <li>
@@ -130,7 +136,7 @@
                                                 库存费
                                             </span>
                                             <span>
-                                                -0.95
+                                                {{ item.swap ? item.swap : 0 }}
                                             </span>
                                         </li>
                                     </ul>
@@ -140,7 +146,7 @@
                                                 跟随
                                             </span>
                                             <span>
-                                                信号源001
+                                                {{ item.follower }}
                                             </span>
                                         </li>
                                         <li>
@@ -148,18 +154,18 @@
                                                 开仓时间
                                             </span>
                                             <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                2018/06/05
+                                                {{ item.orderOpenTime }}
                                             </span>
-                                            <span style="margin-left:0px">
-                                                12:08:36
-                                            </span>
+                                            <!-- <span style="margin-left:0px">
+                                                {{ item.  }}12:08:36
+                                            </span> -->
                                         </li>
                                         <li>
                                             <span>
                                                 手续费
                                             </span>
                                             <span>
-                                                0.00
+                                                {{ item.commission ? item.swap : 0 }}
                                             </span>
                                         </li>
                                     </ul>
@@ -194,7 +200,7 @@
                                     <div class="left">
                                         <p>
                                             <span>
-                                                USD/CHF
+                                                {{ item.symbol }}
                                             </span>
                                             <button class="colorbtn buybtn" v-if="item.type==0">
                                                 买
@@ -202,51 +208,57 @@
                                             <button class="colorbtn cellbtn" v-if="item.type==1">
                                                 卖
                                             </button >
-                                            <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4">
+                                            <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5">
                                                 挂
                                             </button>
                                             <span>
-                                                0.5
+                                                {{ item.lots }}
                                             </span>
                                             <span>
                                                 标准手
                                             </span> 
-                                            <button class="colorbtn buybtn" v-if="item.type==3">
+                                            <button class="colorbtn buybtn" v-if="item.type==2||item.type==4">
                                                 买
                                             </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type==4">
+                                            <button class="colorbtn cellbtn" v-if="item.type==3||item.type==5">
                                                 卖
                                             </button >
                                         </p>
                                         <p>
                                             <span>
-                                                美元/瑞郎
+                                                {{ item.symbolStr }}
                                             </span>
-                                            <span>
-                                                0.99380
-                                            </span>
+                                            <span v-if="item.type == 0">
+                                                {{ item.closePrice }}
+                                            </span> 
+                                            <span v-if="item.type == 1">
+                                                {{ item.openPrice}}
+                                            </span> 
                                             <span>
                                                 -
                                             </span>
-                                            <span>
-                                                0.99394
-                                            </span>
+                                            <span v-if="item.type == 0">
+                                                {{ item.openPrice }}
+                                            </span> 
+                                            <span v-if="item.type == 1">
+                                                {{ item.closePrice }}
+                                            </span> 
                                         </p>
                                     </div>
                                     <div class="right clearfix">
                                         <div class="left">
-                            
-                                            <p :class="colorShow ? 'bulecolor' : 'redcolor' ">
-                                                $70.00
+                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' ">
+                                               {{'$'+ item.profit}}
                                             </p>
                                             <p>
                                                 <span>
-                                                    1.40
+                                                    {{ item.spreads }}
                                                 </span>
                                                 <span>
                                                     点
                                                 </span>
                                             </p>
+                                      
                                         </div>     
                                     </div>
                                 </div>
@@ -257,7 +269,7 @@
                                                 订单号
                                             </span>
                                             <span>
-                                                1436925
+                                                {{ item.orderId }}
                                             </span>
                                         </li>
                                         <li>
@@ -265,7 +277,7 @@
                                                 止损
                                             </span>
                                             <span>
-                                                0.36925
+                                                {{ item.stopLoss }}
                                             </span>
                                         </li>
                                         <li>
@@ -273,7 +285,7 @@
                                                 止盈
                                             </span>
                                             <span>
-                                                0.99999
+                                                {{ item.takeProfits }}
                                             </span>
                                         </li>
                                         <li>
@@ -281,7 +293,7 @@
                                                 库存费
                                             </span>
                                             <span>
-                                                -0.95
+                                                {{ item.swap ? item.swap : 0 }}
                                             </span>
                                         </li>
                                     </ul>
@@ -291,7 +303,7 @@
                                                 跟随
                                             </span>
                                             <span>
-                                                信号源001
+                                                {{ item.follower }}
                                             </span>
                                         </li>
                                         <li>
@@ -299,29 +311,25 @@
                                                 开仓时间
                                             </span>
                                             <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                2018/06/05
+                                                {{ item.orderOpenTime }}
                                             </span>
-                                            <span style="margin-left:0px">
-                                                12:08:36
-                                            </span>
+                                            
                                         </li>
                                         <li>
                                             <span>
                                                 平仓时间
                                             </span>
                                             <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                2018/06/05
+                                                {{ item.orderCloseTime }}
                                             </span>
-                                            <span style="margin-left:0px">
-                                                12:08:36
-                                            </span>
+
                                         </li>
                                         <li>
                                             <span>
                                                 手续费
                                             </span>
                                             <span>
-                                                0.00
+                                                {{ item.commission ? item.commission : 0 }}
                                             </span>
                                         </li>
                                     </ul>
@@ -369,9 +377,14 @@
                 </li>
                 <li class="licen">
                     <p>
-                        买
+                        <span v-if="popInfo.type == 0 ||popInfo.type == 2 ||popInfo.type == 4" class="licentype">
+                            买
+                        </span>
+                        <span v-if="popInfo.type == 1 ||popInfo.type == 3 || popInfo.type == 5" class="licentype">
+                            卖
+                        </span>
                         <span>
-                            {{ popInfo.buy }}
+                            {{ popInfo.lots }}
                         </span>
                         手
                     
@@ -464,52 +477,23 @@ export default {
             urlTitle: '',
             userId: '',
             optionId: '',
+            accountId: '',
             infoPageNum : 1,
             hisPagNum:1,
             pageSize: 10,
             infoArr : [],
-            infoBotShow:[ false,false,false,false,false],
+            infoBotShow:[],
             //历史记录页
-            historyArr : [
-                {
-                    name: '哈哈',
-                    type: 0
-                },
-                {
-                    name: '哈哈',
-                    type: 1
-                },
-                {
-                    name: '哈哈',
-                    type: 2
-                },
-                {
-                    name: '哈哈',
-                    type: 3
-                },
-                {
-                    name: '哈哈',
-                    type: 4
-                }
-            ],
-            popInfo: { 
-                pairEn: 'USDCHF',
-                pairCh: '美元/瑞郎',
-                rate: 1000,
-                buy: 0.01,
-                open: 15.955,
-                now: 15.962,
-                
-            },
+            historyArr : [],  
+            popInfo: { },
+               
+            
             stopLossNum: 0.001,
             targetProfitNum: 18.02,
-            hisBotShow: [ false,false,false,false,false],
-
-
+            hisBotShow: [],
             //弹窗
             popUpShow: false,//弹窗是否显示
             stopLossShow: true,//止损按钮是否显示
-
         }
     },
     created(){
@@ -522,76 +506,70 @@ export default {
             this.iss = ''
         }
         var a=this.GetRequest();
-        this.optionId=a['optionId'];
-   
+        this.optionId=a['optionId'] ? a['optionId'] : 0;
         this.urlTitle = localStorage.getItem('urlTitle');
+        this.accountId = localStorage.getItem('accountId');
         this.userId = localStorage.getItem('userId');
-        console.log(this.optionId)
         //  初始化数据请求
         this.$http.get(this.urlTitle+'/wx/order/member/holdingOrderList',{ //订单信息
             params : {
-                accountsId : 154, 
+                accountsId : this.accountId, 
                 userId : this.userId,
                 pageNum : 1,
                 pageSize: 10,
-                optionId : 0,
-                ud:0
+                optionId : this.optionId,
             }   
         }).then((res) => { 
-            console.log(res.data.data)
-            this .infoArr = res.data.data;
-
-
-
-
-
-
-
-
+            console.log(res)
+            if(res.data.data.zongshu <= 10){
+                this.infoAllLoaded = true;
+            }
+            this.infoArr = res.data.data.orderRespDtoList;
+            for (let i = 0; i < this.infoArr.length; i ++) {
+                this.infoBotShow.push(false);
+            }
         }).catch((err) => {
             console.log(err)
         })
-
-        // //  初始化数据请求
-        // this.$http.get(this.urlTitle+'/wx/order/member/holdOrderHistoryList',{ //订单记录
-        //     params : {
-        //         accountsId : 154, 
-        //         userId : this.userId,
-        //         pageNum : 1,
-        //         pageSize: 10,
-        //         optionId : 0,
-        //         ud: 1
-                
-        //     }   
-        // }).then((res) => { 
-        //     console.log(res)
-        // }).catch((err) => {
-        //     console.log(err)
-        // })
-
+        //  初始化数据请求
+        this.$http.get(this.urlTitle+'/wx/order/member/holdOrderHistoryList',{ //订单记录
+            params : {
+                accountsId : this.accountId, 
+                userId : this.userId,
+                pageNum : 1,
+                pageSize: 10,
+                optionId : this.optionId,
+                ud: 1    
+            }   
+        }).then((res) => { 
+            // console.log(res)
+            if(res.data.data.zongshu <= 10){
+                this.hisAllLoaded = true;
+            }
+            this.historyArr = res.data.data.orderRespDtoList;
+            for (let i = 0; i < this.historyArr.length; i ++) {
+                this.hisBotShow.push(false);
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
     },
-    mounted(){
-        
+    mounted(){       
         this.calculationHeight();
-        this.calculation();
+        this.calculation();   
     },
-    
     watch : {
         stopLossNum(val){
-            // var s= "" + val;
-            // s=(s+'').replace(/^0+\./g,'0.');
-            // s.match(/^0+[1-9]+/)?s=s.replace(/^0+/g,''):b;
-            // this.value=Number(s)?s:0;
-
-            var s= "" + val;
-            console.log(s)
-            var regex=/^[0]+([1-9]\d*\.\d*|0\.\d*[1-9]\d*$)/
-           
-            var a=s.replace(regex,"");
-            this.stopLossNum = Number(a);
-            if(val > this.popInfo.now){
-                this.stopLossNum =  this.popInfo.now
-            }
+            if ( parseInt(val) == parseFloat(val) ){
+                var s= "" + val;
+                console.log(s)
+                var regex=/^[0]+([1-9]\d*\.\d*|0\.\d*[1-9]\d*$)/
+                var a=s.replace(regex,"");
+                this.stopLossNum = Number(a);
+                if(val > this.popInfo.now){
+                    this.stopLossNum =  this.popInfo.now
+                }
+            }   
         },
         targetProfitNum(val){
             var s= "" + val;
@@ -641,7 +619,7 @@ export default {
                 winHeight = document.body.clientHeight;
             }
             this.$refs.back.style.width=`${winWidth}px`;
-            this.$refs.back.style.height=`${winHeight}px`;
+            this.$refs.back.style.height=' 100%';
         },
         //订单信息页
             //设定上拉下拉区域为窗口高度
@@ -657,10 +635,15 @@ export default {
         },
             //点击标题显示内容收缩
         infoBotOnOff(ind){
-            for ( let i = 0; i < this.infoBotShow.length; i ++) {
-                this.infoBotShow[i] = false;
+            if(this.infoBotShow[ind] == true){
+                this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
+            }else{
+                for ( let i = 0; i < this.infoBotShow.length; i ++) {
+                    this.infoBotShow[i] = false;
+                }
+                this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
             }
-            this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
+            
         },
 
         //关闭单个
@@ -675,7 +658,7 @@ export default {
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
                 if (action == 'cancel') {     //确认的回调
-                console.log(ind); 
+                    this.request(ind,3)
                 }
                 if (action == 'confirm') {     //确认的回调
                 console.log(2); 
@@ -685,10 +668,21 @@ export default {
             //止损按钮
         stopLoss(ind){
             //显示遮罩
+            this.calculationHeight();
+            this.calculation(); 
             this.$refs.back.style.zIndex=2;
             this.popUpShow = true;
             this.stopLossShow  = true;
-          
+            this.popInfo = {
+                pairEn: this.infoArr[ind].symbol,
+                pairCh: this.infoArr[ind].symbolStr,
+                rate: this.infoArr[ind].rate,
+                lots: this.infoArr[ind].lots,
+                open: this.infoArr[ind].openPrice,
+                now: this.infoArr[ind].nowprice,
+                type: this.infoArr[ind].type,
+                ind: ind
+            }
         },
         //止盈按钮
         targetProfit(ind){
@@ -697,16 +691,16 @@ export default {
             this.stopLossShow  = false;
         },
         //止损确定按钮
-        confirmStop(){
+        confirmStop(ind){
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
-            console.log("止损确定")
+            this.request(ind,1)
         },
-        //止盈利确定按钮
-        confirmProfit(){
+        //止盈确定按钮
+        confirmProfit(ind){
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
-            console.log("止赢确定")
+            this.request(ind,2)
         },
         //弹窗取消
         cancelBtn(){
@@ -718,45 +712,28 @@ export default {
             //上拉加载
         loadBottom(){
             this.infoPageNum ++;
-            this.$http.get(this.urlTitle+'wx/order/member/followingList',{ //订单信息
-                params : {
-                    accountsId : this.accountId, 
-                    userId : this.userId,
-                    pageNum : 1,
-                    pageSize: 10,
-                    optionId : this.optionId
-                }   
-            }).then((res) => { 
+            this.$http.get(this.urlTitle+'/wx/order/member/holdingOrderList',{ //订单信息
+            params : {
+                accountsId : this.accountId, 
+                userId : this.userId,
+                pageNum : this.infoPageNum,
+                pageSize: 10,
+                optionId : this.optionId,
+            }   
+        }).then((res) => { 
                 console.log(res)
                 this.$refs.loadmores.onBottomLoaded();
-                if(res.data.data.countoptionids <= this.infoPageNum *10){
+                if(res.data.data.zongshu <= this.infoPageNum * 10){
                     this.infoAllLoaded = true;
+                }
+                for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
+                    this.infoArr.push( res.data.data.orderRespDtoList[i]  )
+                    this.infoBotShow.push(false);
                 }
             }).catch((err) => {
                 console.log(err)
             })
-            // this.infoArr.push(
-            //     {
-            //         name: 'USD/CHF',
-            //         type: 0
-            //     },
-            //     {
-            //         name: 'USD/CHF',
-            //         type: 1
-            //     },
-            //     {
-            //         name: 'USD/CHF',
-            //         type: 2
-            //     },
-            //     {
-            //         name: 'USD/CHF',
-            //         type: 3
-            //     },
-            //     {
-            //         name: 'USD/CHF',
-            //         type: 4
-            //     }
-            // );
+           
         },
         // 比例跟随数值填写失焦 取两位小数
         decimal(){
@@ -876,8 +853,7 @@ export default {
                         this.targetProfitNum = ( parseInt(this.targetProfitNum * 100) + 1)/100 // 其他加0.01
                     }else if( parseInt( this.targetProfitNum * 1000 )  ==  parseFloat(this.targetProfitNum * 1000)  ){
                         this.targetProfitNum = ( parseInt(this.targetProfitNum * 1000) + 1)/1000 // 其他加0.01
-                    }
-                    
+                    } 
                 }else{
                     this.targetProfitNum = 0.001
                 }
@@ -992,8 +968,7 @@ export default {
                 }else{//如果是负数，赋值为0
                     this.stopLossNum = 0;
                 }
-            }
-           
+            }  
         },
         // 止盈点数减
         targetProfitNumReduce(){
@@ -1067,8 +1042,52 @@ export default {
                 }else{//如果是负数，赋值为0
                     this.targetProfitNum = 0;
                 }
+            }     
+        },
+        request(ind,type){
+            var index = ind == parseInt(ind) ? ind : this.popInfo.ind;
+            var num =  '';
+            if(type == 1 && this.popInfo.rate == 10){//止损
+                num =  parseInt( this.stopLossNum * 10) /10
+            }else if(type == 1 && this.popInfo.rate == 100){//止损
+                num =  parseInt( this.stopLossNum * 100) /100
+            }else if(type == 1 && this.popInfo.rate == 1000){//止损
+                num =  parseInt( this.stopLossNum * 1000) /1000
+            }else if(type == 1 && this.popInfo.rate == 10000){//止损
+                num =  parseInt( this.stopLossNum * 10000) /10000
+            }else if(type == 1 && this.popInfo.rate == 100000){//止损
+                num =  parseInt( this.stopLossNum * 100000) /100000
+            }else if(type == 2 && this.popInfo.rate == 10){//止损
+                num =  parseInt( this.targetProfitNum * 10) /10
+            }else if(type == 2 && this.popInfo.rate == 100){//止损
+                num =  parseInt( this.targetProfitNum * 100) /100
+            }else if(type == 2 && this.popInfo.rate == 1000){//止损
+                num =  parseInt( this.targetProfitNum * 1000) /1000
+            }else if(type == 2 && this.popInfo.rate == 10000){//止损
+                num =  parseInt( this.targetProfitNum * 10000) /10000
+            }else if(type == 2 && this.popInfo.rate == 100000){//止损
+                num =  parseInt( this.targetProfitNum * 100000) /100000
+            }else if (type == 3 ){
+                num = ''
             }
-           
+            let postData = this.$qs.stringify({
+                accountsId: this.accountId,
+                number: 0.01 ,
+                orderId: this.infoArr[index].orderId,
+                type : type,
+                userId: this.userId
+            });
+            console.log(postData)
+            this.$http({
+                method: 'post',
+                url: this.urlTitle+'wx/order/member/holdOrderSetting',
+                data:postData
+            }).then((res)=>{
+                console.log(res)
+                
+            }).catch((err) => {
+                console.log(err)
+            })
         },
         //返回到index主页（交易领航）
         toIndex(){
@@ -1080,14 +1099,40 @@ export default {
         //历史记录页
             //点击标题显示内容收缩
         hisBotOnOff(ind){
-            for ( let i = 0; i < this.hisBotShow.length; i ++ ) {
-                this.hisBotShow[i] = false;
-            };
-            this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
+            if (  this.hisBotShow[ind] == true ) {
+                this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
+            }else {
+                for ( let i = 0; i < this.hisBotShow.length; i ++ ) {
+                    this.hisBotShow[i] = false;
+                };
+                this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
+            }          
         },
             //上拉加载
         hisloadBottom(){
-            console.log("上拉加载")
+            this.hisPagNum ++ ;
+            this.$http.get(this.urlTitle+'/wx/order/member/holdOrderHistoryList',{ //订单记录
+            params : {
+                accountsId : this.accountId, 
+                userId : this.userId,
+                pageNum : this.hisPagNum ,
+                pageSize: 10,
+                optionId : this.optionId,
+                ud: 1    
+            }   
+        }).then((res) => { 
+            console.log(res)
+            this.$refs.loadmore.onBottomLoaded();
+            if(res.data.data.zongshu <= this.hisPagNum * 10){
+                this.hisAllLoaded = true;
+            }
+            for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
+                this.historyArr.push(res.data.data.orderRespDtoList[i])
+                this.hisBotShow.push(false);
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
         },
         GetRequest() {
             var url = location.search; //获取url中"?"符后的字串
@@ -1111,54 +1156,6 @@ export default {
     #box{
         background-color: #fff;
     }
-    //Header信号源信息
-    #header{
-        position: fixed;
-        top: 0;
-        height: .88rem;
-        background-color: #53a8fe;
-        padding: 0 .24rem;
-        width: 7.01rem;
-        z-index: 3000;
-        img{
-            width: .72rem;
-            height:.72rem;
-            border-radius: 50%;
-            margin-top: .08rem;
-            margin-right: .18rem;
-        }
-        dl{
-            text-align: left;
-            color:#fff;
-            dt{
-                font-size: .24rem;
-                line-height: .24rem;
-                font-weight: 900;
-                margin-top: .16rem;
-            }
-            dd{
-                font-size: .2rem;
-                line-height: .2rem;
-                margin-top: .1rem;
-
-            }
-           
-        } 
-        button{
-            width: 1.38rem;
-            height: .52rem;
-            background: #53a8fe;
-            color:#fff;
-            border-radius: .12rem;
-            border: 1px solid #fff;
-            margin-top: .16rem;
-            font-weight: bold;
-        }
-    }
-
-
-
-
 
     .colorbtn{
         width: .28rem;
@@ -1240,6 +1237,14 @@ export default {
                             font-weight: bold;
                         }
                         
+                    }
+                    .gua{
+                        span{
+                            color: #666;
+                            font-size: .2rem;
+                            line-height: .2rem;
+                            font-weight: bold;
+                        }
                     }
                 }
                 .right{
@@ -1329,7 +1334,7 @@ export default {
     }
 
     .popup{
-        position: absolute;
+        position: fixed;
         left: .65rem;
         top: 1.6rem;
         z-index: 3;
@@ -1365,6 +1370,9 @@ export default {
                 }
                 span{
                     color: #000;
+                }
+                .licentype{
+                    color: #999;
                 }
                 .red{
                     color: #fe0000;

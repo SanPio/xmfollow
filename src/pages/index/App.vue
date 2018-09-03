@@ -172,8 +172,8 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.0.111:8080/",
-      urlTitle:"http://192.168.0.101:80/", 
+      // urlTitle:"http://192.168.0.197:8080/",
+      urlTitle:"http://192.168.0.102:80/",  
       // urlTitle:"http://www.0539maj.com/app/",
       // urlTitle:"http://132.232.44.112:80/app/", 
       // urlTitle:"http://121.196.208.147:80/",
@@ -321,7 +321,6 @@ export default {
           data:postData
       }).then((res)=>{
         console.log(res.data.data)
-        console.log(5555555)
           // console.log(res.data.data.listp[0].yield)
           if(res.data.data.total <= pageNum*pageSize){
              this.allLoaded = true;//数据全部加载完毕
