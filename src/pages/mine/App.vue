@@ -165,7 +165,8 @@
                 <!-- 账号标题 -->
                 <div class="con-tit"  @click="issConboxOpenClose">
                     <p class="con-tit-left"> 
-                   <span>{{ item.accountName}}</span>
+                        <span>{{ item.accountName}}</span>
+                        <span>（距离到期还有{{item.endTime}}）</span>
                     </p>
                     <p class="con-tit-right">
                         <img :src="issaccNumArr ? upSrc : downSrc" alt="">
@@ -299,6 +300,7 @@
 </template>
 <script>
 import { MessageBox } from 'mint-ui';
+import { Toast } from 'mint-ui';
 export default {
     name: 'App', 
     data(){
@@ -479,7 +481,10 @@ export default {
         },
         //切换状态
         swiChange(){
-            if ( sessionStorage.getItem('iss') != 1 &&this.issAccInfo[0].endStatus == 0) {
+            if(sessionStorage.getItem('iss') != 1 && this.issAccInfo[0].endStatus != 0){
+                Toast(`您的模拟账号还有${this.issAccInfo[0].endTime}到期`)
+            }
+            if ( sessionStorage.getItem('iss') != 1 && this.issAccInfo[0].endStatus == 0) {
                 MessageBox('提示', '您的模拟账号已到期');
             }else {
                 this.swi = !this.swi;

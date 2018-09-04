@@ -165,7 +165,6 @@ export default {
         },
         //点击购买
         vipPay(){
-
             if ( (this.disDisabled == false || this.redDisabled == false)&&( this.disOnoff==false && this.reduceOnoff == false)&&this.msgbox==1 ) {
                 MessageBox('提示', '你还有兑换券没有使用');
                 this.msgbox++ ;
@@ -182,27 +181,7 @@ export default {
                     //暂不使用   微信功能 ，后期开放
                     this.onBridgeReady();
                 }
-
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
+            }  
         },
         onBridgeReady(){
             var discountType = '';
@@ -239,10 +218,8 @@ export default {
                             	// location.href="weixinPayResult.html";//支付成功跳转到指定页面
                         }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
                             Toast("支付取消")
-                            console.log("支付取消")
                         }else{
                             Toast("支付失败")
-                            console.log("支付失败")
                         }
                     }
                 );  

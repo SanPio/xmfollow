@@ -172,12 +172,12 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.0.197:8080/",
-      urlTitle:"http://192.168.0.102:80/",  
-      // urlTitle:"http://www.0539maj.com/app/",
-      // urlTitle:"http://132.232.44.112:80/app/", 
-      // urlTitle:"http://121.196.208.147:80/",
-    
+      // urlTitle:"http://192.168.0.197:8080/",//丹峰
+      // urlTitle:"http://192.168.0.103:80/",  //洪波
+      // urlTitle:"http://www.0539maj.com/app/",//域名
+      // urlTitle:"http://132.232.44.112:80/app/", //服务器
+      // urlTitle:"http://121.196.208.147:80/",//另一台
+      urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 
       allLoaded: false,
       setFollowType:8
     }
@@ -191,11 +191,7 @@ export default {
         document.title = '交易领航';
         this.iss = ''
     }
-    // var a=this.GetRequest();
-    // var index_1=a['accountsid'];
-    // var index_2=a['userid']; 
-    //   this.accountId = index_1;
-    //   this.userId = index_2;
+
     this.accountId = localStorage.getItem('accountId');
     this.userId = localStorage.getItem('userId');
     
