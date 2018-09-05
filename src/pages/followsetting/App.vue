@@ -52,7 +52,7 @@
             <p class="left">跟随数值</p>
             <p class="right">
                 <button @click="followNumReduce">-</button>
-                <input type="number" v-model="followNum " @blur="decimal">
+                <input type="number" v-model="followNum " @blur="decimal(1)">
                 <button @click="followNumPlus">+</button>
                 <span v-if="clickBtn">倍</span>
                 <span v-if="!clickBtn">手</span>
@@ -71,7 +71,7 @@
         <p class="content padding clearfix target-profit ">
             <span class="left con-title">止盈</span>
             <span class="right" style="font-size:10px;color:#999;">点</span>
-            <input type="number" class="right" v-model="takeProfits">
+            <input type="number" class="right" v-model="takeProfits" @blur="decimal(3)">
         </p>
         <p class="proportions">
             <span >当盈利达到止盈点数时自动平仓</span>
@@ -81,7 +81,7 @@
         <p class="content padding clearfix target-profit">
             <span class="left con-title">止损</span>
             <span class="right" style="font-size:10px;color:#999;">点</span>
-            <input type="number" class="right" v-model="stopLoss">
+            <input type="number" class="right" v-model="stopLoss" @blur="decimal(2)">
         </p>
         <p class="proportions">
             <span >当损失达到止损点数时自动平仓</span> 
@@ -243,27 +243,27 @@ export default {
         },
         followNum(val){
             if( this.iss == 1 && val >1){
-               this.followNum = 1
+            //    this.followNum = 1
             }
         },
-        takeProfits(val){
-            var s= "" + val;
-            var regex=/^[0]+/
-            var a=s.replace(regex,"");
-            this.takeProfits = Number(a)
-        },
-        stopLoss(val){
-            var s= "" + val;
-            var regex=/^[0]+/
-            var a=s.replace(regex,"");
-            this.stopLoss = Number(a)
-        },
-        followNum(val){
-            var s= "" + val;
-            var regex=/^[0]+/
-            var a=s.replace(regex,"");
-            this.followNum = Number(a)
-        }
+        // takeProfits(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.takeProfits = Number(a)
+        // },
+        // stopLoss(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.stopLoss = Number(a)
+        // },
+        // followNum(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.followNum = Number(a)
+        // }
 
 
     },
@@ -381,9 +381,63 @@ export default {
             this.clickBtn = !this.clickBtn;
         },
         // 比例跟随数值填写失焦 取两位小数
-        decimal(){
-            this.followNum = parseInt(this.followNum*100)/100;
+    
+        decimal(val){
+           if(val ==1){
+                var s= "" + this.followNum;
+                if(s.indexOf('.') == -1){
+                    var regex=/^[0]+/
+                    var a=s.replace(regex,"");
+                    this.followNum = Number(a)
+                }else if ( s.indexOf('.') == 0 ){
+                    this.followNum = Number( '0' + s ) 
+                }else{
+                    var index = s.indexOf('.')
+                    var arr = s.split(".")
+                    var regex=/^[0]+/
+                    var a=arr[0].replace(regex,"");
+                    this.followNum = Number(a + '.' + arr[1]) 
+                }
+                if(this.followNum < 0.01){
+                    this.followNum = 0.01
+                } 
+                this.followNum = parseInt(this.followNum*100)/100;  
+           }else if(val == 2){
+
+                var s= "" + this.stopLoss;
+                if(s.indexOf('.') == -1){
+                    var regex=/^[0]+/
+                    var a=s.replace(regex,"");
+                    this.stopLoss = Number(a)
+                }else if ( s.indexOf('.') == 0 ){
+                    this.stopLoss = Number( '0' + s ) 
+                }else{
+                    var index = s.indexOf('.')
+                    var arr = s.split(".")
+                    var regex=/^[0]+/
+                    var a=arr[0].replace(regex,"");
+                    this.stopLoss = Number(a) 
+                }
+               
+           }else if ( val == 3 ) {
+                var s= "" + this.takeProfits;
+                if(s.indexOf('.') == -1){
+                    var regex=/^[0]+/
+                    var a=s.replace(regex,"");
+                    this.takeProfits = Number(a)
+                }else if ( s.indexOf('.') == 0 ){
+                    this.takeProfits = Number( '0' + s ) 
+                }else{
+                    var index = s.indexOf('.')
+                    var arr = s.split(".")
+                    var regex=/^[0]+/
+                    var a=arr[0].replace(regex,"");
+                    this.takeProfits = Number(a) 
+                }  
+           }
+            
         },
+       
         //跟随比例加
         followNumPlus(){
             if( this.followNum > 0){
