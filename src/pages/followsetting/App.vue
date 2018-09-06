@@ -1,5 +1,5 @@
 <template>
-    <div id="box">
+    <div id="box" ref="box">
         <!-- 头部 -->
         <div id="header" class="padding clearfix">
             <div class="left clearfix">
@@ -113,15 +113,109 @@
         </div>
         <!-- 底部保存按钮 -->
         <p class="preservation">
-            <button @click="preserv">保存</button>
+            <button @click="popShow">保存</button>
         </p>
-        <!-- 底部返回 -->
-        <!-- <div id="footer">
-            <div id="foot-center">
-                <img :src="returnleftSrc" alt="" >
-                <img :src="returnRightSrc" alt="">
+        
+         <!-- 弹窗 -->
+        <div ref="back" class="back" ></div>
+        <div class="popup" v-if="popUpShow">
+            <p class="poptop">
+                设置清单
+            </p>
+            <p class="poptitle">
+                为保障您的权益，特邀您再次确认
+            </p>
+            <ul class="popcontant">
+                <li class="clearfix">
+                    <span class="left">
+                        跟单方式
+                    </span>
+                    <span class="right" v-if="clickBtn">
+                        比例跟随
+                    </span>
+                    <span class="right" v-if="!clickBtn">
+                        固定跟随
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        跟随数值
+                    </span>
+                    <span class="right" v-if="clickBtn">
+                        {{ followNum }} 倍
+                    </span>
+                    <span class="right" v-if="!clickBtn">
+                        {{ followNum }} 手
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        反向跟随
+                    </span>
+                    <span class="right" v-if="followOnOff">
+                        开
+                    </span>
+                    <span class="right" v-if="!followOnOff">
+                        关
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止盈
+                    </span>
+                    <span class="right">
+                        {{ takeProfits }} 点
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止损
+                    </span>
+                    <span class="right">
+                        {{ stopLoss }} 点
+                    </span>
+                </li>
+                <li style="height:.8rem;line-height:.8rem;font-size:.2rem;font-weight:bold;color:#000;">
+                    <p style="text-align:left">
+                        精密设置
+                    </p>
+                </li>
+                <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        最小操作手数
+                    </span>
+                    <span class="right" v-if="handsNum == 0">
+                        1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 1">
+                        0.1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 2">
+                        0.01 标准手
+                    </span>
+                </li>
+                 <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        尾数设置
+                    </span>
+                    <span class="right" v-if="abandonShow">
+                        舍弃尾数
+                    </span>
+                    <span class="right" v-if="!abandonShow">
+                        四舍五入
+                    </span>
+                </li>
+            </ul>
+            <div class="popbot">
+                <button class="confirm" @click="preserv">
+                    确定
+                </button>
+                <button class="cancel" @click="cancelBtn">
+                    取消
+                </button>
             </div>
-        </div> -->
+        </div>
+       
 
 
     </div>
@@ -158,7 +252,8 @@ export default {
             stopLoss:0,//止损点
             takeProfits: 0,//止盈点
             urlTitle:"",
-            iss: '' 
+            iss: '' ,
+            popUpShow: false
         }
     },
     created(){
@@ -484,6 +579,8 @@ export default {
         },
         //保存
         preserv(){
+            this.$refs.back.style.zIndex=-10;
+            this.popUpShow = false;
             //精密设置
             var broundoff = 0;
             if( this.abandonShow == true ){
@@ -554,12 +651,48 @@ export default {
             }).catch((err) => {
                 console.log(err)
             });
-        }
+        },
+        //计算窗口
+        calculation(){
+            let winWidth = 0;
+            let winHeight =0;
+            //获取窗口宽度
+            if (window.innerWidth){
+                winWidth = window.innerWidth;
+            }else if ((document.body) && (document.body.clientWidth)){
+                winWidth = document.body.clientWidth;
+            }
+            
+            //获取窗口高度
+            if (window.innerHeight){
+                winHeight = window.innerHeight;
+            }else if ((document.body) && (document.body.clientHeight)){
+                winHeight = document.body.clientHeight;
+            }
+            this.$refs.back.style.width=`${winWidth}px`;
+            this.$refs.back.style.height=' 100%';
+        },
+        popShow(){
+            this.calculation();
+            this.$refs.back.style.zIndex=2;
+            this.popUpShow = true;
+        },
+  
+        //弹窗取消
+        cancelBtn(){
+            this.$refs.back.style.zIndex=-10;
+            this.popUpShow = false;
+        },
+
         
     }
 }
 </script>
 <style lang="scss" scoped>
+    #box{
+        position: relative;
+        background-color: #fff;
+    }
     .padding{
         padding: 0 .24rem;
         border-bottom: 1px solid #e5e5e5;
@@ -794,8 +927,78 @@ export default {
             img{
                 // width: .3rem;
                 margin-top: .24rem;
-                height:.56rem;
+                height: .56rem;
             }
         }
+    }
+    //弹窗
+    .back{
+        background-color:gray;
+        opacity: .7;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -10;
+        
+    }
+    .popup{
+        position: fixed;
+        left: .65rem;
+        top: .6rem;
+        z-index: 3;
+        opacity: 1;
+        width: 6rem;
+        height: 9.6rem;
+        background-color: #fff;
+        border-radius: .28rem;
+        .poptop{
+            height: .7rem;
+            font-size: .3rem;
+            line-height: .7rem;
+            border-bottom: 1px solid #c9c9c9;
+            font-weight: bold;
+        }
+        .poptitle{
+            height: .8rem;
+            line-height: .8rem;
+            color: #ff3838;
+            font-size: .24rem;
+        }
+        .popcontant{
+            width: 4.8rem;
+            margin-left: .6rem;
+            margin-top: .4rem;
+            background-color: #f8f8f8;
+            li{
+                height: .7rem;
+                line-height: .7rem;
+                border-bottom: 1px solid #e5e5e5;
+                font-size: .16rem;
+                color: #666;
+                padding: 0 .2rem;
+            }
+        }
+        .popbot{
+            margin-top: .6rem;
+            display: flex;
+            justify-content: space-around;
+            button{
+                width: 1.78rem;
+                height: .64rem;
+                border: 1px solid #4fa2fe;
+                border-radius: .16rem;
+                font-weight: bold;
+            }
+            .confirm{
+                background-color: #fff;
+                color: #4fa2fe;
+
+            }
+            .cancel{
+                background-color: #4fa2fe;
+                color: #fff;
+            }
+        }
+          
     }
 </style>
