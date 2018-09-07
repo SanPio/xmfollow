@@ -177,8 +177,6 @@ export default {
             recordTotal: 0,
             num : 0.05,
             userImgSrc: require('./assets/Head-portrait.jpg'),
-            // returnleftSrc : require('./assets/btn-left@2x.png'),
-            // returnRightSrc : require('./assets/btn-right@2x.png'),
             leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
             rightBtnSrc : require('./assets/Myhomepage-Unclicked@2x.png') ,
             stopOn: true,
@@ -276,8 +274,7 @@ export default {
                 return parseInt( parseFloat( val ) / 10 ) / 100 + 'K'
             }else{
                 return val
-            }
-            
+            } 
         }
     },
     methods: {
@@ -391,13 +388,19 @@ export default {
                         console.log(res)
                         console.log(res.data.success)
                         if(res.data.success == true){
-                            if(ind == -1){
-                                this.nowArr = [];
-                            }else{
-                                this.nowArr.splice(ind,1);
-                            }
-                            MessageBox('提示', '平仓成功');
                             
+                            // MessageBox('提示', '平仓成功');
+                            MessageBox({
+                                confirmButtonText:'确定',
+                                title: '提示',
+                                message: '平仓成功',
+                                showConfirmButton:true,
+                            }).then(action => {  
+                                if (action == 'confirm') {     //确认的回调
+                                     window.location.reload();
+                                }
+                            })
+                          
 
                         }else{
                             MessageBox('提示', '平仓失败');
