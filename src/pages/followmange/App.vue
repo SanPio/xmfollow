@@ -17,7 +17,7 @@
                             <!-- <button @click="allClose">一键平仓</button>
                             <button v-if="stopOn" @click="stopClick">暂停开仓</button>
                             <button class="openbtn" v-if="!stopOn" @click="goOn">继续开仓</button> -->
-                            <button @click="boxMsg">一键平仓</button>
+                            <button @click="closeThis(-1)">一键平仓</button>
                             <button v-if="stopOn" @click="boxMsg">暂停开仓</button>
                             <button class="openbtn" v-if="!stopOn" @click="boxMsg">继续开仓</button>
                         </p>
@@ -64,7 +64,7 @@
                                 <!-- <button @click="closeThis(ind)">一键平仓</button>
                                 <button>订单管理</button>
                                 <button @click="toFollowSetting(ind)">跟随设置</button> -->
-                                <button @click="boxMsg">一键平仓</button>
+                                <button @click="closeThis(ind)">一键平仓</button>
                                 <button @click="toOrder(ind)">订单管理</button>
                                 <button @click="toFollowSetting(ind)">跟随设置</button>
                             </p>  
@@ -229,6 +229,7 @@ export default {
             // console.log(res.data.data.followedReCordRespDtoList)
             // console.log(this.nowArr)
             //结束加载图
+            console.log(res)
             this.$refs.loadmores.onBottomLoaded(); 
             if (res.data.data.sumoptionid <= 10) {
                 this.nowallLoaded = true;
@@ -336,31 +337,16 @@ export default {
         },
         //正在跟随点击展开
         listShow(ind){
-            for(var i = 0; i < this.nowOpen.length; i++){
-                this.$set(this.nowOpen,i,false)
+            if( this.nowOpen[ind] == true ) {
+                this.$set(this.nowOpen,ind,false)
+            }else {
+                for(var i = 0; i < this.nowOpen.length; i++){
+                    this.$set(this.nowOpen,i,false)
+                }
+                this.$set(this.nowOpen,ind,!this.nowOpen[ind])
             }
-            this.$set(this.nowOpen,ind,!this.nowOpen[ind])
-
         },
-         //一键平仓(平掉所有)
-        allClose(){
-            MessageBox({
-                cancelButtonText:'确定',
-                confirmButtonText:'取消',
-                title: '平仓管理',
-                message: '您是否确定平掉所有正在持仓？',
-                showConfirmButton:true,
-                showCancelButton:true
-            }).then(action => { 
-                //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
-                if (action == 'cancel') {     //确认的回调
-                console.log(1); 
-                }
-                if (action == 'confirm') {     //确认的回调
-                console.log(2); 
-                }
-            })
-        },
+        
         //暂停开仓
         stopClick(){
             this.stopOn = !this.stopOn;
@@ -369,19 +355,56 @@ export default {
         goOn(){
             this.stopOn = !this.stopOn;
         },
-         //平仓(平掉单个)
-        closeThis(){
+         //平仓
+        closeThis(ind){
+            var optionid = '';
+            var msg = ''
+            if( ind == -1){
+                optionid = '';
+                msg = '您是否确定平掉所有正在持仓？';
+            }else {
+                optionid = this.nowArr[ind].optionId;
+                msg = '您是否确定平掉此信号源的持仓？';
+            }
             MessageBox({
                 cancelButtonText:'确定',
                 confirmButtonText:'取消',
-                title: '清空',
-                message: '您是否确定平掉此信号源的持仓？',
+                title: '平仓管理',
+                message: msg,
                 showConfirmButton:true,
                 showCancelButton:true
             }).then(action => { 
                 //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
                 if (action == 'cancel') {     //确认的回调
-                console.log(1); 
+                    let postData = this.$qs.stringify({
+                        accountId: this.accountId,
+                        optionId: optionid,
+                        type : 0,
+                        userId : this.userId,
+                    });
+                    console.log(postData)
+                    this.$http({
+                        method: 'post',
+                        url: this.urlTitle+'wx/order/member/followStop',
+                        data:postData
+                    }).then((res)=>{
+                        console.log(res)
+                        console.log(res.data.success)
+                        if(res.data.success == true){
+                            if(ind == -1){
+                                this.nowArr = [];
+                            }else{
+                                this.nowArr.splice(ind,1);
+                            }
+                            MessageBox('提示', '平仓成功');
+                            
+
+                        }else{
+                            MessageBox('提示', '平仓失败');
+                        }
+                    }).catch((err) => {
+                    
+                    });
                 }
                 if (action == 'confirm') {     //确认的回调
                 console.log(2); 
@@ -397,10 +420,15 @@ export default {
 
         //跟随记录
         recordListShow(ind){
-            for(var i = 0; i < this.recordOpen.length; i++){
-                this.$set(this.recordOpen,i,false)
+            if ( this.recordOpen[ind] == true ) {
+                this.$set(this.recordOpen,ind,false);
+            }else {
+                for(var i = 0; i < this.recordOpen.length; i++){
+                    this.$set(this.recordOpen,i,false);
+                }
+                this.$set(this.recordOpen,ind,!this.recordOpen[ind]);
             }
-            this.$set(this.recordOpen,ind,!this.recordOpen[ind])
+            
         },
         //返回到index主页（交易领航）
         toIndex(){
