@@ -162,11 +162,11 @@ export default {
             buyShow : true,
             ellShow : true,
             redcolor:true,
-            mianInfoTitle : ["交易时间","余额","收益率","起始资金","盈亏点数","跟随人数","第一单"],
+            mianInfoTitle : ["交易时间","余额","收益率","起始资金","最大回撤","跟随人数","第一单"],
             mianInfo : [],
             secInfoTitle : ["平均持仓时间","最大盈利点数","最大亏损点数","最大手数","最小手数"],
             secInfo : [],
-            principleTitle : ["杠杆比例","预期回报","最大回撤","平均点差"],
+            principleTitle : ["杠杆比例","预期回报","预期回撤","平均点差"],
             principle : [],
             info : {},
             hisArr : [],
@@ -215,6 +215,7 @@ export default {
             }else{
                 this.mianInfo.push(0)
             }
+            //改成最大回撤
             if( parseFloat( res.data.data.profitNo ) >= 1000 || parseFloat( res.data.data.profitNo ) <= -1000){
                 this.mianInfo.push( parseInt( parseFloat( res.data.data.profitNo )/10 )/ 100 + "K")
             }else{

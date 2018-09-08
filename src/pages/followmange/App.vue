@@ -387,21 +387,8 @@ export default {
                     }).then((res)=>{
                         console.log(res)
                         console.log(res.data.success)
-                        if(res.data.success == true){
-                            
-                            // MessageBox('提示', '平仓成功');
-                            MessageBox({
-                                confirmButtonText:'确定',
-                                title: '提示',
-                                message: '平仓成功',
-                                showConfirmButton:true,
-                            }).then(action => {  
-                                if (action == 'confirm') {     //确认的回调
-                                     window.location.reload();
-                                }
-                            })
-                          
-
+                        if(res.data.success == true){                            
+                            MessageBox('提示', '平仓成功');
                         }else{
                             MessageBox('提示', '平仓失败');
                         }

@@ -43,8 +43,8 @@
             <button class="con-btn right " :class="{'clickbtn':clickBtn}"  :disabled="clickBtn"   @click="btnClick">比例跟随</button>
         </p>
         <!-- 跟单方式下提示语 -->
-        <p class="proportions">
-            <span v-if="clickBtn">比例跟随：下单的手数=信号源下单的手数*跟随比例</span>
+        <p class="proportions" style="height:.6rem">
+            <span v-if="clickBtn">比例跟随：下单的手数=信号源下单的手数*跟随比例，若下单手数小于0.01，则不会下单，敬请注意！</span>
             <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与信号源手数无关</span>
         </p>
         <!-- 跟随数值 -->
@@ -123,8 +123,12 @@
                 设置清单
             </p>
             <p class="poptitle">
-                为保障您的权益，特邀您再次确认
+                
+               请结合您的账户资金、信号源账户资金
+               <br/>
+               及交易特征，合理设置您的跟单配置。
             </p>
+            
             <ul class="popcontant">
                 <li class="clearfix">
                     <span class="left">
@@ -152,10 +156,10 @@
                     <span class="left">
                         反向跟随
                     </span>
-                    <span class="right" v-if="followOnOff">
+                    <span class="right" v-if="reverseOnOff">
                         开
                     </span>
-                    <span class="right" v-if="!followOnOff">
+                    <span class="right" v-if="!reverseOnOff">
                         关
                     </span>
                 </li>
@@ -236,7 +240,7 @@ export default {
             returnRightSrc : require('./assets/btn-right@2x.png'),
             proportion: 0.50,
             income: 34.02,
-            followNum : 0,
+            followNum : 0.01,
             clickBtn: true,
             followOnOff: true,
             reverseOnOff : false,
@@ -337,6 +341,7 @@ export default {
             }
         },
         followNum(val){
+            
             if( this.iss == 1 && val >1){
             //    this.followNum = 1
             }
@@ -549,7 +554,7 @@ export default {
         },
         //跟随比例减
         followNumReduce(){
-            if( this.followNum > 0){ //大于0时执行
+            if( this.followNum > 0.01){ //大于0时执行
                 if(  parseInt( this.followNum ) == parseFloat(this.followNum) && this.followNum > 1 ){//判断是否为大于一的整数
                     this.followNum  = parseInt(this.followNum) - 1      //如果为大于一的整数 减1
                 }else if( ( parseInt( this.followNum * 10 ) == parseFloat(this.followNum * 10) || this.followNum == 1) && this.followNum > 0.1){ //判断是否含有一位小数或者为1 并且大于0.1
@@ -558,7 +563,7 @@ export default {
                     this.followNum = ( Math.floor(this.followNum * 100) - 1)/100 // 如果是0.1或者有两位小数 减0.01
                 }
             }else{//如果是负数，赋值为0
-                this.followNum = 0;
+                this.followNum = 0.01;
             }
         },
         //四舍五入
@@ -959,8 +964,9 @@ export default {
             font-weight: bold;
         }
         .poptitle{
-            height: .8rem;
-            line-height: .8rem;
+            height: .5rem;
+            padding-top: .3rem;
+            line-height: .3rem;
             color: #ff3838;
             font-size: .24rem;
         }

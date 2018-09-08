@@ -49,7 +49,7 @@
             </dl>
              <dl style="border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;">
                 <dt>
-                    <img :src="orderImgSrc" alt="">
+                    <img :src="orderImgSrc" alt="" @click="toOrder">
                 </dt>
                 <dd @click="toOrder">订单管理</dd>
             </dl>
