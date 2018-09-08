@@ -70,7 +70,7 @@
                     </ul>
                 </div>
             </mt-swipe-item>
-            <mt-swipe-item>
+            <!-- <mt-swipe-item>
                 <p class="swip-title">
                     周期变化表
                 </p>
@@ -80,7 +80,7 @@
                         
                     </div>
                 </div>
-            </mt-swipe-item> 
+            </mt-swipe-item>  -->
 
 
         </mt-swipe> 
@@ -308,28 +308,21 @@
                                                 {{ item.orderId }}
                                             </span>
                                         </li>
-                                        <li>
-                                            <span>
-                                                止损
-                                            </span>
-                                            <span>
-                                                {{ item.stopLoss }}
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                止盈
-                                            </span>
-                                            <span>
-                                                {{ item.takeProfits }}
-                                            </span>
-                                        </li>
+                                       
                                         <li>
                                             <span>
                                                 库存费
                                             </span>
                                             <span>
                                                 {{ item.swap ? item.swap : 0 }}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                手续费
+                                            </span>
+                                            <span>
+                                                {{ item.commission ? item.commission : 0 }}
                                             </span>
                                         </li>
                                     </ul>
@@ -353,14 +346,7 @@
                                             </span>
 
                                         </li>
-                                        <li>
-                                            <span>
-                                                手续费
-                                            </span>
-                                            <span>
-                                                {{ item.commission ? item.commission : 0 }}
-                                            </span>
-                                        </li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -795,8 +781,8 @@ export default {
                 if(res.data.code <= this.infoPageNum * 10){
                     this.infoAllLoaded = true;
                 }
-                for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
-                    this.infoArr.push( res.data.data.orderRespDtoList[i]  )
+                for (let i = 0; i < res.data.data.length; i ++) {
+                    this.infoArr.push( res.data.data[i]  )
                     this.infoBotShow.push(false);
                 }
             }).catch((err) => {
@@ -820,8 +806,8 @@ export default {
             if(res.data.code<= this.hisPagNum * 10){
                 this.hisAllLoaded = true;
             }
-            for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
-                this.historyArr.push(res.data.data.orderRespDtoList[i])
+            for (let i = 0; i < res.data.data.length; i ++) {
+                this.historyArr.push(res.data.data[i])
                 this.hisBotShow.push(false);
             }
         }).catch((err) => {

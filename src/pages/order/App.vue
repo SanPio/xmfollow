@@ -63,7 +63,7 @@
                                     <div class="right clearfix">
                                         <div class="left">
                             
-                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 ">
+                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.66rem">
                                                 {{'$'+ item.profit}}   
                                             </p>
                                           
@@ -102,22 +102,7 @@
                                                 {{ item.orderId }}
                                             </span>
                                         </li>
-                                        <li>
-                                            <span>
-                                                止损
-                                            </span>
-                                            <span>
-                                               {{ item.stopLoss }} 
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                止盈
-                                            </span>
-                                            <span>
-                                               {{ item.takeProfits }} 
-                                            </span>
-                                        </li>
+                                      
                                       
                                     </ul>
                                     <ul class="right">
