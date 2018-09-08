@@ -6,7 +6,7 @@
                     <img :src="portraitSrc" alt="">
                 </div>
                 <dl class="h-right">
-                    <dt>{{info.signalName}}</dt>
+                    <dt ><span>{{info.signalName}} </span> <button v-if="detail" @click="detail = !detail">查看详情</button> <button  v-if="!detail" @click="detail = !detail">查看订单</button></dt>
                 </dl>
             </div> 
             <p class="h-center" :class="{'ellipsis':ellShow}">
@@ -18,55 +18,7 @@
                 <span class="h-f-right">{{info.signalIntroduce}}</span>
             </p>   
         </div>
-        <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9">
-            <!-- <mt-swipe-item>
-                <p class="swip-title">
-                    持仓信息
-                </p>
-                <div class="swip-content">
-                    <ul class="hold-info">
-               
-                        <li v-for="(item,ind) in holdArr" :key="ind">
-                            <p class="hold-info-left">
-                                <span class="tit"> {{ item.symbol }} </span>
-                                <button class="buybtn" v-if="item.type==0">买</button>
-                                <button class="cellbtn" v-if="item.type==1">卖</button>
-                                <button class="hangbtn" v-if="item.type==2||item.type==3||item.type==4||item.type==5">挂</button>
-                                <span class="num" >{{ item.lots }}</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="hold-info-right">
-                                <span class="money" :class="{'redcolor':(item.profit<0 )} " >${{ item.profit }}</span>
-                                <span class="spot">{{ item.spreads }}点</span>
-                            </p>
-                        </li>
-                        
-     
-                    </ul>
-                </div>
-            </mt-swipe-item>
-            <mt-swipe-item>
-                <p class="swip-title">
-                    历史记录
-                </p>
-                <div class="swip-content">
-                    <ul class="history">
-                        <li v-for="(item,ind) in hisArr" :key="ind">
-                            <p class="history-left">
-                                <span class="tit"> {{ item.symbol }} </span>
-                                <button class="buybtn" v-if="item.type==0">买</button>
-                                <button class="cellbtn" v-if="item.type==1">卖</button>
-                                <button class="hangbtn" v-if="item.type==2||item.type==3||item.type==4||item.type==5">挂</button>
-                                <span class="num" >{{ item.lots }}</span>
-                                <span class="standard">标准手</span>
-                            </p>
-                            <p class="history-right">
-                                <span class="money" :class="{'redcolor':(item.profit<0 )} ">${{ item.profit }}</span>
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-            </mt-swipe-item> -->
+        <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9"  v-if="!detail">
             <mt-swipe-item>
                 <p class="swip-title">
                     主要信息
@@ -118,7 +70,7 @@
                     </ul>
                 </div>
             </mt-swipe-item>
-            <!-- <mt-swipe-item>
+            <mt-swipe-item>
                 <p class="swip-title">
                     周期变化表
                 </p>
@@ -128,24 +80,340 @@
                         
                     </div>
                 </div>
-            </mt-swipe-item> -->
+            </mt-swipe-item> 
+
+
         </mt-swipe> 
+
+
+
+
+
+
+
+
+
+        <div id="order" v-if="detail" >
+        <mt-navbar v-model="selected" >
+            <mt-tab-item id="info">订单信息</mt-tab-item>
+            <mt-tab-item id="history">历史记录</mt-tab-item>
+        </mt-navbar>
+         <mt-tab-container v-model="selected">
+           
+            <mt-tab-container-item id="info">
+              
+                <div style="overflow-y: scroll;hieght:6rem">
+                    <mt-loadmore 
+                    :bottom-method="loadBottom" 
+                    :bottom-all-loaded="infoAllLoaded"
+                    :autoFill="false" ref="loadmores">
+                        <div ref="mybox">
+                            <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
+                                <div class="infotop clearfix" @click="infoBotOnOff(ind)">
+                                    <div class="left">
+                                        <p>
+                                            <span>
+                                                {{ item.symbol }}
+                                            </span>
+                                            <button class="colorbtn buybtn" v-if="item.type == 0">
+                                                买
+                                            </button>
+                                            <button class="colorbtn cellbtn" v-if="item.type == 1">
+                                                卖
+                                            </button >
+                                            <button class="colorbtn hangbtn" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5">
+                                                挂
+                                            </button>
+                                            <span>
+                                                {{ item.lots }}
+                                            </span>
+                                            <span>
+                                                标准手
+                                            </span> 
+                                            <button class="colorbtn buybtn" v-if="item.type == 2 || item.type == 4">
+                                                买
+                                            </button>
+                                            <button class="colorbtn cellbtn" v-if="item.type == 3 || item.type == 5">
+                                                卖
+                                            </button >
+                                        </p>
+                                        <p>
+                                            <span>  
+                                                {{ item.symbolTypeString }}
+                                            </span>
+                                            
+                                            <span >
+                                                {{ item.openPrice}}
+                                            </span> 
+                                            <span v-if="item.type == 0 || item.type == 1">
+                                                -
+                                            </span>
+                                          
+                                            <span >
+                                                {{ item.nowPrice }}
+                                            </span> 
+                                        </p>
+                                    </div>
+                                    <div class="right clearfix">
+                                        <div class="left">
+                            
+                                            <p :class="item.nowProfits >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.6rem">
+                                                {{'$'+ item.nowProfits}}   
+                                            </p>
+                                         
+                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                <span>
+                                                    委托
+                                                </span>
+                                                <span>
+                                                    {{ item.openPrice}}
+                                                </span>
+                                            </p>
+                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                <span>
+                                                    当前
+                                                </span>
+                                                <span>
+                                                    {{ item.nowprice}}
+                                                </span>
+                                            </p>
+                                        </div>
+                                      
+                                        
+                                    </div>
+                                </div>
+                                <div class="infocen clearfix" v-if="infoBotShow[ind]">
+                                    <ul class="left">
+                                        <li>
+                                            <span>
+                                                订单号
+                                            </span>
+                                            <span>
+                                                {{ item.orderId }}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                止损
+                                            </span>
+                                            <span>
+                                               {{ item.stopLoss }} 
+                                            </span>
+                                        </li>
+                                       
+                                      
+                                    </ul>
+                                    <ul class="right">
+                                     
+                                        <li>
+                                            <span>
+                                                开仓时间
+                                            </span>
+                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                {{ item.updatetime }}
+                                            </span>
+                                            
+                                        </li>
+                                        <li>
+                                            <span>
+                                                止盈
+                                            </span>
+                                            <span>
+                                               {{ item.takeProfits }} 
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                        </div>
+                   </mt-loadmore>
+                </div>
+            </mt-tab-container-item>
+
+
+
+
+            <mt-tab-container-item id="history">
+             
+                <div style="overflow-y: scroll;">
+                    <mt-loadmore 
+                    :bottom-method="hisloadBottom" 
+                    :bottom-all-loaded="hisAllLoaded" 
+                    :autoFill="false" ref="loadmore">
+                        <div ref="myboxes">
+                            <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
+                                <div class="infotop clearfix" @click="hisBotOnOff(ind)">
+                                    <div class="left">
+                                        <p>
+                                            <span>
+                                                {{ item.symbol }}
+                                            </span>
+                                            <button class="colorbtn buybtn" v-if="item.type==0">
+                                                买
+                                            </button>
+                                            <button class="colorbtn cellbtn" v-if="item.type==1">
+                                                卖
+                                            </button >
+                                            <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5">
+                                                挂
+                                            </button>
+                                            <span>
+                                                {{ item.lots }}
+                                            </span>
+                                            <span>
+                                                标准手
+                                            </span> 
+                                            <button class="colorbtn buybtn" v-if="item.type==2||item.type==4">
+                                                买
+                                            </button>
+                                            <button class="colorbtn cellbtn" v-if="item.type==3||item.type==5">
+                                                卖
+                                            </button >
+                                        </p>
+                                        <p>
+                                            <span>
+                                                {{ item.symbolTypeString }}
+                                            </span>
+                                          
+                                            <span >
+                                                {{ item.openPrice}}
+                                            </span> 
+                                            <span>
+                                                -
+                                            </span>
+                                           
+                                            <span>
+                                                {{ item.closePrice }}
+                                            </span> 
+                                        </p>
+                                    </div>
+                                    <div class="right clearfix">
+                                        <div class="left">
+                                            <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
+                                               {{'$'+ item.orderProfit}}
+                                            </p>
+                                           
+                                      
+                                        </div>     
+                                    </div>
+                                </div>
+                                <div class="infocen clearfix" v-if="hisBotShow[ind]">
+                                    <ul class="left">
+                                        <li>
+                                            <span>
+                                                订单号
+                                            </span>
+                                            <span>
+                                                {{ item.orderId }}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                止损
+                                            </span>
+                                            <span>
+                                                {{ item.stopLoss }}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                止盈
+                                            </span>
+                                            <span>
+                                                {{ item.takeProfits }}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                库存费
+                                            </span>
+                                            <span>
+                                                {{ item.swap ? item.swap : 0 }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <ul class="right">
+                                       
+                                        <li>
+                                            <span>
+                                                开仓时间
+                                            </span>
+                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                {{ item.orderOpenTime }}
+                                            </span>
+                                            
+                                        </li>
+                                        <li>
+                                            <span>
+                                                平仓时间
+                                            </span>
+                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                {{ item.orderCloseTime }}
+                                            </span>
+
+                                        </li>
+                                        <li>
+                                            <span>
+                                                手续费
+                                            </span>
+                                            <span>
+                                                {{ item.commission ? item.commission : 0 }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                   </mt-loadmore>
+                </div>
+            </mt-tab-container-item>
+        </mt-tab-container>
+       
+       
+       
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div id="footer">
             
             <button @click="toFollowSetting"> 跟随设置 </button>
         </div>
-        <!-- <div id="bottom">
-            <div id="bot-center">
-                <img :src="returnleftSrc" alt="" @click="returnBtn">
-                <img :src="returnRightSrc" alt="">
-            </div>
-        </div>      -->
+        
     </div>
 </template>
 <script>
 var echarts = require('echarts/lib/echarts');
 // 引入线形图
 require('echarts/lib/chart/line');
+import { MessageBox } from 'mint-ui';
+import { Toast } from 'mint-ui';
 export default {
     name: 'App',
     data(){
@@ -172,7 +440,37 @@ export default {
             hisArr : [],
             holdArr:[],
             urlTitle:"",
-            iss: ''
+            iss: '',
+            
+
+
+            detail: true,
+            infoAllLoaded: false,
+            hisAllLoaded: false,
+            iss: '',
+            selected: 'info',
+            fixed: true,
+            //订单信息页
+            colorShow: true,//数字蓝色还是红色
+            urlTitle: '',
+            userId: '',
+            optionId: '',
+            accountId: '',
+            infoPageNum : 1,
+            hisPagNum:1,
+            pageSize: 10,
+            infoArr : [],
+            infoBotShow:[],
+            //历史记录页
+            historyArr : [],  
+            popInfo: { },      
+            stopLossNum: 0.001,
+            targetProfitNum: 18.02,
+            hisBotShow: [],
+            //弹窗
+            popUpShow: false,//弹窗是否显示
+            stopLossShow: true,//止损按钮是否显示
+
         }
     },
     created(){
@@ -189,6 +487,52 @@ export default {
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
+    
+        
+        //  初始化数据请求
+        this.$http.get(this.urlTitle+'wx/order/member/orderDetailsList',{ //订单信息
+            params : { 
+                pageNum : 1,
+                pageSize: 10,
+                optionId:this.optionId
+            }   
+        }).then((res) => { 
+            console.log(res)
+           
+            if(res.data.code <= 10){
+                this.infoAllLoaded = true;
+            }
+           
+            for (let i = 0; i < this.infoArr.length; i ++) {
+                this.infoBotShow.push(false);
+            }
+            this.infoArr = res.data.data
+        }).catch((err) => {
+            console.log(err)
+        })
+     
+        //  初始化数据请求
+        this.$http.get(this.urlTitle+'wx/order/member/orderHistoryList',{ //订单信息
+            params : { 
+                pageNum : 1,
+                pageSize: 10,
+                optionId:this.optionId
+            }   
+        }).then((res) => { 
+            console.log(res)
+            this.historyArr = res.data.data
+            if(res.data.code<= 10){
+                this.infoAllLoaded = true;
+            }
+           
+            for (let i = 0; i < this.historyArr.length; i ++) {
+                this.hisBotShow.push(false);
+            }
+           
+        }).catch((err) => {
+            console.log(err)
+        })
+
         //初始化数据请求
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          
@@ -216,10 +560,18 @@ export default {
                 this.mianInfo.push(0)
             }
             //改成最大回撤
-            if( parseFloat( res.data.data.profitNo ) >= 1000 || parseFloat( res.data.data.profitNo ) <= -1000){
-                this.mianInfo.push( parseInt( parseFloat( res.data.data.profitNo )/10 )/ 100 + "K")
+            // if( parseFloat( res.data.data.profitNo ) >= 1000 || parseFloat( res.data.data.profitNo ) <= -1000){
+            //     this.mianInfo.push( parseInt( parseFloat( res.data.data.profitNo )/10 )/ 100 + "K")
+            // }else{
+            //     this.mianInfo.push( res.data.data.initFunds );
+            // }
+            // //改成最大回撤
+            if( res.data.data.maxHuicheRatio == 0 ){
+                this.mianInfo.push( '0' );
+                // this.mianInfo.push( parseInt( parseFloat( res.data.data.profitNo )/10 )/ 100 + "K")
             }else{
-                this.mianInfo.push( res.data.data.initFunds );
+                this.mianInfo.push( res.data.data.maxHuicheRatio  + '%');
+                // this.mianInfo.push( parseInt(res.data.data.maxHuicheRatio *10000 ) /100  + '%');
             }
             
             if(  res.data.data.followerNumber ){
@@ -273,37 +625,7 @@ export default {
             console.log(err)
         });
 
-        //     //历史记录
-        // this.$http.get(this.urlTitle+'wx/order/trader/'+ v['optionId'] +'/history',{  
-        //     params : { 
-        //         pageNum  : 1,
-        //         pageSize : 6,
-        //         optionId : this.optionId,
-        //         userId : this.userId 
-        //     }      
-        // }).then((res) => {
-          
-        //     this.hisArr = res.data.data.list;
-           
-            
-        // }).catch((err) => {
-        //     console.log(err)
-        // });
-        // //持仓信息
-
-        // this.$http.get(this.urlTitle+'wx/order/trader/'+this.optionId+'/traderNowOrders',{  
-        //     params : { 
-        //         pageNum  : 1,
-        //         pageSize : 6,
-        //         optionId : this.optionId,
-        //         userId : this.userId 
-        //     }      
-        // }).then((res) => {
-        //      this.holdArr = res.data.data.list;  
-            
-        // }).catch((err) => {
-        //     console.log(err)
-        // });
+       
 
 
 
@@ -416,7 +738,6 @@ export default {
         //到跟随设置页面
         toFollowSetting(){            
             // window.location.href=`followsetting.html?optionId=${this.optionId}`;
-           
     
                         this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
                                 params : {
@@ -455,8 +776,98 @@ export default {
         },
         returnBtn(){
             window.location.href="index.html";
-        }
-        //
+        },
+
+
+
+             //上拉加载
+        loadBottom(){
+            this.infoPageNum ++;
+            this.$http.get(this.urlTitle+'wx/order/member/orderDetailsList',{ //订单信息
+            params : {
+                pageNum : this.infoPageNum,
+                pageSize: 10,
+                optionId:this.optionId
+            }   
+        }).then((res) => { 
+                console.log(res)
+                this.$refs.loadmores.onBottomLoaded();
+                if(res.data.code <= this.infoPageNum * 10){
+                    this.infoAllLoaded = true;
+                }
+                for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
+                    this.infoArr.push( res.data.data.orderRespDtoList[i]  )
+                    this.infoBotShow.push(false);
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+           
+        },
+             //上拉加载
+        hisloadBottom(){
+            this.hisPagNum ++ ;
+           this.$http.get(this.urlTitle+'wx/order/member/orderHistoryList',{ //订单信息
+            params : { 
+                pageNum : this.hisPagNum,
+                pageSize: 10,
+                optionId:this.optionId
+            }   
+        }).then((res) => { 
+              
+            console.log(res)
+            this.$refs.loadmore.onBottomLoaded();
+            if(res.data.code<= this.hisPagNum * 10){
+                this.hisAllLoaded = true;
+            }
+            for (let i = 0; i < res.data.data.orderRespDtoList.length; i ++) {
+                this.historyArr.push(res.data.data.orderRespDtoList[i])
+                this.hisBotShow.push(false);
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+        },
+            //点击标题显示内容收缩
+        infoBotOnOff(ind){
+            if(this.infoBotShow[ind] == true){
+                this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
+            }else{
+                for ( let i = 0; i < this.infoBotShow.length; i ++) {
+                    this.infoBotShow[i] = false;
+                }
+                this.$set(this.infoBotShow,ind,!this.infoBotShow[ind])
+            }
+            
+        },
+               //点击标题显示内容收缩
+        hisBotOnOff(ind){
+            if (  this.hisBotShow[ind] == true ) {
+                this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
+            }else {
+                for ( let i = 0; i < this.hisBotShow.length; i ++ ) {
+                    this.hisBotShow[i] = false;
+                };
+                this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
+            }          
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 </script>
@@ -483,6 +894,17 @@ export default {
                     font-size: .36rem;
                     font-weight: 900;
                     margin-top: .2rem;
+                    button{
+                        padding: .1rem .2rem;
+                        color: #fff;
+                        border-radius: .16rem;
+                        outline: none;
+                        font-size: .2rem;
+                        background-color: #44aafa;
+                        border: 1px solid #fff;
+                        margin-left: 1.6rem;
+                    }
+                    
                 } 
             }
         }
@@ -610,7 +1032,7 @@ export default {
         
     }
     #footer{
-        margin-top: 2rem;
+        margin-top: 1.4rem;
         height: 1rem;
         text-align: center;
         
@@ -650,7 +1072,296 @@ export default {
         }
     }
 
+    #order{
+        // height: 6.5rem;
+       
+        .colorbtn{
+            width: .28rem;
+            height: .28rem;
+            font-size: .2rem;
+            line-height: .2rem;
+            border: none;
+            color: #fff;
+            border-radius: .04rem;
+        }
+        .buybtn{
+            background-color: #007aff;
+        }
+        .cellbtn{
+            background-color: #fe0000;
+        }
+        .hangbtn{
+            background-color: #ff7c2b;
+        }
+        .infolist{
+            font-size: .2rem;
+            line-height: .2rem;
+            color: #999;
+            .infotop{
+                height: 1.1rem;
+                border-bottom: 1px solid #c9c9c9;
+                padding: 0 .24rem;
+                .left{
+                    text-align: left;
+                    p:nth-of-type(1){
+                        margin-top: .24rem;
+                        margin-bottom: .2rem;
+                        span{
+                            font-size: .28rem;
+                            line-height: .28rem;
+                            font-weight:bold;
+                            color: #000; 
+                        } 
+                        span:nth-last-of-type(1){
+                            font-size: .2rem;
+                            font-weight: normal;
+                            line-height: .2rem;
+                            color: #999;
+                        }
+                    }
+                    p:nth-of-type(2){
+                        span{
+                            font-weight:bold;
+                            color: #000;  
+                        }
+                        span:nth-of-type(1){
+                            font-weight: normal;
+                            color: #999;
+                            margin-right: .04rem;
+                        }
+                    }
 
+                }
+                .right{
+                    .left{
+                        text-align: right;
+                        p:nth-of-type(1){
+                            font-size: .28rem;
+                            line-height: .28rem;
+                            font-weight: bold;
+                            
+                        }
+                        .bulecolor{
+                            color: #007aff;
+                        }
+                        .redcolor{
+                            color: #fe0000;
+                        }
+                        p:nth-of-type(2){
+                            span{
+                                color: #666;
+                                font-size: .2rem;
+                                line-height: .2rem;
+                                font-weight: bold;
+                            }
+                            
+                        }
+                        .gua{
+                            span{
+                                color: #666;
+                                font-size: .2rem;
+                                line-height: .2rem;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                    .right{
+                        button{
+                            line-height: .28rem;
+                            height: .28rem;
+                            color: #666;
+                            margin-top: .44rem;
+                            font-weight: bold;
+                            margin-left: .2rem;
+                            border: none;
+                            background-color: #fff;
+                        }
+                        
+                    }
+                }
+            }
+            .infocen{
+                padding: .16rem .24rem ;
+                background-color: #f9f9f9;
+                li{
+                    height: .48rem;
+                    line-height: .48rem;
+                    text-align: left;
+                    span:nth-last-of-type(1){
+                        margin-left: .24rem;
+                        color: #666;
+                        font-weight: bold;
+                    }
+                }
+            }
+            .infobot{
+                background-color: #f9f9f9;
+                display: flex;
+                justify-content: space-around;
+                padding: .32rem .24rem;
+                button{
+                    width: 1.68rem;
+                    height: .64rem;
+                    left: .64rem;
+                    color: #4fa2fe;
+                    border: 1px solid #4fa2fe;
+                    background-color: #f9f9f9;
+                    border-radius: .12rem;
+                    font-size: .28rem;
+                    font-weight: 900;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+    #order{
+         #box{
+        background-color: #fff;
+    }
+    .colorbtn{
+        width: .28rem;
+        height: .28rem;
+        font-size: .2rem;
+        line-height: .2rem;
+        border: none;
+        color: #fff;
+        border-radius: .04rem;
+    }
+    .buybtn{
+        background-color: #007aff;
+    }
+    .cellbtn{
+        background-color: #fe0000;
+    }
+    .hangbtn{
+        background-color: #ff7c2b;
+    }
+    .infolist{
+        font-size: .2rem;
+        line-height: .2rem;
+        color: #999;
+        .infotop{
+            height: 1.1rem;
+            border-bottom: 1px solid #c9c9c9;
+            padding: 0 .24rem;
+            .left{
+                text-align: left;
+                p:nth-of-type(1){
+                    margin-top: .24rem;
+                    margin-bottom: .2rem;
+                    span{
+                        font-size: .28rem;
+                        line-height: .28rem;
+                        font-weight:bold;
+                        color: #000; 
+                    } 
+                    span:nth-last-of-type(1){
+                        font-size: .2rem;
+                        font-weight: normal;
+                        line-height: .2rem;
+                        color: #999;
+                    }
+                }
+                p:nth-of-type(2){
+                    span{
+                        font-weight:bold;
+                        color: #000;  
+                    }
+                    span:nth-of-type(1){
+                        font-weight: normal;
+                        color: #999;
+                        margin-right: .04rem;
+                    }
+                }
+
+            }
+            .right{
+                .left{
+                    text-align: right;
+                    p:nth-of-type(1){
+                        font-size: .28rem;
+                        line-height: .28rem;
+                        font-weight: bold;
+                        
+                    }
+                    .bulecolor{
+                        color: #007aff;
+                    }
+                    .redcolor{
+                        color: #fe0000;
+                    }
+                    p:nth-of-type(2){
+                        span{
+                            color: #666;
+                            font-size: .2rem;
+                            line-height: .2rem;
+                            font-weight: bold;
+                        }
+                        
+                    }
+                    .gua{
+                        span{
+                            color: #666;
+                            font-size: .2rem;
+                            line-height: .2rem;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                .right{
+                    button{
+                        line-height: .28rem;
+                        height: .28rem;
+                        color: #666;
+                        margin-top: .44rem;
+                        font-weight: bold;
+                        margin-left: .2rem;
+                        border: none;
+                        background-color: #fff;
+                    }
+                    
+                }
+            }
+        }
+        .infocen{
+            padding: .16rem .24rem ;
+            background-color: #f9f9f9;
+            li{
+                height: .48rem;
+                line-height: .48rem;
+                text-align: left;
+                span:nth-last-of-type(1){
+                    margin-left: .24rem;
+                    color: #666;
+                    font-weight: bold;
+                }
+            }
+        }
+        .infobot{
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-around;
+            padding: .32rem .24rem;
+            button{
+                width: 1.68rem;
+                height: .64rem;
+                left: .64rem;
+                color: #4fa2fe;
+                border: 1px solid #4fa2fe;
+                background-color: #f9f9f9;
+                border-radius: .12rem;
+                font-size: .28rem;
+                font-weight: 900;
+            }
+        }
+    }
+    }
 </style>
 
 

@@ -75,8 +75,8 @@
                   <!-- <dt v-if="nearTime==7"> 近一周盈亏点数 </dt>
                   <dt v-if="nearTime==14"> 近两周盈亏点数 </dt>
                   <dt v-if="nearTime==30"> 近一月盈亏点数 </dt> -->
-                  <dt > 盈亏点数 </dt>
-                  <dd> {{item.profitNo | plus}} </dd>
+                  <dt > 最大回撤 </dt>
+                  <dd> {{item.maxHuicheRatio + "%"}} </dd>
                 </dl>
                 <dl class="balance">
                   <dt> 余额 </dt>
@@ -173,7 +173,7 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.0.197:8080/",//丹峰
-      // urlTitle:"http://192.168.0.101:8080/",  //洪波
+      // urlTitle:"http://192.168.0.102:8080/",  //大潘
       // urlTitle:"http://www.0539maj.com/app/",//域名
       urlTitle:"http://132.232.44.112:80/app/", //服务器
       // urlTitle:"http://121.196.208.147:80/",//另一台

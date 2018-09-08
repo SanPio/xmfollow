@@ -47,21 +47,15 @@
                                             <span>  
                                                 {{ item.symbolStr }}
                                             </span>
-                                            <span v-if="item.type == 0">
-                                                {{ item.nowprice }}
-                                               
-                                            </span> 
-                                            <span v-if="item.type == 1">
+                                           
+                                            <span >
                                                 {{ item.openPrice}}
                                             </span> 
                                             <span v-if="item.type == 0 || item.type == 1">
                                                 -
                                             </span>
-                                            <span v-if="item.type == 0">
-                                                {{ item.openPrice }}
-                                               
-                                            </span> 
-                                            <span v-if="item.type == 1">
+                                            
+                                            <span >
                                                 {{ item.nowprice }}
                                             </span> 
                                         </p>
@@ -72,14 +66,7 @@
                                             <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 ">
                                                 {{'$'+ item.profit}}   
                                             </p>
-                                            <p v-if="item.type == 0 || item.type == 1 ">
-                                                <span>
-                                                   {{ item.spreads }}
-                                                </span>
-                                                <span>
-                                                    点
-                                                </span>
-                                            </p>
+                                          
                                             <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
                                                 <span>
                                                     委托
@@ -131,14 +118,7 @@
                                                {{ item.takeProfits }} 
                                             </span>
                                         </li>
-                                        <li>
-                                            <span>
-                                                库存费
-                                            </span>
-                                            <span>
-                                                {{ item.swap ? item.swap : 0 }}
-                                            </span>
-                                        </li>
+                                      
                                     </ul>
                                     <ul class="right">
                                         <li>
@@ -160,24 +140,10 @@
                                                 {{ item.  }}12:08:36
                                             </span> -->
                                         </li>
-                                        <li>
-                                            <span>
-                                                手续费
-                                            </span>
-                                            <span>
-                                                {{ item.commission ? item.swap : 0 }}
-                                            </span>
-                                        </li>
+                                       
                                     </ul>
                                 </div>
-                                <!-- <p class="infobot" v-if="infoBotShow[ind]">
-                                    <button @click="stopLoss(ind)">
-                                        止损
-                                    </button>
-                                    <button @click="targetProfit(ind)">
-                                        止盈
-                                    </button>
-                                </p> -->
+                               
                             </div>
                         </div>
                    </mt-loadmore>
@@ -228,36 +194,25 @@
                                             <span>
                                                 {{ item.symbolStr }}
                                             </span>
-                                            <span v-if="item.type == 0">
-                                                {{ item.closePrice }}
-                                            </span> 
-                                            <span v-if="item.type == 1">
+                                           
+                                            <span >
                                                 {{ item.openPrice}}
                                             </span> 
                                             <span>
                                                 -
                                             </span>
-                                            <span v-if="item.type == 0">
-                                                {{ item.openPrice }}
-                                            </span> 
-                                            <span v-if="item.type == 1">
+                                            
+                                            <span >
                                                 {{ item.closePrice }}
                                             </span> 
                                         </p>
                                     </div>
                                     <div class="right clearfix">
                                         <div class="left">
-                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' ">
+                                            <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
                                                {{'$'+ item.profit}}
                                             </p>
-                                            <p>
-                                                <span>
-                                                    {{ item.spreads }}
-                                                </span>
-                                                <span>
-                                                    点
-                                                </span>
-                                            </p>
+                                            
                                       
                                         </div>     
                                     </div>
@@ -1086,8 +1041,19 @@ export default {
             }).then((res)=>{
                 console.log(res)
                 if(res.data.code == 1){
-                    Toast("操作成功");
-                    this.infoArr.splice(ind,1);
+                    MessageBox({
+                        cancelButtonText:'确定',
+                        title: '提示',
+                        message: '平仓成功',
+                        showConfirmButton:false,
+                        showCancelButton:true
+                    }).then(action => { 
+                        //因为按钮布局与原来Mint布局是相反的，所以回调取的也是相反
+                        if (action == 'cancel') {     //确认的回调
+                           window.location.reload();
+                        }
+                        
+                    })
                 }else{
                     Toast("操作失败")
                 }

@@ -44,7 +44,7 @@
         </p>
         <!-- 跟单方式下提示语 -->
         <p class="proportions" style="height:.6rem">
-            <span v-if="clickBtn">比例跟随：下单的手数=信号源下单的手数*跟随比例，若下单手数小于0.01，则不会下单，敬请注意！</span>
+            <span v-if="clickBtn">比例跟随：下单的手数=信号源下单的手数*跟随比例，若下单手数小于0.01， 则不会下单，敬请注意！</span>
             <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与信号源手数无关</span>
         </p>
         <!-- 跟随数值 -->
@@ -498,9 +498,9 @@ export default {
                     var a=arr[0].replace(regex,"");
                     this.followNum = Number(a + '.' + arr[1]) 
                 }
-                if(this.followNum < 0.01){
-                    this.followNum = 0.01
-                } 
+                // if(this.followNum < ){
+                //     this.followNum = 0.01
+                // } 
                 this.followNum = parseInt(this.followNum*100)/100;  
            }else if(val == 2){
 
@@ -584,6 +584,7 @@ export default {
         },
         //保存
         preserv(){
+            
             this.$refs.back.style.zIndex=-10;
             this.popUpShow = false;
             //精密设置
@@ -678,9 +679,14 @@ export default {
             this.$refs.back.style.height=' 100%';
         },
         popShow(){
-            this.calculation();
-            this.$refs.back.style.zIndex=2;
-            this.popUpShow = true;
+            if( this.followNum <= 0 ){
+                 MessageBox('提示', '您设置的数值有误请重新输入')
+            }else{
+                this.calculation();
+                this.$refs.back.style.zIndex=2;
+                this.popUpShow = true;
+            }
+           
         },
   
         //弹窗取消
@@ -788,7 +794,7 @@ export default {
     }
     .proportions{
         text-align: left;
-        padding-left: .24rem;
+        padding: .24rem;
         font-size: .2rem;
         height: .4rem;
         line-height: .4rem;
