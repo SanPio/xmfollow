@@ -25,9 +25,9 @@
             </div>
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
-                <img :src="invitImgSrc" alt="">
+                <img :src="invitImgSrc" alt="" style="visibility:hidden">
                 <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" @click="toauthentication">
-                <img :src="setImgSrc" alt="">
+                <img :src="setImgSrc" alt="" style="visibility:hidden">
             </div>
         </div>
         <!-- Title部分，收益总览 -->
@@ -101,7 +101,7 @@
                                 <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="msss">账号历程&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -310,7 +310,7 @@ export default {
             memberImgSrc : require('./assets/My-home-page-icon1.jpg') ,
             memberImgSrcYellow : require('./assets/Myhomepage-icon1@2x.png') ,
             setImgSrc :　require('./assets/Set-up.jpg'),
-             numberImgSrc : require('./assets/Accountnumber@2x.png') ,
+            numberImgSrc : require('./assets/Accountnumber@2x.png') ,
             orderImgSrc :　require('./assets/Order@2x.png'),
             followImgSrc : require('./assets/follow@2x.png') ,
             leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
@@ -370,8 +370,16 @@ export default {
             this.accInfo = res.data.data.account;
             this.issAccInfo = res.data.data.accountsmoni;
             console.log(this.accInfo)
-            localStorage.setItem('accountId', this.accInfo[0].accountid);
-            this.accountid = this.accInfo[0].accountid
+
+            if(sessionStorage.getItem('iss') == 1){
+                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+                this.accountid = this.issAccInfo[0].accountid
+            }else{
+                localStorage.setItem('accountId', this.accInfo[0].accountid);
+                this.accountid = this.accInfo[0].accountid
+            }
+
+
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
                 this.acth = true;
@@ -421,6 +429,10 @@ export default {
     //    })       
     },
     methods: {
+        msss(){
+            MessageBox('提示', '建设中');
+        },
+       
         toauthentication(){
             if(this.acth == false){
                  window.location.href=`authentication.html`;
@@ -619,8 +631,8 @@ export default {
             height: .88rem;
             text-align: center;
             img{
-                width: .64rem;
-                height: .64rem;
+                width: .66rem;
+                height: .66rem;
             }
             dd{
                 margin-top: .14rem;

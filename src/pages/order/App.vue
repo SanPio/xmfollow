@@ -102,7 +102,22 @@
                                                 {{ item.orderId }}
                                             </span>
                                         </li>
-                                      
+                                        <li>
+                                            <span>
+                                                止损
+                                            </span>
+                                            <span>
+                                               {{ item.stopLoss }} 
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                止盈
+                                            </span>
+                                            <span>
+                                               {{ item.takeProfits }} 
+                                            </span>
+                                        </li>
                                       
                                     </ul>
                                     <ul class="right">

@@ -6,6 +6,7 @@
                     <img :src="portraitSrc" alt="">
                 </div>
                 <dl class="h-right">
+                    
                     <dt ><span>{{info.signalName}} </span> <button v-if="detail" @click="detail = !detail">查看详情</button> <button  v-if="!detail" @click="detail = !detail">查看订单</button></dt>
                 </dl>
             </div> 
@@ -18,7 +19,8 @@
                 <span class="h-f-right">{{info.signalIntroduce}}</span>
             </p>   
         </div>
-        <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9"  v-if="!detail">
+        <div v-if="!detail">
+        <mt-swipe :auto="0" style="width:100%;height:332px;border-bottom:1px solid #c9c9c9"  >
             <mt-swipe-item>
                 <p class="swip-title">
                     主要信息
@@ -84,6 +86,7 @@
 
 
         </mt-swipe> 
+        </div>
 
 
 
@@ -94,304 +97,278 @@
 
 
         <div id="order" v-if="detail" >
-        <mt-navbar v-model="selected" >
-            <mt-tab-item id="info">订单信息</mt-tab-item>
-            <mt-tab-item id="history">历史记录</mt-tab-item>
-        </mt-navbar>
-         <mt-tab-container v-model="selected">
-           
-            <mt-tab-container-item id="info">
-              
-                <div style="overflow-y: scroll;hieght:6rem">
-                    <mt-loadmore 
-                    :bottom-method="loadBottom" 
-                    :bottom-all-loaded="infoAllLoaded"
-                    :autoFill="false" ref="loadmores">
-                        <div ref="mybox">
-                            <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
-                                <div class="infotop clearfix" @click="infoBotOnOff(ind)">
-                                    <div class="left">
-                                        <p>
-                                            <span>
-                                                {{ item.symbol }}
-                                            </span>
-                                            <button class="colorbtn buybtn" v-if="item.type == 0">
-                                                买
-                                            </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type == 1">
-                                                卖
-                                            </button >
-                                            <button class="colorbtn hangbtn" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5">
-                                                挂
-                                            </button>
-                                            <span>
-                                                {{ item.lots }}
-                                            </span>
-                                            <span>
-                                                标准手
-                                            </span> 
-                                            <button class="colorbtn buybtn" v-if="item.type == 2 || item.type == 4">
-                                                买
-                                            </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type == 3 || item.type == 5">
-                                                卖
-                                            </button >
-                                        </p>
-                                        <p>
-                                            <span>  
-                                                {{ item.symbolTypeString }}
-                                            </span>
-                                            
-                                            <span >
-                                                {{ item.openPrice}}
-                                            </span> 
-                                            <span v-if="item.type == 0 || item.type == 1">
-                                                -
-                                            </span>
-                                          
-                                            <span >
-                                                {{ item.nowPrice }}
-                                            </span> 
-                                        </p>
-                                    </div>
-                                    <div class="right clearfix">
+            <mt-navbar v-model="selected" >
+                <mt-tab-item id="info">订单信息</mt-tab-item>
+                <mt-tab-item id="history">历史记录</mt-tab-item>
+            </mt-navbar>
+            <mt-tab-container v-model="selected">
+            
+                <mt-tab-container-item id="info">
+                
+                    <div style="overflow-y: scroll;hieght:6rem" >
+                        <mt-loadmore 
+                        :bottom-method="loadBottom" 
+                        :bottom-all-loaded="infoAllLoaded"
+                        :autoFill="false" ref="loadmores">
+                            <div ref="mybox">
+                                <div class="infolist" v-for="(item, ind) in infoArr" :key="ind" >
+                                    <div class="infotop clearfix" @click="infoBotOnOff(ind)">
                                         <div class="left">
-                            
-                                            <p :class="item.nowProfits >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.6rem">
-                                                {{'$'+ item.nowProfits}}   
-                                            </p>
-                                         
-                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                            <p>
                                                 <span>
-                                                    委托
+                                                    {{ item.symbol }}
+                                                </span>
+                                                <button class="colorbtn buybtn" v-if="item.type == 0">
+                                                    买
+                                                </button>
+                                                <button class="colorbtn cellbtn" v-if="item.type == 1">
+                                                    卖
+                                                </button >
+                                                <button class="colorbtn hangbtn" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5">
+                                                    挂
+                                                </button>
+                                                <span>
+                                                    {{ item.lots }}
                                                 </span>
                                                 <span>
+                                                    标准手
+                                                </span> 
+                                                <button class="colorbtn buybtn" v-if="item.type == 2 || item.type == 4">
+                                                    买
+                                                </button>
+                                                <button class="colorbtn cellbtn" v-if="item.type == 3 || item.type == 5">
+                                                    卖
+                                                </button >
+                                            </p>
+                                            <p>
+                                                <span>  
+                                                    {{ item.symbolTypeString }}
+                                                </span>
+                                                
+                                                <span >
                                                     {{ item.openPrice}}
+                                                </span> 
+                                                <span v-if="item.type == 0 || item.type == 1">
+                                                    -
                                                 </span>
-                                            </p>
-                                            <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
-                                                <span>
-                                                    当前
-                                                </span>
-                                                <span>
-                                                    {{ item.nowprice}}
-                                                </span>
+                                            
+                                                <span >
+                                                    {{ item.nowPrice }}
+                                                </span> 
                                             </p>
                                         </div>
-                                      
-                                        
-                                    </div>
-                                </div>
-                                <div class="infocen clearfix" v-if="infoBotShow[ind]">
-                                    <ul class="left">
-                                        <li>
-                                            <span>
-                                                订单号
-                                            </span>
-                                            <span>
-                                                {{ item.orderId }}
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                止损
-                                            </span>
-                                            <span>
-                                               {{ item.stopLoss }} 
-                                            </span>
-                                        </li>
-                                       
-                                      
-                                    </ul>
-                                    <ul class="right">
-                                     
-                                        <li>
-                                            <span>
-                                                开仓时间
-                                            </span>
-                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                {{ item.updatetime }}
-                                            </span>
-                                            
-                                        </li>
-                                        <li>
-                                            <span>
-                                                止盈
-                                            </span>
-                                            <span>
-                                               {{ item.takeProfits }} 
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        <div class="right clearfix">
+                                            <div class="left">
                                 
-                            </div>
-                        </div>
-                   </mt-loadmore>
-                </div>
-            </mt-tab-container-item>
-
-
-
-
-            <mt-tab-container-item id="history">
-             
-                <div style="overflow-y: scroll;">
-                    <mt-loadmore 
-                    :bottom-method="hisloadBottom" 
-                    :bottom-all-loaded="hisAllLoaded" 
-                    :autoFill="false" ref="loadmore">
-                        <div ref="myboxes">
-                            <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
-                                <div class="infotop clearfix" @click="hisBotOnOff(ind)">
-                                    <div class="left">
-                                        <p>
-                                            <span>
-                                                {{ item.symbol }}
-                                            </span>
-                                            <button class="colorbtn buybtn" v-if="item.type==0">
-                                                买
-                                            </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type==1">
-                                                卖
-                                            </button >
-                                            <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5">
-                                                挂
-                                            </button>
-                                            <span>
-                                                {{ item.lots }}
-                                            </span>
-                                            <span>
-                                                标准手
-                                            </span> 
-                                            <button class="colorbtn buybtn" v-if="item.type==2||item.type==4">
-                                                买
-                                            </button>
-                                            <button class="colorbtn cellbtn" v-if="item.type==3||item.type==5">
-                                                卖
-                                            </button >
-                                        </p>
-                                        <p>
-                                            <span>
-                                                {{ item.symbolTypeString }}
-                                            </span>
-                                          
-                                            <span >
-                                                {{ item.openPrice}}
-                                            </span> 
-                                            <span>
-                                                -
-                                            </span>
-                                           
-                                            <span>
-                                                {{ item.closePrice }}
-                                            </span> 
-                                        </p>
-                                    </div>
-                                    <div class="right clearfix">
-                                        <div class="left">
-                                            <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
-                                               {{'$'+ item.orderProfit}}
-                                            </p>
-                                           
-                                      
-                                        </div>     
-                                    </div>
-                                </div>
-                                <div class="infocen clearfix" v-if="hisBotShow[ind]">
-                                    <ul class="left">
-                                        <li>
-                                            <span>
-                                                订单号
-                                            </span>
-                                            <span>
-                                                {{ item.orderId }}
-                                            </span>
-                                        </li>
-                                       
-                                        <li>
-                                            <span>
-                                                库存费
-                                            </span>
-                                            <span>
-                                                {{ item.swap ? item.swap : 0 }}
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                手续费
-                                            </span>
-                                            <span>
-                                                {{ item.commission ? item.commission : 0 }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                    <ul class="right">
-                                       
-                                        <li>
-                                            <span>
-                                                开仓时间
-                                            </span>
-                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                {{ item.orderOpenTime }}
-                                            </span>
+                                                <p :class="item.nowProfits >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.6rem">
+                                                    {{'$'+ item.nowProfits}}   
+                                                </p>
                                             
-                                        </li>
-                                        <li>
-                                            <span>
-                                                平仓时间
-                                            </span>
-                                            <span style="margin-left: .24rem;color: #666;font-weight: bold;">
-                                                {{ item.orderCloseTime }}
-                                            </span>
-
-                                        </li>
+                                                <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                    <span>
+                                                        委托
+                                                    </span>
+                                                    <span>
+                                                        {{ item.openPrice}}
+                                                    </span>
+                                                </p>
+                                                <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
+                                                    <span>
+                                                        当前
+                                                    </span>
+                                                    <span>
+                                                        {{ item.nowprice}}
+                                                    </span>
+                                                </p>
+                                            </div>
                                         
-                                    </ul>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="infocen clearfix" v-if="infoBotShow[ind]">
+                                        <ul class="left">
+                                            <li>
+                                                <span>
+                                                    订单号
+                                                </span>
+                                                <span>
+                                                    {{ item.orderId }}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    止损
+                                                </span>
+                                                <span>
+                                                {{ item.stopLoss }} 
+                                                </span>
+                                            </li>
+                                        
+                                        
+                                        </ul>
+                                        <ul class="right">
+                                        
+                                            <li>
+                                                <span>
+                                                    开仓时间
+                                                </span>
+                                                <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                    {{ item.updatetime }}
+                                                </span>
+                                                
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    止盈
+                                                </span>
+                                                <span>
+                                                {{ item.takeProfits }} 
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
                                 </div>
                             </div>
-                        </div>
-                   </mt-loadmore>
-                </div>
-            </mt-tab-container-item>
-        </mt-tab-container>
-       
-       
-       
-    </div>
+                    </mt-loadmore>
+                    </div>
+                
+                </mt-tab-container-item>
 
 
 
 
+                <mt-tab-container-item id="history">
+                
+                    <div style="overflow-y: scroll;">
+                        <mt-loadmore 
+                        :bottom-method="hisloadBottom" 
+                        :bottom-all-loaded="hisAllLoaded" 
+                        :autoFill="false" ref="loadmore">
+                            <div ref="myboxes">
+                                <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
+                                    <div class="infotop clearfix" @click="hisBotOnOff(ind)">
+                                        <div class="left">
+                                            <p>
+                                                <span>
+                                                    {{ item.symbol }}
+                                                </span>
+                                                <button class="colorbtn buybtn" v-if="item.type==0">
+                                                    买
+                                                </button>
+                                                <button class="colorbtn cellbtn" v-if="item.type==1">
+                                                    卖
+                                                </button >
+                                                <button class="colorbtn hangbtn" v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5">
+                                                    挂
+                                                </button>
+                                                <span>
+                                                    {{ item.lots }}
+                                                </span>
+                                                <span>
+                                                    标准手
+                                                </span> 
+                                                <button class="colorbtn buybtn" v-if="item.type==2||item.type==4">
+                                                    买
+                                                </button>
+                                                <button class="colorbtn cellbtn" v-if="item.type==3||item.type==5">
+                                                    卖
+                                                </button >
+                                            </p>
+                                            <p>
+                                                <span>
+                                                    {{ item.symbolTypeString }}
+                                                </span>
+                                            
+                                                <span >
+                                                    {{ item.openPrice}}
+                                                </span> 
+                                                <span>
+                                                    -
+                                                </span>
+                                            
+                                                <span>
+                                                    {{ item.closePrice }}
+                                                </span> 
+                                            </p>
+                                        </div>
+                                        <div class="right clearfix">
+                                            <div class="left">
+                                                <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
+                                                {{'$'+ item.orderProfit}}
+                                                </p>
+                                            
+                                        
+                                            </div>     
+                                        </div>
+                                    </div>
+                                    <div class="infocen clearfix" v-if="hisBotShow[ind]">
+                                        <ul class="left">
+                                            <li>
+                                                <span>
+                                                    订单号
+                                                </span>
+                                                <span>
+                                                    {{ item.orderId }}
+                                                </span>
+                                            </li>
+                                        
+                                            <li>
+                                                <span>
+                                                    库存费
+                                                </span>
+                                                <span>
+                                                    {{ item.swap ? item.swap : 0 }}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    手续费
+                                                </span>
+                                                <span>
+                                                    {{ item.commission ? item.commission : 0 }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <ul class="right">
+                                        
+                                            <li>
+                                                <span>
+                                                    开仓时间
+                                                </span>
+                                                <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                    {{ item.orderOpenTime }}
+                                                </span>
+                                                
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    平仓时间
+                                                </span>
+                                                <span style="margin-left: .24rem;color: #666;font-weight: bold;">
+                                                    {{ item.orderCloseTime }}
+                                                </span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div id="footer">
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    </mt-loadmore>
+                    </div>
+                    
+        
+                </mt-tab-container-item>
+            </mt-tab-container>
+        
+        
+        </div>
+        <div id="footer" >
             
             <button @click="toFollowSetting"> 跟随设置 </button>
         </div>
-        
+
     </div>
 </template>
 <script>
@@ -484,15 +461,17 @@ export default {
             }   
         }).then((res) => { 
             console.log(res)
-           
             if(res.data.code <= 10){
                 this.infoAllLoaded = true;
             }
-           
+            
             for (let i = 0; i < this.infoArr.length; i ++) {
                 this.infoBotShow.push(false);
+               
             }
-            this.infoArr = res.data.data
+            if(res.data.code != 0){
+                this.infoArr = res.data.data
+            }
         }).catch((err) => {
             console.log(err)
         })
@@ -505,12 +484,10 @@ export default {
                 optionId:this.optionId
             }   
         }).then((res) => { 
-            console.log(res)
             this.historyArr = res.data.data
             if(res.data.code<= 10){
                 this.infoAllLoaded = true;
             }
-           
             for (let i = 0; i < this.historyArr.length; i ++) {
                 this.hisBotShow.push(false);
             }
@@ -518,13 +495,10 @@ export default {
         }).catch((err) => {
             console.log(err)
         })
-
         //初始化数据请求
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          
         }).then((res) => {
-            
-            console.log(res)
             this.info = res.data.data;
             //主要信息
             this.mianInfo.push(res.data.data.experience);
@@ -642,6 +616,9 @@ export default {
     //     numInt
     // },
     mounted(){
+        if(this.infoArr.length == 0 ){
+                this.$refs.footer.style.marginTop = "7rem"
+        }
         // let myChart = echarts.init(document.getElementById('cycle'));
         // myChart.setOption({
         //     tooltip : {
@@ -763,7 +740,7 @@ export default {
         returnBtn(){
             window.location.href="index.html";
         },
-
+       
 
 
              //上拉加载
@@ -837,27 +814,11 @@ export default {
                 this.$set(this.hisBotShow,ind,!this.hisBotShow[ind]);
             }          
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
 </script>
 <style lang="scss" scoped>
+    
     #header{
         width: 100;
         background-color: #44aafa;
@@ -1017,7 +978,7 @@ export default {
         
         
     }
-    #footer{
+   #footer{
         margin-top: 1.4rem;
         height: 1rem;
         text-align: center;

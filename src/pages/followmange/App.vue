@@ -52,8 +52,8 @@
                                         </span>
                                     </p>
                                     <p>
-                                        <span>当前获利</span>
-                                        <span :class="profit ? 'profit-blue' : 'profit-red' ">
+                                        <span>当前浮亏</span>
+                                        <span :class="item.nowProfits >= 0 ? 'profit-blue' : 'profit-red' ">
                                             $ {{ item.nowProfits | numPuls}}
                                         </span>
                                     </p>
