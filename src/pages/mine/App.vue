@@ -199,7 +199,7 @@
                                 <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn">账号历程&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="msss">账号历程&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
