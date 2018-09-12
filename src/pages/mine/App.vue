@@ -26,8 +26,8 @@
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
                 <img :src="invitImgSrc" alt="" style="visibility:hidden">
-                <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" @click="toauthentication">
                 <img :src="setImgSrc" alt="" style="visibility:hidden">
+                <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" @click="toauthentication">
             </div>
         </div>
         <!-- Title部分，收益总览 -->
