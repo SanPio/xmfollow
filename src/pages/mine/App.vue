@@ -370,21 +370,21 @@ export default {
             this.accInfo = res.data.data.account;
             this.issAccInfo = res.data.data.accountsmoni;
             console.log(this.accInfo)
-
-            if(sessionStorage.getItem('iss') == 1){
-                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-                this.accountid = this.issAccInfo[0].accountid
-            }else{
-                localStorage.setItem('accountId', this.accInfo[0].accountid);
-                this.accountid = this.accInfo[0].accountid
-            }
+            this.userImgSrc = res.data.data.image;
+            // if(sessionStorage.getItem('iss') == 1){
+            //     localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+            //     this.accountid = this.issAccInfo[0].accountid
+            // }else{
+            //     localStorage.setItem('accountId', this.accInfo[0].accountid);
+            //     this.accountid = this.accInfo[0].accountid
+            // }
 
 
             if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
                 this.dateMinus(res.data.data.overDatetime)
                 this.acth = true;
             }
-            this.userImgSrc = res.data.data.image;
+         
             if ( res.data.data.sumUserprofit > 1000 || res.data.data.sumUserprofit <= -1000 ) {
                 this.titleInfo.push( parseInt( res.data.data.sumUserprofit/10 )/100 + 'K')
             }else {
@@ -399,6 +399,19 @@ export default {
             for(let i = 0; i < res.data.data.account.length-1; i++){
                 this.accNumArr.push(false)
                 // this.$set(this.accNumArr,i,false)
+            }
+
+
+
+
+
+
+            if(sessionStorage.getItem('iss') == 1){
+                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
+                this.accountid = this.issAccInfo[0].accountid
+            }else{
+                localStorage.setItem('accountId', this.accInfo[0].accountid);
+                this.accountid = this.accInfo[0].accountid
             }
             // console.log(this.accNumArr)
         }).catch((err) => {

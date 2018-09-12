@@ -172,10 +172,10 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.0.197:8080/",//丹峰
+      urlTitle:"http://192.168.0.197:8080/",//丹峰
       // urlTitle:"http://192.168.0.102:8080/",  //大潘
       // urlTitle:"http://www.0539maj.com/app/",//域名
-      urlTitle:"http://132.232.44.112:80/app/", //服务器
+      // urlTitle:"http://132.232.44.112:80/app/", //服务器
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 
       allLoaded: false,
