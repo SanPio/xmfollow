@@ -88,7 +88,7 @@
 
 
                         <!-- 记录标题 -->
-                        <div class="listtop" @click="recordListShow(ind)">
+                        <div class="listtop">
                             <div class="left listleft">
                                 <img :src="userImgSrc" alt="">
                             </div>
@@ -106,10 +106,14 @@
                                     <span>累计获利</span>
                                     <span :class="item.yingli>0 ? 'profit-blue' : 'profit-red'">${{ item.yingli }}</span>
                                 </p>
+                                <p>
+                                    <span>累计获利</span>
+                                    <span>$ {{ item.yingli }} </span>
+                                </p>
                             </div>
                         </div>
                         <!-- 记录内容 -->
-                        <div class="listbot clearfix" v-if="recordOpen[ind]">
+                        <!-- <div class="listbot clearfix" v-if="recordOpen[ind]"> -->
                             <!-- <div class="listbot-left left">
                                 <p>
                                     <span>当前跟单数量</span>
@@ -124,7 +128,7 @@
                                     <span>2018-01-13</span>
                                 </p>
                             </div> -->
-                            <div class="listbot-right right">
+                            <!-- <div class="listbot-right right">
                                 <p>
                                     <span>累计跟单数量</span>
                                     <span> {{ item.countlishi }} </span>
@@ -134,7 +138,7 @@
                                     <span>$ {{ item.yingli }} </span>
                                 </p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     </mt-loadmore>
                 </div>    
@@ -577,7 +581,7 @@ export default {
                     font-size: .24rem;
                     font-weight: 900;
                     line-height: .28rem;
-                    margin-top: .32rem;
+                    margin-top: .45rem;
                 }
                 .flownum{
                     font-size: .2rem;
@@ -593,7 +597,7 @@ export default {
                     text-align: left;
                     font-size: .2rem;
                     line-height: .32rem;
-                    margin-top: .44rem;
+                    margin-top: .2rem;
                     span:nth-of-type(1){
                         color: #999;  
                         margin-right: .1rem;  

@@ -12,8 +12,8 @@
                         <span> {{ followInfo.lotsTypeStr }}&nbsp;{{followInfo.lots}}</span>
                         <span v-if="followInfo.lotsTypeStr=='按比例'">倍</span>
                         <span v-if="followInfo.lotsTypeStr=='按手数'">手</span>
-                        <span class="incomeTitle">跟随收益</span>
-                        <span class="income" :class="{'redcolor':redcolor}" v-if="followInfo.profitTotal"> {{"$" + followInfo.profitTotal}} </span>
+                        <!-- <span class="incomeTitle">跟随收益</span>
+                        <span class="income" :class="{'redcolor':redcolor}" v-if="followInfo.profitTotal"> {{"$" + followInfo.profitTotal}} </span> -->
                     </dd>
                 </dl>
             </div>
