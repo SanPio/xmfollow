@@ -229,7 +229,7 @@ export default {
         },
         //跳转到账号历程
         toCourse(ind){
-            console.log('跳到账号历程')
+            window.location.href="accounthistory.html";
         },
         //解除绑定
         relieve(ind){
