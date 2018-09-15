@@ -101,7 +101,7 @@
                                 <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn" @click="msss">账号历程&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toHistory">账号历程&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -199,7 +199,7 @@
                                 <dd>${{ item.free_margin | numPuls }}</dd>
                             </dl>
                             <dl>
-                                <dt class="con-box-bot-btn" @click="msss">账号历程&nbsp;>></dt>    
+                                <dt class="con-box-bot-btn" @click="toHistory">账号历程&nbsp;>></dt>    
                             </dl>
                         </div>
                     </li>
@@ -495,6 +495,10 @@ export default {
         //跳转到订单管理
         toOrder(ind){   
             window.location.href="order.html";
+        },
+        // 跳转到账号历程
+        toHistory(ind){   
+            window.location.href="accounthistory.html";
         },
         //计算会员到期时间   
         dateMinus(sDate){
