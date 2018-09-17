@@ -393,7 +393,7 @@ export default {
             buyShow : true,
             ellShow : true,
             redcolor:true,
-            mianInfoTitle : ["交易时间","余额","收益率","起始资金","最大回撤","跟随人数","第一单"],
+            mianInfoTitle : ["交易时间","盈利","收益率","起始资金","最大回撤","跟随人数","第一单"],
             mianInfo : [],
             secInfoTitle : ["平均持仓时间","最大盈利点数","最大亏损点数","最大手数","最小手数"],
             secInfo : [],

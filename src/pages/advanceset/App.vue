@@ -1,5 +1,5 @@
 <template>
-    <div id="box" ref="box">
+    <div id="box">
         <!-- 头部 -->
         <div id="header" class="padding clearfix">
             <div class="left clearfix">
@@ -21,65 +21,68 @@
                 <button class="cancel" @click="cancelFollo">取消跟随</button>
             </div>
         </div>
-        <!-- 跟单开关 -->
+
+        <!-- 反向跟随 -->
         <div class="content padding clearfix follow-on">
-            <span class="con-title left ">跟单开关</span>
-            <mt-switch v-model="followOnOff" class="right"></mt-switch>
+            <span class="con-title left ">反向跟随</span>
+                <mt-switch v-model="reverseOnOff" class="right"></mt-switch>
         </div>
-        <!-- 一键平仓 -->
-        <p class="content padding clearfix close-position">
-            <span class="con-title left">一键平仓</span>
-            <button class="con-btn right" @click="closePosition">点击平仓</button>
+        <!-- 反向跟随提示语 -->
+        <p class="proportions">
+            <span >开启后将执行与信号源相反的交易</span>
         </p>
-        <!-- 订单管理 -->
-        <p class="content padding clearfix order-mange">
-            <span class="con-title left">订单管理</span>
-            <button class="con-btn right">点击管理</button>
+        <!-- 止盈 -->
+        <p class="content padding clearfix target-profit ">
+            <span class="left con-title">止盈</span>
+            <span class="right" style="font-size:10px;color:#999;">点</span>
+            <input type="number" class="right" v-model="takeProfits" @blur="decimal(3)">
         </p>
-        <!-- 跟单方式 -->
-        <p class="content padding clearfix follow-type">
-            <span class="con-title left">跟单方式</span>
-            <button class="con-btn right fixedbtn" :class="{'clickbtn':!clickBtn}" :disabled="!clickBtn"   @click="btnClick">固定跟随</button>
-            <button class="con-btn right " :class="{'clickbtn':clickBtn}"  :disabled="clickBtn"   @click="btnClick">比例跟随</button>
-        </p>
-        <!-- 跟单方式下提示语 -->
-        <p class="proportions" style="height:.6rem">
-            <span v-if="clickBtn">比例跟随：您下单的手数=交易员下单手数*跟随比例，若下单手数小于最小操作手数，则按最小操作手数下单，敬请注意！</span>
-            <span v-if="!clickBtn">固定跟随：下单的手数=设定的手数，与信号源手数无关</span>
-        </p>
-        <!-- 跟随数值 -->
-        <div class="clearfix follow-num" style="border-bottom:1px solid #e5e5e5">
-            <p class="left">跟随数值</p>
-            <p class="right">
-                <button @click="followNumReduce">-</button>
-                <input type="number" v-model="followNum " @blur="decimal(1)" @focus="followNumFocus">
-                <button @click="followNumPlus">+</button>
-                <span v-if="clickBtn">倍</span>
-                <span v-if="!clickBtn">手</span>
-            </p> 
+        <p class="proportions">
+            <span >当盈利达到止盈点数时自动平仓</span>
            
-                
+        </p>
+        <!-- 止损 -->
+        <p class="content padding clearfix target-profit">
+            <span class="left con-title">止损</span>
+            <span class="right" style="font-size:10px;color:#999;">点</span>
+            <input type="number" class="right" v-model="stopLoss" @blur="decimal(2)">
+        </p>
+        <p class="proportions">
+            <span >当损失达到止损点数时自动平仓</span> 
+        </p>
+
+
+
+        <!-- 精密设置 -->
+        <p class="title">精密设置</p>
+        <div class="content padding clearfix pre-set">
+            <p class="left ">最小手数</p>
+            <p class="right">
+                <!-- <button :class="{'btn-click':handsOne}">1</button>
+                <button :class="{'btn-click':handsZero}">0.1</button> -->
+                <button v-for="(item,ind) in handsNumArr" :key="item" :class="{'btn-click':handsNum==ind}" @click="handsNum=ind">{{item}}</button>
+                <span>标准手</span>  
+            </p>
         </div>
-       <p class="follownumred">
-           <span v-if="follownumred">
-               *跟随数值不能为0
-           </span>
+        <!-- 四舍五入选择 -->
+        <p class="abandon padding clearfix">
+            <span class="left">开仓手数精度大于最小手数</span>
             
+            <button class="right" :class="{'btn-chose':!abandonShow}" :disabled="!abandonShow"  @click="abandonBtn">四舍五入</button>
+            <button class="right" :class="{'btn-chose':abandonShow}" :disabled="abandonShow" @click="abandonBtn">舍弃尾数</button>
         </p>
-        <p class="content padding clearfix adv-set" @click="toAdvset">
-            <span class="con-title left">高级跟随设置</span>
-            <img :src="returnRightSrc" alt="" class="right">
-        </p>
-        
-
-
-
-      
+        <!-- 四舍五入指示图 -->
+        <div class="bottom">
+            <img :src="showImgSrc" alt="">
+        </div>
         <!-- 底部保存按钮 -->
         <p class="preservation">
             <button @click="popShow">保存</button>
         </p>
-        
+
+
+
+
          <!-- 弹窗 -->
          <!-- popUpShow -->
         <div ref="back" class="back" ></div>
@@ -95,29 +98,64 @@
             </p>
             
             <ul class="popcontant">
-                <li class="clearfix">
-                    <span class="left">
-                        跟单方式
-                    </span>
-                    <span class="right" v-if="clickBtn">
-                        比例跟随
-                    </span>
-                    <span class="right" v-if="!clickBtn">
-                        固定跟随
-                    </span>
-                </li>
-                <li class="clearfix">
-                    <span class="left">
-                        跟随数值
-                    </span>
-                    <span class="right" v-if="clickBtn">
-                        {{ followNum }} 倍
-                    </span>
-                    <span class="right" v-if="!clickBtn">
-                        {{ followNum }} 手
-                    </span>
-                </li>
                
+                <li class="clearfix">
+                    <span class="left">
+                        反向跟随
+                    </span>
+                    <span class="right" v-if="reverseOnOff">
+                        开
+                    </span>
+                    <span class="right" v-if="!reverseOnOff">
+                        关
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止盈
+                    </span>
+                    <span class="right">
+                        {{ takeProfits }} 点
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止损
+                    </span>
+                    <span class="right">
+                        {{ stopLoss }} 点
+                    </span>
+                </li>
+                <li style="height:.8rem;line-height:.8rem;font-size:.2rem;font-weight:bold;color:#000;">
+                    <p style="text-align:left">
+                        精密设置
+                    </p>
+                </li>
+                <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        最小操作手数
+                    </span>
+                    <span class="right" v-if="handsNum == 0">
+                        1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 1">
+                        0.1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 2">
+                        0.01 标准手
+                    </span>
+                </li>
+                 <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        尾数设置
+                    </span>
+                    <span class="right" v-if="abandonShow">
+                        舍弃尾数
+                    </span>
+                    <span class="right" v-if="!abandonShow">
+                        四舍五入
+                    </span>
+                </li>
             </ul>
             <div class="popbot">
                 <button class="confirm" @click="preserv">
@@ -128,7 +166,6 @@
                 </button>
             </div>
         </div>
-       
 
 
     </div>
@@ -166,25 +203,24 @@ export default {
             takeProfits: 0,//止盈点
             urlTitle:"",
             iss: '' ,
-            popUpShow: false,
-            follownumred: false
-            
+            popUpShow: false
         }
     },
     created(){
         let haveiss = sessionStorage.getItem('iss');
         if(haveiss == 1){
-            document.title = '跟随设置(模拟)';
+            document.title = '高级设置(模拟)';
             this.iss = haveiss
         }else{
-            document.title = '跟随设置';
+            document.title = '高级设置';
             this.iss = ''
         }
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
         var v = this.parseUrl();//解析所有参数
-        this.optionId = v['optionId'];
+        // this.optionId = v['optionId'];
+        this.optionId = 2
         //初始化数据请求
         this.$http.get(this.urlTitle+'wx/order/member/followSettingInfo',{ 
             params : {
@@ -479,6 +515,24 @@ export default {
             //    this.followNum = 1
             }
         },
+        // takeProfits(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.takeProfits = Number(a)
+        // },
+        // stopLoss(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.stopLoss = Number(a)
+        // },
+        // followNum(val){
+        //     var s= "" + val;
+        //     var regex=/^[0]+/
+        //     var a=s.replace(regex,"");
+        //     this.followNum = Number(a)
+        // }
 
 
     },
@@ -652,9 +706,7 @@ export default {
            }
             
         },
-        followNumFocus(){
-            this.follownumred = false
-        },
+       
         //跟随比例加
         followNumPlus(){
             if( this.followNum > 0){
@@ -797,8 +849,7 @@ export default {
         },
         popShow(){
             if( this.followNum <= 0 ){
-                //  MessageBox('提示', '您设置的数值有误请重新输入')
-                 this.follownumred = true
+                 MessageBox('提示', '您设置的数值有误请重新输入')
             }else{
                 this.calculation();
                 this.$refs.back.style.zIndex=2;
@@ -806,10 +857,7 @@ export default {
             }
            
         },
-        toAdvset(){
-             window.location.href=`advanceset.html?optionId=${this.optionId}`;
-        },
-       
+  
         //弹窗取消
         cancelBtn(){
             this.$refs.back.style.zIndex=-10;
@@ -878,7 +926,7 @@ export default {
         height: .74rem;
         line-height: .74rem;
     }
-    .close-position,.order-mange,.adv-set{
+    .close-position,.order-mange{
         height: 1.12rem;
         line-height: 1.12rem;
         button{
@@ -889,10 +937,6 @@ export default {
             background: none;
             margin-top: .32rem;
             outline: none; 
-        }
-        img{
-            height: .4rem;
-            margin-top: .4rem;
         }
     }  
     .follow-type{
@@ -959,12 +1003,6 @@ export default {
                 
             }
         }
-    }
-    .follownumred{
-        color: red;
-        text-align: right;
-        padding: 0 .24rem;
-        height: .24rem;
     }
     .target-profit{
         height :1.08rem;
@@ -1042,8 +1080,7 @@ export default {
         }
     }
     .preservation{
-        margin-top: 1.13rem;
-
+        border-bottom: 1px solid #dbdbdb;
         button{
             width: 6.5rem;
             height: 1rem;
@@ -1087,11 +1124,11 @@ export default {
     .popup{
         position: fixed;
         left: .65rem;
-        top: 3.2rem;
+        top: 1.4rem;
         z-index: 3;
         opacity: 1;
         width: 6rem;
-        height: 5rem;
+        height: 8rem;
         background-color: #fff;
         border-radius: .28rem;
         .poptop{
@@ -1146,3 +1183,4 @@ export default {
           
     }
 </style>
+

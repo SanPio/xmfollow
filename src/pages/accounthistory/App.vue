@@ -1,34 +1,26 @@
 <template>
     <div>
         <div class="accHistory">
-            <dl>
-                <dt>总收益</dt>
-                <dd>${{info.orderprofits}}</dd>
-            </dl>
-            <dl>
-                <dt><!-- 当前获利点数 -->待添加</dt>
-                <dd>{{info.kong}}</dd>
-            </dl>
-            <dl>
-                <dt>正在跟随</dt>
-                <dd>{{infos.optionidnum}}</dd>
-            </dl>
-            <dl>
-                <dt>浮动收益</dt>
-                <dd>${{infos.nowprofits}}</dd>
-            </dl>
+            <div class="left fl">
+                <div class="left-icon">${{info.orderprofits}}</div>
+                <p>总收益</p>
+            </div>
+            
+            <div class="center fl">
+                <div class="center-icon">{{infos.optionidnum}}人</div>
+                <p>正在跟随</p>
+            </div>
+            <div class="right fl">
+                <div class="right-icon">${{infos.nowprofits}}</div>
+                <p>浮动收益</p>
+            </div>
         </div>
         <ul>                                                                                   
-            <li><a>累计盈亏点数</a><span>{{info.ordersgrandpoints}}k</span></li>
-            <li><a>平均获利点数</a><span>{{info.avggrandpoint}}点</span></li>
             <li><a>累计交易笔数</a><span>{{info.orderscount}}笔</span></li>
             <li><a>累计交易手数</a><span>{{info.orderslots}}标准手</span></li>
             <li><a>交易时间</a><span>{{re.weeks}}周</span></li>
         </ul>
         <button @click="tofollow(ind)">查看跟随</button>
-        <!-- <div class="footer">
-            
-        </div> -->
     </div>
 </template>
 <script>
@@ -138,81 +130,56 @@ export default {
     a{
         text-decoration: none;
     }
+    .fl{
+        float: left;
+    }
     .accHistory{
-        width: 7rem;
-        height: 3.16rem;
-        background: url("./assets/course-bg.png");
-        background-size: 100% 100%;
-        margin: 0.58rem auto 0;
-        
-        dl:nth-of-type(1){
-            width: 3.37rem;
-            height: 1.45rem;
-            float: left;
-            padding: 0.06rem 0 0 0.06rem;
-            dt{
-                color: white;
-                font-size: 0.3rem;
-                margin-top: 0.3rem;
-            }
-            dd{
-               color: white; 
-               font-size: 0.36rem;
-               margin-top: 0.1rem;
-            }
+        margin-top: 0.48rem;
+        overflow: hidden;
+        p{
+            font-size: 0.3rem;
+            color: #666666;
         }
-        dl:nth-of-type(2){
-            width: 3.37rem;
-            height: 1.45rem;
-            float: left;
-            padding: 0.06rem 0 0 0.06rem;
-            dt{
-                color: white;
-                font-size: 0.3rem;
-                margin-top: 0.3rem;
-            }
-            dd{
-               color: white; 
-               font-size: 0.36rem;
-               margin-top: 0.1rem;
-            }
-        }
-        dl:nth-of-type(3){
-            width: 3.37rem;
-            height: 1.45rem;
-            float: left;
-            padding: 0 0 0.06rem 0.06rem;
-            dt{
-                color: white;
-                font-size: 0.3rem;
-                margin-top: 0.3rem;
-            }
-            dd{
-               color: white; 
-               font-size: 0.36rem;
-               margin-top: 0.1rem;
-            }
-        }
-        dl:nth-of-type(4){
-            width: 3.37rem;
-            height: 1.45rem;
-            float: left;
-            padding: 0 0 0 0.06rem;
-            dt{
-                color: white;
-                font-size: 0.3rem;
-                margin-top: 0.3rem;
-            }
-            dd{
-               color: white;
-               font-size: 0.36rem; 
-               margin-top: 0.1rem;
-            }
-        }
-        
+    }
+    .left,.center,.right{
+        width: 33.33%;
+        height: 2.1rem;
+    }
+    .left-icon{
+        width: 1.7rem;
+        height: 1.71rem;
+        font-size: 0.32rem;
+        color: white;
+        line-height: 1.71rem;
+        background: url("./assets/course-icon1.png");
+        background-size: 100%;
+        margin-left: 0.4rem;
+        background-repeat: no-repeat;
+    }
+    .center-icon{
+        width: 1.7rem;
+        height: 1.71rem;
+        font-size: 0.32rem;
+        color: white;
+        line-height: 1.71rem;
+        background: url("./assets/course-icon2.png");
+        background-size: 100%;
+        margin-left: 0.4rem;
+        background-repeat: no-repeat;
+    }
+    .right-icon{
+        width: 1.7rem;
+        height: 1.71rem;
+        font-size: 0.32rem;
+        color: white;
+        line-height: 1.71rem;
+        background: url("./assets/course-icon3.png");
+        background-size: 100%;
+        margin-left: 0.4rem;
+        background-repeat: no-repeat;
     }
     ul{
-        margin-top: 0.66rem;
+        margin-top: 0.8rem;
         li{
             border-bottom: 1px solid #c9c9c9;
             width: 100%;
@@ -255,12 +222,7 @@ export default {
         font-weight: bold;
         border-radius: 0.1rem;
     }
-    .footer{
-        width: 100%;
-        height: 0.88rem;
-        margin-top: 3.8rem;
-        border-top:0.01rem solid  #c9c9c9;
-    }
+    
 </style>
 
 
