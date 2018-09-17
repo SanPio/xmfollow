@@ -107,8 +107,8 @@
                                     <span :class="item.yingli>0 ? 'profit-blue' : 'profit-red'">${{ item.yingli }}</span>
                                 </p>
                                 <p>
-                                    <span>累计获利</span>
-                                    <span>$ {{ item.yingli }} </span>
+                                    <span>累计跟单数量</span>
+                                    <span> {{ item.countlishi }} </span>
                                 </p>
                             </div>
                         </div>

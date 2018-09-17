@@ -117,6 +117,7 @@
         </p>
         
          <!-- 弹窗 -->
+         <!-- popUpShow -->
         <div ref="back" class="back" ></div>
         <div class="popup" v-if="popUpShow">
             <p class="poptop">
@@ -282,50 +283,272 @@ export default {
                 userId : this.userId
             }   
         }).then((res) => { 
+            var myData = '';
+            if (res.data.data){
+                myData = res.data.data
+            }else {
+                if ( this.optionId == 8) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"牛顿趋势001",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }else if ( this.optionId == 1) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单001",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }else if ( this.optionId == 2) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单002",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }else if ( this.optionId == 3) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单003",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+        
+                }else if ( this.optionId == 5) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单005",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }else if ( this.optionId == 6) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单006",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }else if ( this.optionId == 7) {
+                    myData = {           
+                        "broundoff":0,
+                        "followNum":null,
+                        "followNumTotal":null,
+                        "followTime":null,
+                        "headImg":null,
+                        "lots":0.01,
+                        "lotsType":1,
+                        "lotsTypeStr":"按比例",
+                        "minLotsCount":0.01,
+                        "nowProfits":0,
+                        "nullity":0,
+                        "opposite":0,
+                    
+                        "optiondetail":null,
+                        "profitTotal":"0",
+                        "qubie":null,
+                        "signalName":"小铭跟单007",
+                        "stopLoss":0,
+                        "sumoptionid":null,
+                        "takeProfits":0,
+                        "type":null
+                    }
+                }
+                
+                
+            }
             console.log(res.data.data);
-            this.followInfo  = res.data.data;
-            this.signalName = res.data.data.signalName;
-            this.lotsType = res.data.data.lotsType;
-            this.takeProfits = res.data.data.takeProfits;
-            this.stopLoss = res.data.data.stopLoss;
-            this.followNum = res.data.data.lots;
+            // this.followInfo  = res.data.data;
+            // this.signalName = res.data.data.signalName;
+            // this.lotsType = res.data.data.lotsType;
+            // this.takeProfits = res.data.data.takeProfits;
+            // this.stopLoss = res.data.data.stopLoss;
+            // this.followNum = res.data.data.lots;
+            // //固定跟随还是手数跟随
+            // if(res.data.data.lotsTypeStr == "按比例"){
+            //     this.clickBtn = true;
+            // }else if(res.data.data.lotsTypeStr == "按手数"){
+            //     this.clickBtn = false;
+            // }
+            // //跟随收益是正还是负的
+            // if(  Number(res.data.data.profitTotal) > 0 ){
+            //     this.redcolor = false;
+            // }else{
+            //     this.redcolor = true;
+            // }
+            // //跟单开关
+            // if(res.data.data.nullity == 0){
+            //     this.followOnOff = true;
+            // }else if(res.data.data.nullity == 1){
+            //     this.followOnOff = false;
+            // }
+            // //反向跟随
+            // if( res.data.data.opposite == 0 ){
+            //     this.reverseOnOff = false;
+            // }else if(res.data.data.opposite == 1){
+            //     this.reverseOnOff = true;
+            // }
+            // //最小手数
+            // if( res.data.data.minLotsCount == 1){
+            //     this.handsNum = 0
+            // }else if(res.data.data.minLotsCount == 0.1){
+            //     this.handsNum = 1;
+            // }else if(res.data.data.minLotsCount == 0.01){
+            //     this.handsNum = 2;
+            // }
+
+            // //精密设置去大小
+            // if( res.data.data.broundoff == 0){
+            //     this.abandonShow = true;
+            // }else if(res.data.data.broundoff == 1){
+            //     this.abandonShow = false;
+            // }
+            this.followInfo  = myData;
+            this.signalName = myData.signalName;
+            this.lotsType = myData.lotsType;
+            this.takeProfits = myData.takeProfits;
+            this.stopLoss = myData.stopLoss;
+            this.followNum = myData.lots;
             //固定跟随还是手数跟随
-            if(res.data.data.lotsTypeStr == "按比例"){
+            if(myData.lotsTypeStr == "按比例"){
                 this.clickBtn = true;
-            }else if(res.data.data.lotsTypeStr == "按手数"){
+            }else if(myData.lotsTypeStr == "按手数"){
                 this.clickBtn = false;
             }
             //跟随收益是正还是负的
-            if(  Number(res.data.data.profitTotal) > 0 ){
+            if(  Number(myData.profitTotal) > 0 ){
                 this.redcolor = false;
             }else{
                 this.redcolor = true;
             }
             //跟单开关
-            if(res.data.data.nullity == 0){
+            if(myData.nullity == 0){
                 this.followOnOff = true;
-            }else if(res.data.data.nullity == 1){
+            }else if(myData.nullity == 1){
                 this.followOnOff = false;
             }
             //反向跟随
-            if( res.data.data.opposite == 0 ){
+            if( myData.opposite == 0 ){
                 this.reverseOnOff = false;
-            }else if(res.data.data.opposite == 1){
+            }else if(myData.opposite == 1){
                 this.reverseOnOff = true;
             }
             //最小手数
-            if( res.data.data.minLotsCount == 1){
+            if( myData.minLotsCount == 1){
                 this.handsNum = 0
-            }else if(res.data.data.minLotsCount == 0.1){
+            }else if(myData.minLotsCount == 0.1){
                 this.handsNum = 1;
-            }else if(res.data.data.minLotsCount == 0.01){
+            }else if(myData.minLotsCount == 0.01){
                 this.handsNum = 2;
             }
 
             //精密设置去大小
-            if( res.data.data.broundoff == 0){
+            if( myData.broundoff == 0){
                 this.abandonShow = true;
-            }else if(res.data.data.broundoff == 1){
+            }else if(myData.broundoff == 1){
                 this.abandonShow = false;
             }
         }).catch((err) => {console.log(err) })

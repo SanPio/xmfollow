@@ -44,6 +44,7 @@ export default {
             re:[]
         }
     },
+
     created(){
         let haveiss = sessionStorage.getItem('iss');
         if(haveiss==1){
@@ -107,9 +108,10 @@ export default {
         })
     },
     methods:{
-        //跳转到跟随设置页面
+        //跳转到跟随管理页面
         tofollow(ind){   
-            window.location.href="followmange.html";
+            
+            window.location.href=`followmange.html?accountsid=${localStorage.accountId}`;
         },
         GetRequest() {
             var url = location.search; //获取url中"?"符后的字串
