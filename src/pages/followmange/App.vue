@@ -45,19 +45,33 @@
                                     </p>
                                 </div>
                                 <div class="right liright">
-                                    <p >
+                                    <!-- 判断当前持仓是否为0 为0则显示没有持仓 -->
+                                    <p v-if="item.optiondetail!=0">
                                         <span>当前持仓</span>
                                         <span class="hold">
                                             {{ item.optiondetail | numPuls}}
                                         </span>
                                     </p>
-                                    <p>
+                                    <p v-else>
+                                        <span>当前持仓</span>
+                                        <span class="hold">
+                                            没有持仓
+                                        </span>
+                                    </p>
+                                    <p  v-if="item.nowProfits!=0">
                                         <span>当前浮亏</span>
                                         <span :class="item.nowProfits >= 0 ? 'profit-blue' : 'profit-red' ">
                                             $ {{ item.nowProfits | numPuls}}
                                         </span>
                                     </p>
+                                    <p v-else>
+                                        <span>当前浮亏</span>
+                                        <span :class="item.nowProfits >= 0 ? 'profit-blue' : 'profit-red' ">
+                                            没有持仓
+                                        </span>
+                                    </p>
                                 </div>
+                                
                             </div>
                             <p class="libot" v-if="nowOpen[ind]">
                                 <!-- 1.0版本不用 -->
@@ -237,6 +251,8 @@ export default {
                 this.nowallLoaded = true;
             } 
             this.nowArr = res.data.data.followedReCordRespDtoList;
+      
+            console.log(this.nowArr)
             if(res.data.data.sumoptionid){
                 this.nowTotal = res.data.data.sumoptionid
             }

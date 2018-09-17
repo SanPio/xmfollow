@@ -83,18 +83,8 @@
                     </div>
                 </div>
             </mt-swipe-item>  -->
-
-
         </mt-swipe> 
         </div>
-
-
-
-
-
-
-
-
 
         <div id="order" v-if="detail" >
             <mt-navbar v-model="selected" >
@@ -104,14 +94,14 @@
             <mt-tab-container v-model="selected">
             
                 <mt-tab-container-item id="info">
-                
+                    
                     <div style="overflow-y: scroll;hieght:6rem" >
                         <mt-loadmore 
                         :bottom-method="loadBottom" 
                         :bottom-all-loaded="infoAllLoaded"
                         :autoFill="false" ref="loadmores">
                             <div ref="mybox">
-                                <div class="infolist" v-for="(item, ind) in infoArr" :key="ind" >
+                                <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
                                     <div class="infotop clearfix" @click="infoBotOnOff(ind)">
                                         <div class="left">
                                             <p>
@@ -180,11 +170,10 @@
                                                         {{ item.nowprice}}
                                                     </span>
                                                 </p>
-                                            </div>
-                                        
-                                            
+                                            </div>                                           
                                         </div>
                                     </div>
+                                    
                                     <div class="infocen clearfix" v-if="infoBotShow[ind]">
                                         <ul class="left">
                                             <li>
@@ -202,12 +191,9 @@
                                                 <span>
                                                 {{ item.stopLoss }} 
                                                 </span>
-                                            </li>
-                                        
-                                        
+                                            </li>                                       
                                         </ul>
                                         <ul class="right">
-                                        
                                             <li>
                                                 <span>
                                                     开仓时间
@@ -215,7 +201,6 @@
                                                 <span style="margin-left: .24rem;color: #666;font-weight: bold;">
                                                     {{ item.updatetime }}
                                                 </span>
-                                                
                                             </li>
                                             <li>
                                                 <span>
@@ -229,15 +214,13 @@
                                     </div>
                                     
                                 </div>
+                                <div v-if="infoArr.length==0" class="noinfo">
+                                    暂未开仓
+                                </div>
                             </div>
                     </mt-loadmore>
-                    </div>
-                
+                    </div>               
                 </mt-tab-container-item>
-
-
-
-
                 <mt-tab-container-item id="history">
                 
                     <div style="overflow-y: scroll;">
@@ -279,14 +262,12 @@
                                                 <span>
                                                     {{ item.symbolTypeString }}
                                                 </span>
-                                            
                                                 <span >
                                                     {{ item.openPrice}}
                                                 </span> 
                                                 <span>
                                                     -
                                                 </span>
-                                            
                                                 <span>
                                                     {{ item.closePrice }}
                                                 </span> 
@@ -296,9 +277,7 @@
                                             <div class="left">
                                                 <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
                                                 {{'$'+ item.orderProfit}}
-                                                </p>
-                                            
-                                        
+                                                </p>                                        
                                             </div>     
                                         </div>
                                     </div>
@@ -311,8 +290,7 @@
                                                 <span>
                                                     {{ item.orderId }}
                                                 </span>
-                                            </li>
-                                        
+                                            </li>                                       
                                             <li>
                                                 <span>
                                                     库存费
@@ -357,8 +335,6 @@
                             </div>
                     </mt-loadmore>
                     </div>
-                    
-        
                 </mt-tab-container-item>
             </mt-tab-container>
         
@@ -393,7 +369,7 @@ export default {
             buyShow : true,
             ellShow : true,
             redcolor:true,
-            mianInfoTitle : ["交易时间","盈利","收益率","起始资金","最大回撤","跟随人数","第一单"],
+            mianInfoTitle : ["交易时间","余额","收益率","起始资金","最大回撤","跟随人数","第一单"],
             mianInfo : [],
             secInfoTitle : ["平均持仓时间","最大盈利点数","最大亏损点数","最大手数","最小手数"],
             secInfo : [],
@@ -472,6 +448,11 @@ export default {
             if(res.data.code != 0){
                 this.infoArr = res.data.data
             }
+            
+            // if(res.data.success==false){
+            //     console.log("暂未开仓")
+            // }
+
         }).catch((err) => {
             console.log(err)
         })
@@ -1308,6 +1289,12 @@ export default {
             }
         }
     }
+    }
+    // 信号源未开仓时提示
+    .noinfo{
+        font-size: 0.4rem;
+        line-height: 5rem;
+        color: #ffa544;
     }
 </style>
 

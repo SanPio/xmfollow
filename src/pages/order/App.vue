@@ -5,7 +5,6 @@
             <mt-tab-item id="history">历史记录</mt-tab-item>
         </mt-navbar>
          <mt-tab-container v-model="selected">
-           
             <mt-tab-container-item id="info">
                 <div style="height:.92rem"></div>
                 <div style="overflow-y: scroll;">
@@ -14,6 +13,12 @@
                     :bottom-all-loaded="infoAllLoaded"
                     :autoFill="false" ref="loadmores">
                         <div ref="mybox">
+                            <!-- 订单信息汇总条-->
+                            <div class="gather">
+                                <p class="fl">跟随总获利<span class="fr">$153.9k</span></p>
+                                <p class="fl">可用保证金<span class="fr">$50244</span></p>
+                            </div>
+
                             <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
                                 <div class="infotop clearfix" @click="infoBotOnOff(ind)">
                                     <div class="left">
@@ -161,7 +166,12 @@
                     :bottom-all-loaded="hisAllLoaded" 
                     :autoFill="false" ref="loadmore">
                         <div ref="myboxes">
+                            <!-- 历史记录汇总条-->
+                            <div class="hisgather">
+                                <p class="fl">累计总获利<span class="fr">$111k</span></p>
+                            </div>
                             <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
+                                
                                 <div class="infotop clearfix" @click="hisBotOnOff(ind)">
                                     <div class="left">
                                         <p>
@@ -1399,5 +1409,51 @@ export default {
                 
             }
         }
+    }
+
+    // 汇总条
+    .gather{
+        width: 100%;
+        height: 1.06rem;
+        background-color: #fffaef;
+        border-top: 1px solid #c9c9c9; 
+        overflow: hidden;
+        p{
+            width: 100%;
+            text-align: left;
+            height: 0.53rem;
+            line-height: 0.53rem;
+            color: #666;
+            font-size: 0.24rem;
+            padding: 0 0 0 0.24rem;
+            span{
+                padding: 0 0.5rem 0 0 ;
+            }
+        }
+    }
+    .hisgather{
+        width: 100%;
+        height: 0.63rem;
+        background-color: #fffaef;
+        border-top: 1px solid #c9c9c9; 
+        overflow: hidden;
+        p{
+            width: 100%;
+            text-align: left;
+            height: 0.63rem;
+            line-height: 0.63rem;
+            color: #666;
+            font-size: 0.24rem;
+            padding: 0 0 0 0.24rem;
+            span{
+                padding: 0 0.5rem 0 0 ;
+            }
+        }
+    }
+    .fl{
+        float: left;
+    }
+    .fr{
+        float: right;
     }
 </style>
