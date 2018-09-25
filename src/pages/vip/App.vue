@@ -31,10 +31,17 @@
                 <button v-if="sevenfive" :class="{'blue':dischoose == 3}"  @click="carchoose(3)">
                     7.5 折
                 </button>
-                <button v-if="fullreduction" :disabled="redDisabled" :class="{'blue':dischoose == 4}"  @click="carchoose(4)">
+                <!-- <button v-if="fullreduction" :disabled="redDisabled" :class="{'blue':dischoose == 4}"  @click="carchoose(4)">
                     满 {{ full }} 减  {{ reduce }}
-                </button>
+                </button> -->
                 
+                
+            </p>
+            <p style="text-align:center;border-bottom:1px solid #c9c9c9" v-if="fullcard.length">
+               <button v-for="(item, index) in fullcard" :key="index"  :disabled="fullCardShow[index]" :class="{'blue':fullChoose == index}" style="margin-top:.2rem"  @click="carchoose(4,index)">
+                    满 {{ item.fullSubtractionMin }} 减  {{ item.fullSubtractionValue }} 
+                    {{'（有效期'+ item.fullSubtractionEndTime+'）'}}
+                </button> 
             </p>
             <p class="paytype">
                 <span>
@@ -103,12 +110,17 @@ export default {
 
 
             dischoose: '',
+            
             eight: false,
             eightId: '',
             eightfive: false,
             sevenfive: false,
             sevenfiveId: '',
-            fullreduction: false
+            fullreduction: false,
+            
+            fullcard:[],
+            fullChoose: -1,
+            fullCardShow: []
         }
     },
     created(){
@@ -147,14 +159,15 @@ export default {
                     this.sevenfiveId = '';
                 }
                 // 满减
-                if ( res.data.data.fullSubtraction == "TRUE" ) {
-                    this.fullreduction = true;
-                    this.fullSubtractionId = res.data.data.fullSubtractionId;
-                    this.full = res.data.data.fullSubtractionMin;
-                    this.reduce = res.data.data.fullSubtractionValue;
+            
+                if ( res.data.data.fullSubtraction.length ) {
+                    this.fullcard = res.data.data.fullSubtraction;
+                    this.redDisabled = false
+                    for(let i = 0; i < this.fullcard.length; i++) {
+                        this.fullCardShow.push(true)
+                    }
                 }else {
-                    this.fullreduction = false;
-                    this.fullSubtractionId = ''
+                 
                 }
 
         
@@ -169,10 +182,14 @@ export default {
     },
     watch: {
         money(val){
-            if( val >= this.full ) {
-                this.redDisabled = false
-            }else{
-                this.redDisabled = true
+
+            for(let i = 0 ; i < this.fullcard.length; i ++){
+                this.$set(this.fullCardShow,i,true)
+                if (val >= Number(this.fullcard[i].fullSubtractionMin) ){
+                    this.$set(this.fullCardShow,i,false)
+                    
+                }
+                
             }
         }
     },
@@ -183,6 +200,7 @@ export default {
             // this.disOnoff = false;
             // this.reduceOnoff = false;
             this.dischoose = '';
+            this.fullChoose = -1;
             this.msgbox = 1;
             if ( ind == 0) {
                 this.time = 1;
@@ -200,24 +218,53 @@ export default {
             this.haveClick = !this.haveClick;
         },
  
-        carchoose(val){
-            if(this.dischoose == val){
+        carchoose(val,ind){
+            if(this.dischoose == val && val != 4){
                 this.dischoose = '';
                 this.payMoney = this.money;
-            }else{
+                this.fullChoose = -1
+            }else if(this.dischoose != val && val != 4){
                 this.dischoose = val;
+                this.fullChoose = -1
                 if( val == 1){
                     this.payMoney = parseInt(this.money * 85 )/100;
                 }else if( val == 2){
                     this.payMoney = parseInt(this.money * 80 )/100;
                 }else if( val == 3){
                     this.payMoney = parseInt(this.money * 75 )/100;
-                }else if( val == 4){
-                    this.payMoney = this.money - this.reduce;
                 }
+                // else if( val == 4){
+                //     console.log(ind)
+                //     if(this.fullChoose == ind) {
+                //         this.fullChoose = -1;
+                //         this.payMoney = this.money;
+                //         // this.$set(this.fullCardShow,i,false)
+                //     }else{
+                //         this.fullChoose = ind
+                //     this.full = this.fullcard[ind].fullSubtractionMin;
+                //     this.reduce = this.fullcard[ind].fullSubtractionValue;
+                //     this.fullSubtractionId = this.fullcard[ind].fullSubtractionId;
+                //     this.payMoney = this.money - this.reduce;
+                //     }
+                    
+                // }
 
 
 
+            }else if( val == 4){
+                this.dischoose = '';
+                 console.log(ind)
+                    if(this.fullChoose == ind) {
+                        this.fullChoose = -1;
+                        this.payMoney = this.money;
+                        // this.$set(this.fullCardShow,i,false)
+                    }else{
+                        this.fullChoose = ind
+                    this.full = this.fullcard[ind].fullSubtractionMin;
+                    this.reduce = this.fullcard[ind].fullSubtractionValue;
+                    this.fullSubtractionId = this.fullcard[ind].fullSubtractionId;
+                    this.payMoney = this.money - this.reduce;
+                    }
             }
             
         },
@@ -225,7 +272,7 @@ export default {
  
         vipPay(){
          //   if ( (this.disDisabled == false || this.redDisabled == false)&&( this.disOnoff==false && this.reduceOnoff == false) ) {
-            if ( (this.eight == true || this.eightfive == true || this.sevenfive == true || this.redDisabled == false) && this.dischoose == '' && this.msgbox==1) {
+            if ( (this.eight == true || this.eightfive == true || this.sevenfive == true || this.redDisabled == false) && this.dischoose == '' && this.fullChoose == -1&& this.msgbox==1) {
                 MessageBox('提示', '你还有兑换券没有使用');
                 this.msgbox ++ ;
             }else {
@@ -247,9 +294,9 @@ export default {
             var discountType = '';
             var discountId = '';
          
-            if ( this.dischoose == 4 ) {
+            if ( this.dischoose == ""&& this.fullChoose != -1 ) {
                 discountType = 1;
-                discountId = this.fullSubtractionId
+                discountId = this.fullcard[this.fullChoose].fullSubtractionId
             }else if ( this.dischoose == 3 ) {
                 discountType = 2;
                 discountId = this.sevenfiveId
@@ -261,7 +308,7 @@ export default {
                 discountId = this.discountId
             }
 
-
+            console.log(discountId)
             this.$http.get(this.urlTitle+'wechat/unifiedOrder',{ 
                 params : { 
                     userId : this.userId,  
@@ -349,6 +396,7 @@ export default {
         }
         .paytype{
             height: .94rem;
+            margin-top: .4rem;
             text-align: left;
             span{
                 margin-left: .4rem;
@@ -395,7 +443,7 @@ export default {
         
     }
     #bottom{
-        margin-top: 2.1rem;
+        margin-top: 1rem;
         text-align: center;
         button{
             width: 6.48rem;
