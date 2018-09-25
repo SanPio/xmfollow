@@ -765,7 +765,7 @@ export default {
                 console.log(res)
                 if(res.data.code == 1){
                     //   1.0版本以后跳转到跟随管理
-                    window.location.href=`followmange.html?accountsid=${this.accountId}`;
+                    // window.location.href=`followmange.html?accountsid=${this.accountId}`;
                     // //   1.0版本回到主页
                     // window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
                 }else{
@@ -805,7 +805,7 @@ export default {
                 this.popUpShow = true;
             }
            
-        },
+        }, 
         toAdvset(){
              window.location.href=`advanceset.html?optionId=${this.optionId}`;
         },

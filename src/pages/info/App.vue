@@ -215,7 +215,7 @@
                                     
                                 </div>
                                 <div v-if="infoArr.length==0" class="noinfo">
-                                    暂未开仓
+                                    此信号源暂时还没有开仓
                                 </div>
                             </div>
                     </mt-loadmore>

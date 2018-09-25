@@ -219,8 +219,8 @@ export default {
         this.userId = localStorage.getItem('userId');
         this.accountId = localStorage.getItem('accountId');
         var v = this.parseUrl();//解析所有参数
-        // this.optionId = v['optionId'];
-        this.optionId = 2
+        this.optionId = v['optionId'];
+        // this.optionId = 2
         //初始化数据请求
         this.$http.get(this.urlTitle+'wx/order/member/followSettingInfo',{ 
             params : {

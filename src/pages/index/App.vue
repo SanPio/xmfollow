@@ -33,7 +33,17 @@
           </li>
         </ul>
     </div>
-      
+      <div class="buyVip" ref="back">
+          <div class="buy">
+              <h2>提示</h2>
+              <p v-if="stat == 1">您的跟随权限不够,将跳转到V认证购买页面</p>
+              <p v-if="stat == 2">您的跟随权限不够,将跳转到购买vip购买页面</p>
+              <p v-if="stat == 3">您的跟随权限不够，将跳转到五星购买页面</p>
+              <p v-if="stat == 4">您还没有账号，将跳转到绑定账号页面</p>
+              <p v-if="stat == 5">模拟账号不能跟随五星信号源</p>
+              <button @click="sure">确定</button><button @click="cancel">取消</button>
+          </div>
+      </div>
       <div style="overflow:scroll; -webkit-overflow-scrolling: touch">
          <mt-loadmore 
           :bottom-method="loadBottom" :autoFill="false" ref="loadmore" :bottom-all-loaded="allLoaded">
@@ -50,12 +60,23 @@
                     <img v-for="val in Number(item.star) " :key="val" :src="starImg">
                     <span  v-if="item.status == 1" class="orange">警告</span>
                     <span  v-if="item.status == 2" class="red">收尾</span>
+                    <!-- <span v-if="item.memberorder==1">V认证</span>
+                    <span v-if="item.memberorder==2">VIP</span> -->
                   </dd>
                 </dl>
               </div>
               <div class="tit-right">
-                <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
-                <button class="flow-btn" v-if="!item.followed" @click.stop="followMe(ind)" >跟随</button>
+                <!-- <button class="flow-set" v-if="item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button> -->
+                <!-- <button class="flow-btn" v-if="!item.followed && (item.memberorder=1 && item.star<4)" @click.stop="followMe(ind)">跟随</button> -->
+                <!-- <button class="flow-btn" v-if="item.memberorder>=1 && item.star>=4" @click.stop="followMe(ind)" style="background-color: #e5e5e5;color:#fcfcfc;border:none;">跟随</button> -->
+                <!-- <button class="flow-btn" v-if="item.memberorder!=1 || item.memberorder!=2" @click.stop="followMe(ind)" style="background-color: #e5e5e5;color:#fcfcfc;border:none;">跟随</button> -->
+                <button class="flow-btn" v-if="item.memberorder!=1 && item.memberorder!=2" @click.stop="followMe(ind)" style="background-color: #e5e5e5;color:#fcfcfc;border:none;">跟随</button>
+                <button class="flow-btn" v-if="item.memberorder==1 && item.star>=4" @click.stop="followMe(ind)" style="background-color: #e5e5e5;color:#fcfcfc;border:none;">跟随</button>
+                <button class="flow-btn" v-if="item.memberorder==1 && item.star<4 && !item.followed" @click.stop="followMe(ind)">跟随</button>
+                <button class="flow-set" v-if="item.memberorder==1 && item.star<4 && item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
+                <button class="flow-btn" v-if="item.memberorder==2 && item.star<=4 && !item.followed" @click.stop="followMe(ind)">跟随</button>                
+                <button class="flow-set" v-if="item.memberorder==2 && item.star<=4 && item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
+                <!-- <button class="flow-btn" v-else  @click.stop="followMe(ind)">跟随</button> -->
               </div>
             </div>
             <div class="content">
@@ -97,8 +118,6 @@
                   <dd v-if="item.optionId == 7 "> {{item.followerNumber + 31}} </dd>
                 </dl>
               </div>
-
-
             </div>
           </div>
         </mt-loadmore>
@@ -124,8 +143,6 @@
     
 </template>
 <script>
-
-
 // 引入 ECharts 主模块
 var echarts = require('echarts/lib/echarts');
 // 引入线形图
@@ -137,8 +154,7 @@ require('echarts/lib/chart/line');
 //   parseInt(val*100)/100
 // })
 export default {
-  name: 'App',
-  
+  name: 'App',  
   data () {
     return {
       time : "近一周有交易",
@@ -172,14 +188,17 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.0.197:8080/",//丹峰
-      // urlTitle:"http://192.168.0.102:8080/",  //大潘
+      urlTitle:"http://192.168.0.197:8080/",//丹峰
+      // urlTitle:"http://192.168.0.100:8080/",  //大潘
       // urlTitle:"http://www.0539maj.com/app/",//域名
-      urlTitle:"http://132.232.44.112:80/app/", //服务器
+      // urlTitle:"http://132.232.44.112:80/app/", //服务器
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 
       allLoaded: false,
-      setFollowType:8
+      setFollowType:8,
+      // 购买弹框
+      // bntBuy:true
+      stat:''
     }
   },
   created(){
@@ -194,6 +213,8 @@ export default {
 
     this.accountId = localStorage.getItem('accountId');
     this.userId = localStorage.getItem('userId');
+    console.log(this.accountId)
+    console.log(this.userId)
     
       //储存域名端口
       localStorage.setItem('urlTitle', this.urlTitle);
@@ -201,7 +222,7 @@ export default {
        
     },
     mounted(){
-      this.clickrequest(7,1,10,'',1,1);
+      this.clickrequest(7,1,10,'',1,this.userId);
 
     },
     // filters:{  
@@ -223,6 +244,7 @@ export default {
         
     },
   methods:{
+
     //加载请求
 
     request(nearTime,pageNum,pageSize,sortField,sortType,userId){
@@ -240,7 +262,6 @@ export default {
           url: this.urlTitle +'wx/index/list',
           data:postData
       }).then((res)=>{
-
           if(res.data.data.total <= pageNum*pageSize){
              this.allLoaded = true;//数据全部加载完毕
           }
@@ -466,37 +487,43 @@ export default {
       this.abilitybln = false;
       this.clickrequest(this.nearTime,1,4,this.sortField,this.sortType,this.userId)
     },
-    //点击跟随
 
+    //点击跟随
     followMe(ind){
-       console.log(this.optionId)
+      //  console.log(this.optionId)
        this.$http.get(this.urlTitle+'wx/order/trader/follow',{ 
             params : {
-                userid: this.userId,
-                optionid: this.optionId[ind] ,
-                accountsid: this.accountId
+              userid: this.userId,
+              optionid: this.optionId[ind] ,
+              accountsid: this.accountId
             }   
         }).then((res) => { 
           // console.log(res)
+          this.stat = res.data.status
           if( res.data.status == 0 ){
+
               //跟随设置
               window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
-
           }else if( res.data.status == 1 ){
-              //购买会员
-              window.location.href=`authentication.html`;
+              //认证会员
+              this.$refs.back.style.display='block';
+              // window.location.href=`authentication.html`;
           }else if( res.data.status == 2 ){
-              //绑定
-              window.location.href=`vip.html`;
+              //购买VIP
+              this.$refs.back.style.display='block';             
+              // window.location.href=`vip.html`;
           }else if( res.data.status == 3 ){
-              //绑定
-              window.location.href=`fivestar.html?optionId=${this.optionId[ind]}&name=${this.boxItem[ind].signalName}`;
+              //购买五星
+              this.$refs.back.style.display='block';
+              // window.location.href=`fivestar.html?optionId=${this.optionId[ind]}&name=${this.boxItem[ind].signalName}`;
           }else if( res.data.status == 4 ){
-              //绑定
-              window.location.href=`accountmanage.html`;
+              //绑定账号
+              this.$refs.back.style.display='block';
+              // window.location.href=`accountmanage.html`;
           }else if( res.data.status == 5 ){
               //模拟账号不能跟随五星
-              MessageBox('提示', '模拟账号不能跟随五星信号源');
+              this.$refs.back.style.display='block';
+              // MessageBox('提示', '模拟账号不能跟随五星信号源');
           }
           
 
@@ -505,11 +532,6 @@ export default {
           console.log(err)
         })
     },
-
-
-
-
-
     GetRequest() {
         var url = location.search; //获取url中"?"符后的字串
         var theRequest = new Object();
@@ -522,8 +544,6 @@ export default {
         }
         return theRequest;
     },
-
-
     //上拉加载
     loadBottom(){
       this.pageNum = this.pageNum +1
@@ -543,12 +563,91 @@ export default {
     //到跟随设置页面
     toFollowSetting(ind){
       window.location.href=`followsetting.html?optionId=${this.optionId[ind]}`;
-    }   
+    },
+    
+    // 判断是否需要跳转
+    // 确定
+    sure(){
+      console.log(this.stat)
+      if(this.stat==1){
+        // 认证会员
+        window.location.href=`authentication.html`;
+      }else if(this.stat==2){
+        // 购买会员
+        window.location.href=`vip.html`;
+      }else if(this.stat==3){
+        // 购买五星会员
+        window.location.href=`fivestar.html?optionId=${this.optionId[ind]}&name=${this.boxItem[ind].signalName}`;
+      }else if(this.stat==4){
+        // 绑定账号
+        window.location.href=`accountmanage.html`;
+      }else if(this.stat==5){
+        // 模拟账号不能跟随五星
+        this.$refs.back.style.display='block';
+      }
+    },
+    // 取消
+    cancel(){
+      this.$refs.back.style.display="none";
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+// 购买会员弹框样式
+.buyVip{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display:none;
+}
+.box{
+  position: relative;;
+}
+.buy{
+  width: 6.2rem;
+  height: 3.06rem;
+  position: fixed;
+  left: 8%;
+  top: 26.4%;
+  background-color: white;
+  border-radius: 0.2rem; 
+  h2{
+    font-size: 0.32rem;
+    border-bottom: 1px solid #c9c9c9;
+    padding: 0.2rem 0 0.2rem 0; 
+  }
+  p{
+    font-size: 0.28rem;
+    color: #666666;
+    text-align: center;
+    padding: 0.38rem 0 0.48rem 0;
+  }
+  button:nth-of-type(1){
+    width: 1.8rem;
+    height: 0.66rem;
+    background-color: #4fa2fe;
+    color: white;
+    border: none;
+    font-size: 0.28rem;
+    border-radius: 0.1rem;
+  }
+  button:nth-of-type(2){
+    width: 1.8rem;
+    height: 0.66rem;
+    border:1px solid #4fa2fe;
+    color: #4fa2fe;
+    background-color: white;
+    margin-left: 0.7rem;
+    font-size: 0.28rem;
+    border-radius: 0.1rem;
+  }
+}
 
 // 头部
 #title{
@@ -702,6 +801,7 @@ export default {
       margin-top:.32rem;
       width: 1.46rem;
       height: .52rem;
+      line-height: .52rem;
       border:1px solid #4fa2fe;
       background: none;
       border-radius: .12rem;
