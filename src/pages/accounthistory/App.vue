@@ -2,23 +2,26 @@
     <div>
         <div class="accHistory">
             <div class="left fl">
-                <div class="left-icon">${{info.orderprofits}}</div>
+                <div class="left-icon" v-if="info">${{info.orderprofits | numPuls }}</div>
+                <div class="left-icon" v-else>0</div>
                 <p>总收益</p>
             </div>
-            
             <div class="center fl">
-                <div class="center-icon">{{infos.optionidnum}}人</div>
+                <div class="center-icon" v-if="infos.optionidnum">{{infos.optionidnum | numPuls }}人</div>
+                <div class="center-icon" v-if="!infos.optionidnum">0人</div>
                 <p>正在跟随</p>
             </div>
             <div class="right fl">
-                <div class="right-icon">${{infos.nowprofits}}</div>
+                <div class="right-icon" v-if="infos.nowprofits">${{infos.nowprofits | numPuls }}</div>
+                <div class="right-icon" v-if="!infos.nowprofits">0</div>
                 <p>浮动收益</p>
             </div>
+            
         </div>
         <ul>                                                                                   
-            <li><a>累计交易笔数</a><span>{{info.orderscount}}笔</span></li>
-            <li><a>累计交易手数</a><span>{{info.orderslots}}标准手</span></li>
-            <li><a>交易时间</a><span>{{re.weeks}}周</span></li>
+            <li><a>累计交易笔数</a><span v-if="info">{{info.orderscount | numPuls }}笔</span><span v-else>0笔</span></li>
+            <li><a>累计交易手数</a><span v-if="info">{{info.orderslots | numPuls }}标准手</span><span v-else>0标准手</span></li>
+            <li><a>交易时间</a><span>{{re.weeks | numPuls }}周</span></li>
         </ul>
         <button @click="tofollow(ind)">查看跟随</button>
     </div>
@@ -34,6 +37,7 @@ export default {
             info:[],
             infos:[],
             re:[]
+            
         }
     },
 
@@ -55,7 +59,6 @@ export default {
         // console.log(this.accountId)
         // console.log(this.userId)
 
-        var that = this
         //初始化数据请求
         this.$http.get(this.urlTitle+'wx/member/accountHistory',{
             params : {
@@ -65,39 +68,29 @@ export default {
             }
         }).then((res)=>{
             console.log(res)
-            that.re = res.data.data
-            that.info = res.data.data.accountHistoryReponse
-            that.infos = res.data.data.userOrderDetailsReponse
-
-            // console.log(info)
-            if(that.info.orderprofits == null){
-                that.info.orderprofits =0
-            }
-            if(that.info.kong == null){
-                that.info.kong =0
-            }
-            if(that.infos.optionidnum == null){
-                that.infos.optionidnum =0
-            }
-            if(that.infos.nowprofits == null){
-                that.infos.nowprofits =0
-            }
-            if(that.info.ordersgrandpoints == null){
-                that.info.ordersgrandpoints =0
-            }
-            if(that.info.orderscount == null){
-                that.info.orderscount =0
-            }
-            if(that.info.orderslots == null){
-                that.info.orderslots =0
-            }
-            if(that.info.avggrandpoint == null){
-                that.info.avggrandpoint =0
-            }
+            this.re = res.data.data
+            this.info = res.data.data.accountHistoryReponse
+            this.infos = res.data.data.userOrderDetailsReponse
             
         }).catch((err)=>{
             console.log(err)
         })
+
+
+        
+    },
+    filters: {
+        numPuls(val){
+            if( parseFloat( val ) >=1000000000 || parseFloat( val ) <= -1000000000 ){
+                return parseInt( val / 10000000 ) / 100 + 'B'
+            }else if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
+                return parseInt( val / 10000 ) / 100 + 'M'
+            }else if ( parseFloat( val ) >=1000 || parseFloat( val ) <= -1000 ){
+                return parseInt( val / 10 ) / 100 + 'K'
+            }else{
+                return val
+            }    
+        }
     },
     methods:{
         //跳转到跟随管理页面

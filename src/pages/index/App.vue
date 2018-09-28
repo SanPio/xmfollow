@@ -254,7 +254,8 @@ export default {
         pageSize: pageSize,
         sortField: sortField,
         sortType: sortType,
-        userId: userId
+        userId: userId,
+        accountId: this.accountId
       });
 
       this.$http({
@@ -330,7 +331,8 @@ export default {
         pageSize: pageSize,
         sortField: sortField,
         sortType: sortType,
-        userId: userId
+        userId: userId,
+        accountId: this.accountId
       });
       this.$http({
           method: 'post',

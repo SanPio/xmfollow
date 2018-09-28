@@ -66,10 +66,74 @@
            </span>
             
         </p>
-        <p class="content padding clearfix adv-set" @click="toAdvset">
+        <!--  @click="toAdvset" -->
+        <p class="content padding clearfix adv-set" @click="kai">
             <span class="con-title left">高级跟随设置</span>
             <img :src="returnRightSrc" alt="" class="right">
         </p>
+
+        <!-- 高级设置 -->
+        <div id="box" v-if="heightSetting">
+            <!-- 头部 -->
+            
+            <!-- 反向跟随 -->
+            <div class="content padding clearfix follow-on">
+                <span class="con-title left ">反向跟随</span>
+                    <mt-switch v-model="reverseOnOff" class="right"></mt-switch>
+            </div>
+            <!-- 反向跟随提示语 -->
+            <p class="proportions">
+                <span >开启后将执行与信号源相反的交易</span>
+            </p>
+            <!-- 止盈 -->
+            <p class="content padding clearfix target-profit ">
+                <span class="left con-title">止盈</span>
+                <span class="right" style="font-size:10px;color:#999;">点</span>
+                <input type="number" class="right" v-model="takeProfits" @blur="decimal(3)">
+            </p>
+            <p class="proportions">
+                <span >当盈利达到止盈点数时自动平仓</span>
+            
+            </p>
+            <!-- 止损 -->
+            <p class="content padding clearfix target-profit">
+                <span class="left con-title">止损</span>
+                <span class="right" style="font-size:10px;color:#999;">点</span>
+                <input type="number" class="right" v-model="stopLoss" @blur="decimal(2)">
+            </p>
+            <p class="proportions">
+                <span >当损失达到止损点数时自动平仓</span> 
+            </p>
+
+
+
+            <!-- 精密设置 -->
+            <p class="title">精密设置</p>
+            <div class="content padding clearfix pre-set">
+                <p class="left ">最小手数</p>
+                <p class="right">
+                    <!-- <button :class="{'btn-click':handsOne}">1</button>
+                    <button :class="{'btn-click':handsZero}">0.1</button> -->
+                    <button v-for="(item,ind) in handsNumArr" :key="item" :class="{'btn-click':handsNum==ind}" @click="handsNum=ind">{{item}}</button>
+                    <span>标准手</span>  
+                </p>
+            </div>
+            <!-- 四舍五入选择 -->
+            <p class="abandon padding clearfix">
+                <span class="left">开仓手数精度大于最小手数</span>
+                
+                <button class="right" :class="{'btn-chose':!abandonShow}" :disabled="!abandonShow"  @click="abandonBtn">四舍五入</button>
+                <button class="right" :class="{'btn-chose':abandonShow}" :disabled="abandonShow" @click="abandonBtn">舍弃尾数</button>
+            </p>
+            <!-- 四舍五入指示图 -->
+            <div class="bottom">
+                <img :src="showImgSrc" alt="">
+            </div>
+            <!-- 底部保存按钮 -->
+            <!-- <p class="preservation">
+                <button @click="popShow">保存</button>
+            </p> -->
+        </div>
         
 
 
@@ -81,9 +145,11 @@
         </p>
         
          <!-- 弹窗 -->
+         
          <!-- popUpShow -->
         <div ref="back" class="back" ></div>
-        <div class="popup" v-if="popUpShow">
+        <!-- 没有设置高级跟随设置 -->
+        <div class="popups" v-if="popUpShow && !setHeight">
             <p class="poptop">
                 设置清单
             </p>
@@ -93,8 +159,8 @@
                <br/>
                及交易特征，合理设置您的跟单配置。
             </p>
-            
-            <ul class="popcontant">
+            <!-- 没有设置 高级设置的弹窗 -->
+            <ul class="popcontants">
                 <li class="clearfix">
                     <span class="left">
                         跟单方式
@@ -128,8 +194,110 @@
                 </button>
             </div>
         </div>
-       
-
+        <!-- 设置了高级跟随设置 -->
+        <div class="popup" v-if="popUpShow && setHeight">
+            <p class="poptop">
+                设置清单
+            </p>
+            <p class="poptitle">
+                
+               请结合您的账户资金、信号源账户资金
+               <br/>
+               及交易特征，合理设置您的跟单配置。
+            </p>
+            
+            <!-- 设置了高级设置的弹窗 -->
+            <ul class="popcontant">
+                <li class="clearfix">
+                    <span class="left">
+                        跟单方式
+                    </span>
+                    <span class="right" v-if="clickBtn">
+                        比例跟随
+                    </span>
+                    <span class="right" v-if="!clickBtn">
+                        固定跟随
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        跟随数值
+                    </span>
+                    <span class="right" v-if="clickBtn">
+                        {{ followNum }} 倍
+                    </span>
+                    <span class="right" v-if="!clickBtn">
+                        {{ followNum }} 手
+                    </span>
+                </li>
+                <li style="height:.8rem;line-height:.8rem;font-size:.2rem;font-weight:bold;color:#000;">高级跟随设置</li>
+                <li class="clearfix">
+                    <span class="left">
+                        反向跟随
+                    </span>
+                    <span class="right" v-if="reverseOnOff">
+                        开
+                    </span>
+                    <span class="right" v-if="!reverseOnOff">
+                        关
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止盈
+                    </span>
+                    <span class="right">
+                        {{ takeProfits }} 点
+                    </span>
+                </li>
+                <li class="clearfix">
+                    <span class="left">
+                        止损
+                    </span>
+                    <span class="right">
+                        {{ stopLoss }} 点
+                    </span>
+                </li>
+                <li>
+                    <p style="text-align:left">
+                        精密设置
+                    </p>
+                </li>
+                <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        最小操作手数
+                    </span>
+                    <span class="right" v-if="handsNum == 0">
+                        1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 1">
+                        0.1 标准手
+                    </span>
+                    <span class="right" v-if="handsNum == 2">
+                        0.01 标准手
+                    </span>
+                </li>
+                 <li class="clearfix" style="border:none;">
+                    <span class="left">
+                        尾数设置
+                    </span>
+                    <span class="right" v-if="abandonShow">
+                        舍弃尾数
+                    </span>
+                    <span class="right" v-if="!abandonShow">
+                        四舍五入
+                    </span>
+                </li>
+            </ul>
+            <div class="popbot">
+                <button class="confirm" @click="preserv">
+                    确定
+                </button>
+                <button class="cancel" @click="cancelBtn">
+                    取消
+                </button>
+            </div>
+        </div>
 
     </div>
 </template>
@@ -146,7 +314,7 @@ export default {
             userImgSrc: require('./assets/Head-portrait.jpg'),
             showImgSrc: require('./assets/setting-img.jpg'),
             returnleftSrc : require('./assets/btn-left@2x.png'),
-            returnRightSrc : require('./assets/btn-right@2x.png'),
+            returnRightSrc : require('./assets/btn-right@2x1.png'),
             proportion: 0.50,
             income: 34.02,
             followNum : 0.01,
@@ -167,14 +335,17 @@ export default {
             urlTitle:"",
             iss: '' ,
             popUpShow: false,
-            follownumred: false
+            follownumred: false,
+            // 高级设置
+            heightSetting:false,
+            setHeight:false
             
         }
     },
     created(){
         let haveiss = sessionStorage.getItem('iss');
         if(haveiss == 1){
-            document.title = '跟随设置(模拟)';
+            document.title = '跟随设置(模拟)';  ``
             this.iss = haveiss
         }else{
             document.title = '跟随设置';
@@ -194,6 +365,7 @@ export default {
             }   
         }).then((res) => { 
             var myData = '';
+            myData = res.data.data
             if (res.data.data){
                 myData = res.data.data
             }else {
@@ -483,6 +655,18 @@ export default {
 
     },
     methods: {
+        // 高级设置
+        kai(){
+            this.setHeight = true
+            if(this.heightSetting == false){
+                this.heightSetting = true
+                this.returnRightSrc = require('./assets/btn-right@2x.png')              
+            }else{
+                this.heightSetting = false
+                this.returnRightSrc = require('./assets/btn-right@2x1.png')
+            }
+        },
+
         ////接受跳转参数
         parseUrl(){
             var url=location.href;
@@ -765,7 +949,7 @@ export default {
                 console.log(res)
                 if(res.data.code == 1){
                     //   1.0版本以后跳转到跟随管理
-                    // window.location.href=`followmange.html?accountsid=${this.accountId}`;
+                    window.location.href=`followmange.html?accountsid=${this.accountId}`;
                     // //   1.0版本回到主页
                     // window.location.href=`index.html?accountsid=${this.accountId}&userid=${this.userId}`;
                 }else{
@@ -806,9 +990,9 @@ export default {
             }
            
         }, 
-        toAdvset(){
-             window.location.href=`advanceset.html?optionId=${this.optionId}`;
-        },
+        // toAdvset(){
+        //      window.location.href=`advanceset.html?optionId=${this.optionId}`;
+        // },
        
         //弹窗取消
         cancelBtn(){
@@ -891,7 +1075,7 @@ export default {
             outline: none; 
         }
         img{
-            height: .4rem;
+            width: .32rem;
             margin-top: .4rem;
         }
     }  
@@ -1092,6 +1276,413 @@ export default {
         opacity: 1;
         width: 6rem;
         height: 5rem;
+        background-color: #fff;
+        border-radius: .28rem;
+        .poptop{
+            height: .7rem;
+            font-size: .3rem;
+            line-height: .7rem;
+            border-bottom: 1px solid #c9c9c9;
+            font-weight: bold;
+        }
+        .poptitle{
+            height: .5rem;
+            padding-top: .3rem;
+            line-height: .3rem;
+            color: #ff3838;
+            font-size: .24rem;
+        }
+        .popcontant{
+            width: 4.8rem;
+            margin-left: .6rem;
+            margin-top: .4rem;
+            background-color: #f8f8f8;
+            li{
+                height: .7rem;
+                line-height: .7rem;
+                border-bottom: 1px solid #e5e5e5;
+                font-size: .16rem;
+                color: #666;
+                padding: 0 .2rem;
+            }
+        }
+        
+        .popcontants{
+            width: 4.8rem;
+            margin-left: .6rem;
+            margin-top: .4rem;
+            background-color: #f8f8f8;
+            li{
+                height: .7rem;
+                line-height: .7rem;
+                border-bottom: 1px solid #e5e5e5;
+                font-size: .16rem;
+                color: #666;
+                padding: 0 .2rem;
+            }
+        }
+        .popbot{
+            margin-top: .6rem;
+            display: flex;
+            justify-content: space-around;
+            button{
+                width: 1.78rem;
+                height: .64rem;
+                border: 1px solid #4fa2fe;
+                border-radius: .16rem;
+                font-weight: bold;
+            }
+            .confirm{
+                background-color: #fff;
+                color: #4fa2fe;
+
+            }
+            .cancel{
+                background-color: #4fa2fe;
+                color: #fff;
+            }
+        }
+          
+    }
+    .popups{
+        position: fixed;
+        left: .65rem;
+        top: 3.2rem;
+        z-index: 3;
+        opacity: 1;
+        width: 6rem;
+        height: 5rem;
+        background-color: #fff;
+        border-radius: .28rem;
+        .poptop{
+            height: .7rem;
+            font-size: .3rem;
+            line-height: .7rem;
+            border-bottom: 1px solid #c9c9c9;
+            font-weight: bold;
+        }
+        .poptitle{
+            height: .5rem;
+            padding-top: .3rem;
+            line-height: .3rem;
+            color: #ff3838;
+            font-size: .24rem;
+        }
+        .popcontant{
+            width: 4.8rem;
+            margin-left: .6rem;
+            margin-top: .4rem;
+            background-color: #f8f8f8;
+            li{
+                height: .7rem;
+                line-height: .7rem;
+                border-bottom: 1px solid #e5e5e5;
+                font-size: .16rem;
+                color: #666;
+                padding: 0 .2rem;
+            }
+        }
+        
+        .popcontants{
+            width: 4.8rem;
+            margin-left: .6rem;
+            margin-top: .4rem;
+            background-color: #f8f8f8;
+            li{
+                height: .7rem;
+                line-height: .7rem;
+                border-bottom: 1px solid #e5e5e5;
+                font-size: .16rem;
+                color: #666;
+                padding: 0 .2rem;
+            }
+        }
+        .popbot{
+            margin-top: .6rem;
+            display: flex;
+            justify-content: space-around;
+            button{
+                width: 1.78rem;
+                height: .64rem;
+                border: 1px solid #4fa2fe;
+                border-radius: .16rem;
+                font-weight: bold;
+            }
+            .confirm{
+                background-color: #fff;
+                color: #4fa2fe;
+
+            }
+            .cancel{
+                background-color: #4fa2fe;
+                color: #fff;
+            }
+        }
+          
+    }
+
+
+
+    #box{
+        position: relative;
+        background-color: #fff;
+    }
+    .padding{
+        padding: 0 .24rem;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    #header{
+        height: 1.2rem;
+        img{
+            margin-top: .2rem;
+            margin-right: .2rem;
+            width: .8rem;
+            height: .8rem;
+            border-radius: 50%;
+        }
+        dl{
+            font-size: .2rem;
+            margin-top: .28rem;
+            text-align: left;
+            dt{
+                font-weight: 900;
+            }
+            .incomeTitle{
+                margin-left: .2rem;
+            }
+            .income{
+                color: #4fa2fe;
+            }
+            .redcolor{
+                color:red;
+            }
+        }
+        .cancel{
+            padding: .1rem .2rem;
+            color: #4fa2fe;
+            border: 1px solid #4fa2fe;
+            border-radius: .12rem;
+            background: none;
+            margin-top: .32rem;
+            outline: none;
+        }
+        
+    }
+    .content{
+        .con-title{
+            font-size: .26rem;
+            font-weight: 900;
+            color: #666666;
+        }
+        
+    }
+    .follow-on{
+        height: .74rem;
+        line-height: .74rem;
+    }
+    .close-position,.order-mange{
+        height: 1.12rem;
+        line-height: 1.12rem;
+        button{
+            padding: .1rem .2rem;
+            color: #4fa2fe;
+            border: 1px solid #4fa2fe;
+            border-radius: .12rem;
+            background: none;
+            margin-top: .32rem;
+            outline: none; 
+        }
+    }  
+    .follow-type{
+        height: 1.2rem;
+        line-height: 1.2rem;
+        button{
+            padding: .1rem .2rem;
+            color: #999;
+            border: 1px solid #e5e5e5;
+            border-radius: .12rem;
+            background: none;
+            margin-top: .32rem;
+            outline: none; 
+        }
+        .fixedbtn{
+            margin-left: .4rem;
+        }
+        .clickbtn{
+            color: #fff;
+            border: 1px solid #4fa2fe;
+            border-radius: .12rem;
+            background: #4fa2fe;;
+        }
+    }
+    .proportions{
+        text-align: left;
+        padding: .24rem;
+        font-size: .2rem;
+        height: .4rem;
+        line-height: .4rem;
+        color: #999;
+        // background-color: pink;
+    }
+    .follow-num{
+        height: 1rem;
+        line-height: 1rem;
+        padding: 0 .24rem;
+        .left{
+            color: #666;
+            font-size: .26rem;
+            font-weight: 900;
+        }
+        .right{
+            button{
+                width: .34rem;
+                height: .34rem;
+                line-height: .34rem;
+                border: 1px solid #e6e6e6;
+                border-radius: 50%;
+                font-size: .32rem;
+                background: none;
+                // font-weight: 900;
+                outline: none; 
+            }
+            input{
+                // outline: none; 
+                width: 1rem;
+                text-align: center;
+                outline: none;
+                border:none;
+            }
+            span{
+                color: #999;
+                
+            }
+        }
+    }
+    .target-profit{
+        height :1.08rem;
+        line-height: 1.08rem;
+        input{
+            width: 1.38rem;
+            border:1px solid #e5e5e5;
+            height: .52rem;
+            margin-top: .28rem;
+            outline: none;
+            margin-right: .3rem;
+            text-align: center;
+        }
+    }
+    .title{
+        font-size: .28rem;
+        line-height: .68rem;
+        margin-top: .4rem;
+        border: 1px solid #e6e6e6;
+    }
+    .pre-set{
+        height:1.88rem;
+        line-height: 1.88rem;
+        .left{
+            color: #666;
+            font-size: .26rem;
+            font-weight: 900; 
+        }
+        span{
+            color: #999;
+        }
+        button{
+            width: 1rem;
+            height: .52rem;
+            border: 1px solid #e8e8e8;
+            color: #999;
+            background: none;
+            text-align: center;
+            border-radius: .12rem;
+            margin-right: .3rem;
+            outline: none;
+        }
+        .btn-click{
+            border: 1px solid #4fa2fe;
+            color: #fff;
+            background: #4fa2fe;
+        }
+    
+    }
+    .abandon{
+        height: 1rem;
+        line-height: 1rem;
+        span{
+            font-size: .26rem;
+            color: #666;
+        }
+        button{
+            padding: .12rem .2rem;
+            background: none;
+            border: none;
+            outline: none;
+            color: #999;
+            margin-top: .2rem;
+            border-radius: .12rem;
+
+        }
+        .btn-chose{
+            background-color: #4fa2fe;
+            color: #fff;
+        }
+    }
+    .bottom{
+        img{
+            width: 100%;
+        }
+    }
+    .preservation{
+        border-bottom: 1px solid #dbdbdb;
+        button{
+            width: 6.5rem;
+            height: 1rem;
+            border: none;
+            outline: none;
+            font-weight: 900;
+            background-color: #4fa2fe;
+            color: #fff;
+            font-size: .44rem;
+            border-radius: .16rem;
+            margin: .48rem 0;
+        }
+    }
+    #footer{
+        width: 100%;
+        
+        display: flex;
+        justify-content: center;
+        #foot-center{
+            width: 2rem;
+            height: .9rem;
+            display: flex;
+            justify-content: space-between;
+            img{
+                // width: .3rem;
+                margin-top: .24rem;
+                height: .56rem;
+            }
+        }
+    }
+    //弹窗
+    .back{
+        background-color:gray;
+        opacity: .7;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -10;
+        
+    }
+    .popup{
+        position: fixed;
+        left: .65rem;
+        top: 1.4rem;
+        z-index: 3;
+        opacity: 1;
+        width: 6rem;
+        height: 10rem;
         background-color: #fff;
         border-radius: .28rem;
         .poptop{

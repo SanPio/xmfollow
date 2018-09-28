@@ -21,7 +21,7 @@
                 <button :class="{'blue':reduceOnoff}" :disabled="redDisabled" @click="chooseRed" v-if="!redDisabled">
                     满 {{ full }}  减  {{ reduce }}
                 </button> -->
-           
+                
                 <button v-if="eightfive" :class="{'blue':dischoose == 1}" @click="carchoose(1)">
                     8.5 折
                 </button>
@@ -37,12 +37,18 @@
                 
                 
             </p>
-            <p style="text-align:center;border-bottom:1px solid #c9c9c9" v-if="fullcard.length">
-               <button v-for="(item, index) in fullcard" :key="index"  :disabled="fullCardShow[index]" :class="{'blue':fullChoose == index}" style="margin-top:.2rem"  @click="carchoose(4,index)">
-                    满 {{ item.fullSubtractionMin }} 减  {{ item.fullSubtractionValue }} 
-                    {{'（有效期'+ item.fullSubtractionEndTime+'）'}}
+            <div style="text-align:center;border-bottom:1px solid #c9c9c9" v-if="fullcard.length">
+               <button v-for="(item, index) in fullcard" :key="index"  :disabled="fullCardShow[index]" :class="{'blue':fullChoose == index}" style="margin:.2rem .1rem"  @click="carchoose(4,index)" >
+                    <span style="">
+                         满 {{ item.fullSubtractionMin }} 减  {{ item.fullSubtractionValue }} 
+                    </span>
+                    <br/>
+                    <span style="font-size:.1rem;line-height:.1rem" v-if="item.fullSubtractionEndTime">
+                         {{'（有效期'+ item.fullSubtractionEndTime+'）'}}
+                    </span>
+                   
                 </button> 
-            </p>
+            </div>
             <p class="paytype">
                 <span>
                     付费方式
@@ -363,7 +369,7 @@ export default {
         }
         button{
             font-size: .26rem;
-            height: .56rem;
+            // height: .56rem;
             line-height: .56rem;
             background: #fff;
             color: #4fa2fe;

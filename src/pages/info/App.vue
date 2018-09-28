@@ -135,14 +135,14 @@
                                                     {{ item.symbolTypeString }}
                                                 </span>
                                                 
-                                                <span >
+                                                <span v-if="item.type == 0 || item.type == 1">
                                                     {{ item.openPrice}}
                                                 </span> 
                                                 <span v-if="item.type == 0 || item.type == 1">
                                                     -
                                                 </span>
                                             
-                                                <span >
+                                                <span v-if="item.type == 0 || item.type == 1">
                                                     {{ item.nowPrice }}
                                                 </span> 
                                             </p>
@@ -150,7 +150,7 @@
                                         <div class="right clearfix">
                                             <div class="left">
                                 
-                                                <p :class="item.nowProfits >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.6rem">
+                                                <p :class="item.nowProfits >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " >
                                                     {{'$'+ item.nowProfits}}   
                                                 </p>
                                             
@@ -167,7 +167,7 @@
                                                         当前
                                                     </span>
                                                     <span>
-                                                        {{ item.nowprice}}
+                                                        {{ item.nowPrice}}
                                                     </span>
                                                 </p>
                                             </div>                                           
@@ -275,7 +275,7 @@
                                         </div>
                                         <div class="right clearfix">
                                             <div class="left">
-                                                <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
+                                                <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " >
                                                 {{'$'+ item.orderProfit}}
                                                 </p>                                        
                                             </div>     
@@ -598,7 +598,7 @@ export default {
     // },
     mounted(){
         if(this.infoArr.length == 0 ){
-                this.$refs.footer.style.marginTop = "7rem"
+                // this.$refs.footer.style.marginTop = "7rem"
         }
         // let myChart = echarts.init(document.getElementById('cycle'));
         // myChart.setOption({
@@ -1071,9 +1071,11 @@ export default {
                         }
                         .bulecolor{
                             color: #007aff;
+                            line-height:.6rem
                         }
                         .redcolor{
                             color: #fe0000;
+                            line-height:.6rem
                         }
                         p:nth-of-type(2){
                             span{

@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Header 部分 -->
-        <div :id="headerOnOff ? headerOn : headerOff" class="hahaa">
+        <div :id="headerOnOff ? headerOn : headerOff">
             <!-- 账号名称 -->
             <div class="head-left">
                 <div>
@@ -15,7 +15,7 @@
                         <!-- <span @click="toPersonInfo"> {{info.name}}</span> -->
                         <span > {{info.name}}</span>
                     </dt>
-                    <dd>
+                    <dd style="text-align:left">
                         <span v-if="info.meeber==1">认证会员</span>
                         <span v-if="info.meeber==2">VIP会员</span>
                         <span v-if="info.meeber==0"> 非会员</span>
@@ -25,9 +25,31 @@
             </div>
             <!-- 会员设置，邀请好友 -->
             <div class="head-right">
-                <img :src="invitImgSrc" alt="" style="visibility:hidden">
-                <img :src="setImgSrc" alt="" style="visibility:hidden">
-                <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" @click="toauthentication">
+                <dl>
+                    <dt>
+                        <img :src="invitImgSrc" alt="" style="visibility:hidden">
+                    </dt>
+                    
+                </dl>
+                <dl>
+                    <dt>
+                        <img :src="setImgSrc" alt="" style="visibility:hidden">
+                    </dt>
+                    
+                </dl>
+                <dl>
+                    <dt @click="toVip">
+                        <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" >
+                    </dt>
+                    <dd @click="toVip">
+                        <span v-if="!acth">充值</span>
+                        <span style="color:#ffc484" v-if="acth">续费</span>
+                    </dd>
+                </dl>
+                
+               
+                
+                
             </div>
         </div>
         <!-- Title部分，收益总览 -->
@@ -446,10 +468,10 @@ export default {
             MessageBox('提示', '建设中');
         },
        
-        toauthentication(){
-            if(this.acth == false){
-                 window.location.href=`authentication.html`;
-            } 
+        toVip(){
+           
+                window.location.href=`vip.html`;
+            
         },
         //账号列表内容展开收缩控制
         conboxOpenClose(ind){
