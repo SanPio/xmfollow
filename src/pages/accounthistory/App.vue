@@ -7,13 +7,13 @@
                 <p>总收益</p>
             </div>
             <div class="center fl">
-                <div class="center-icon" v-if="infos.optionidnum">{{infos.optionidnum | numPuls }}人</div>
-                <div class="center-icon" v-if="!infos.optionidnum">0人</div>
+                <div class="center-icon" v-if="info.optionidnum">{{info.optionidnum | numPuls }}人</div>
+                <div class="center-icon" v-if="!info.optionidnum">0人</div>
                 <p>正在跟随</p>
             </div>
             <div class="right fl">
-                <div class="right-icon" v-if="infos.nowprofits">${{infos.nowprofits | numPuls }}</div>
-                <div class="right-icon" v-if="!infos.nowprofits">0</div>
+                <div class="right-icon" v-if="info.nowprofits">${{info.nowprofits | numPuls }}</div>
+                <div class="right-icon" v-if="!info.nowprofits">0</div>
                 <p>浮动收益</p>
             </div>
             
@@ -21,7 +21,7 @@
         <ul>                                                                                   
             <li><a>累计交易笔数</a><span v-if="info">{{info.orderscount | numPuls }}笔</span><span v-else>0笔</span></li>
             <li><a>累计交易手数</a><span v-if="info">{{info.orderslots | numPuls }}标准手</span><span v-else>0标准手</span></li>
-            <li><a>交易时间</a><span>{{re.weeks | numPuls }}周</span></li>
+            <li><a>交易时间</a><span>{{info.weeks | numPuls }}周</span></li>
         </ul>
         <button @click="tofollow(ind)">查看跟随</button>
     </div>
@@ -35,7 +35,7 @@ export default {
             accountid:'',
             userid:'',
             info:[],
-            infos:[],
+            // infos:[],
             re:[]
             
         }
@@ -68,9 +68,9 @@ export default {
             }
         }).then((res)=>{
             console.log(res)
-            this.re = res.data.data
-            this.info = res.data.data.accountHistoryReponse
-            this.infos = res.data.data.userOrderDetailsReponse
+            this.info = res.data.data
+            // this.info = res.data.data.accountHistoryReponse
+            // this.infos = res.data.data.userOrderDetailsReponse
             
         }).catch((err)=>{
             console.log(err)

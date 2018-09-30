@@ -76,6 +76,9 @@
                 <button class="flow-set" v-if="item.memberorder==1 && item.star<4 && item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
                 <button class="flow-btn" v-if="item.memberorder==2 && item.star<=4 && !item.followed" @click.stop="followMe(ind)">跟随</button>                
                 <button class="flow-set" v-if="item.memberorder==2 && item.star<=4 && item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button>
+                <!-- 五星信号源 memberorder = 3 -->
+                <!-- <button class="flow-btn" v-if="item.memberorder==3 && item.star<=5 && !item.followed" @click.stop="followMe(ind)">跟随</button>                
+                <button class="flow-set" v-if="item.memberorder==3 && item.star<=5 && item.followed" @click.stop="toFollowSetting(ind)">跟随设置</button> -->
                 <!-- <button class="flow-btn" v-else  @click.stop="followMe(ind)">跟随</button> -->
               </div>
             </div>
@@ -188,9 +191,9 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      urlTitle:"http://192.168.0.197:8080/",//丹峰
-      // urlTitle:"http://192.168.0.100:8080/",  //大潘
-      // urlTitle:"http://www.0539maj.com/app/",//域名
+      // urlTitle:"http://192.168.0.197:8080/",//丹峰
+      // urlTitle:"http://192.168.0.103:8080/",  //大潘
+      urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://132.232.44.112:80/app/", //服务器
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 

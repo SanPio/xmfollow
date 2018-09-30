@@ -1,5 +1,6 @@
 <template>
     <div id="box">
+        <!-- <img :src="updataimg"> -->
         <mt-navbar v-model="selected" :fixed='fixed'>
             <mt-tab-item id="info">订单信息</mt-tab-item>
             <mt-tab-item id="history">历史记录</mt-tab-item>
@@ -14,9 +15,9 @@
                     :autoFill="false" ref="loadmores">
                         <div ref="mybox">
                             <!-- 订单信息汇总条-->
-                            <div class="gather">
-                                <p class="fl">跟随总获利<span class="fr">$153.9k</span></p>
-                                <p class="fl">可用保证金<span class="fr">$50244</span></p>
+                            <div class="gather" >
+                                <p class="fl">浮动总收益<span class="fr">${{ totalProfit | numAll }}</span></p>
+                                <p class="fl">可用保证金<span class="fr">${{ freeMargin | numAll }}</span></p>
                             </div>
 
                             <div class="infolist" v-for="(item, ind) in infoArr" :key="ind">
@@ -69,7 +70,7 @@
                                         <div class="left">
                             
                                             <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " v-if="item.type == 0 || item.type == 1 " style="line-height:.66rem">
-                                                {{'$'+ item.profit}}   
+                                                ${{ item.profit }}   
                                             </p>
                                           
                                             <p class="gua" v-if="item.type == 2 || item.type == 3 || item.type == 4 || item.type == 5 ">
@@ -141,9 +142,6 @@
                                             <span style="margin-left: .24rem;color: #666;font-weight: bold;">
                                                 {{ item.orderOpenTime }}
                                             </span>
-                                            <!-- <span style="margin-left:0px">
-                                                {{ item.  }}12:08:36
-                                            </span> -->
                                         </li>
                                        
                                     </ul>
@@ -168,7 +166,7 @@
                         <div ref="myboxes">
                             <!-- 历史记录汇总条-->
                             <div class="hisgather">
-                                <p class="fl">累计总获利<span class="fr">$111k</span></p>
+                                <p class="fl">累计总收益<span class="fr">${{ lishiTotalProfit | numAll }}</span></p>
                             </div>
                             <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
                                 
@@ -220,7 +218,7 @@
                                     <div class="right clearfix">
                                         <div class="left">
                                             <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
-                                               {{'$'+ item.profit}}
+                                               ${{item.profit}}
                                             </p>
                                             
                                       
@@ -421,6 +419,9 @@ export default {
     name: 'App', 
     data(){
         return {
+            
+            // updataimg:require('./assets/update.jpg'),
+
             //Header信号源信息  
             traderImg: require('./assets/img2.jpg'),
             plusImg: require('./assets/plus@2x.png'),
@@ -443,6 +444,10 @@ export default {
             pageSize: 10,
             infoArr : [],
             infoBotShow:[],
+            // 汇总条
+            totalProfit : 0,    //浮动总收益
+            lishiTotalProfit:0,  //历史记录中累计总收益
+            freeMargin:0, //可用保证金
             //历史记录页
             historyArr : [],  
             popInfo: { },      
@@ -479,13 +484,21 @@ export default {
             }   
         }).then((res) => { 
             console.log(res)
+            this.freeMargin = res.data.data.freeMargin
+            this.freeMargin = parseFloat(this.freeMargin).toFixed(2)
             if(res.data.data.zongshu <= 10){
                 this.infoAllLoaded = true;
             }
             this.infoArr = res.data.data.orderRespDtoList;
-            for (let i = 0; i < this.infoArr.length; i ++) {
+            this.totalProfit = res.data.data.totalProfit
+            for (let i = 0; i < this.infoArr.length; i++) {
                 this.infoBotShow.push(false);
+                
+                // console.log(typeof(this.infoArr[i].profit))
             }
+            this.totalProfit = parseFloat(this.totalProfit).toFixed(2)
+            console.log(this.totalProfit)
+            // console.log("this.totalProfit ==" + this.totalProfit)
         }).catch((err) => {
             console.log(err)
         })
@@ -500,14 +513,19 @@ export default {
                 ud: 1    
             }   
         }).then((res) => { 
-            // console.log(res)
+            console.log(res)
+            this.lishiTotalProfit = res.data.data.lishiTotalProfit
             if(res.data.data.zongshu <= 10){
                 this.hisAllLoaded = true;
             }
             this.historyArr = res.data.data.orderRespDtoList;
             for (let i = 0; i < this.historyArr.length; i ++) {
                 this.hisBotShow.push(false);
+                
+                
             }
+            this.lishiTotalProfit = parseFloat(this.lishiTotalProfit).toFixed(2)
+            console.log(this.lishiTotalProfit)
         }).catch((err) => {
             console.log(err)
         })
@@ -539,7 +557,20 @@ export default {
             // }
         }
     },
+    filters: {
+        numAll(val){
+            if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
+                return parseInt( val / 10000 ) / 100 + 'M'
+            }else if ( parseFloat( val ) >=1000 || parseFloat( val ) <= -1000 ){
+                return parseInt( val / 10 ) / 100 + 'K'
+            }else{
+                return val
+            }    
+        }
+    },
     methods: {
+        
+
          //一键平仓(平掉所有)
         allClose(){
             MessageBox({
@@ -680,6 +711,8 @@ export default {
             }   
         }).then((res) => { 
                 console.log(res)
+                this.totalProfit = res.data.data.totalProfit
+                this.totalProfit = parseFloat(this.totalProfit).toFixed(2)
                 this.$refs.loadmores.onBottomLoaded();
                 if(res.data.data.zongshu <= this.infoPageNum * 10){
                     this.infoAllLoaded = true;
@@ -1105,6 +1138,8 @@ export default {
             }   
         }).then((res) => { 
             console.log(res)
+            this.lishiTotalProfit = res.data.data.lishiTotalProfit
+            this.lishiTotalProfit = parseFloat(this.lishiTotalProfit).toFixed(2)
             this.$refs.loadmore.onBottomLoaded();
             if(res.data.data.zongshu <= this.hisPagNum * 10){
                 this.hisAllLoaded = true;

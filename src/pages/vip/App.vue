@@ -43,7 +43,7 @@
                          满 {{ item.fullSubtractionMin }} 减  {{ item.fullSubtractionValue }} 
                     </span>
                     <br/>
-                    <span style="font-size:.1rem;line-height:.1rem" v-if="item.fullSubtractionEndTime">
+                    <span style="font-size:.18rem;line-height:.18rem" v-if="item.fullSubtractionEndTime">
                          {{'（有效期'+ item.fullSubtractionEndTime+'）'}}
                     </span>
                    

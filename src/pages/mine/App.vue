@@ -425,9 +425,6 @@ export default {
 
 
 
-
-
-
             if(sessionStorage.getItem('iss') == 1){
                 localStorage.setItem('accountId', this.issAccInfo[0].accountid);
                 this.accountid = this.issAccInfo[0].accountid
