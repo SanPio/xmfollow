@@ -13,14 +13,8 @@
                 </button>
                
             </p>
-            <p class="card" >
-                <!-- <button :class="{'blue':disOnoff}" :disabled="disDisabled" @click="chooseDis" v-if="!disDisabled">
-                    {{ discount }} 折
-                </button>
-                
-                <button :class="{'blue':reduceOnoff}" :disabled="redDisabled" @click="chooseRed" v-if="!redDisabled">
-                    满 {{ full }}  减  {{ reduce }}
-                </button> -->
+            <p class="card" v-if="eightfive || eight || sevenfive">
+               
                 
                 <button v-if="eightfive" :class="{'blue':dischoose == 1}" @click="carchoose(1)">
                     8.5 折
@@ -30,14 +24,11 @@
                 </button>
                 <button v-if="sevenfive" :class="{'blue':dischoose == 3}"  @click="carchoose(3)">
                     7.5 折
-                </button>
-                <!-- <button v-if="fullreduction" :disabled="redDisabled" :class="{'blue':dischoose == 4}"  @click="carchoose(4)">
-                    满 {{ full }} 减  {{ reduce }}
-                </button> -->
-                
+                </button>   
                 
             </p>
             <div style="text-align:center;border-bottom:1px solid #c9c9c9" v-if="fullcard.length">
+                
                <button v-for="(item, index) in fullcard" :key="index"  :disabled="fullCardShow[index]" :class="{'blue':fullChoose == index}" style="margin:.2rem .1rem"  @click="carchoose(4,index)" >
                     <span style="">
                          满 {{ item.fullSubtractionMin }} 减  {{ item.fullSubtractionValue }} 
@@ -176,6 +167,15 @@ export default {
                  
                 }
 
+
+
+                for(let i = 0 ; i < this.fullcard.length; i ++){
+                    this.$set(this.fullCardShow,i,true)
+                    if (this.money >= Number(this.fullcard[i].fullSubtractionMin) ){
+                        this.$set(this.fullCardShow,i,false)
+                        
+                    }  
+                }
         
             
         }).catch((err) => {
@@ -186,6 +186,7 @@ export default {
 
 
     },
+
     watch: {
         money(val){
 
@@ -194,8 +195,7 @@ export default {
                 if (val >= Number(this.fullcard[i].fullSubtractionMin) ){
                     this.$set(this.fullCardShow,i,false)
                     
-                }
-                
+                }  
             }
         }
     },

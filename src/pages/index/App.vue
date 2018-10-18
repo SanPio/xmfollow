@@ -112,6 +112,7 @@
                 </dl>
                 <dl>
                   <dt> 跟随人数 </dt>
+                  <dd v-if="item.optionId == 9 "> {{item.followerNumber}} </dd>
                   <dd v-if="item.optionId == 8 "> {{item.followerNumber + 100}} </dd>
                   <dd v-if="item.optionId == 1 "> {{item.followerNumber + 70}} </dd>
                   <dd v-if="item.optionId == 2 "> {{item.followerNumber + 10}} </dd>
@@ -193,8 +194,8 @@ export default {
       len: 10,
       // urlTitle:"http://192.168.0.197:8080/",//丹峰
       // urlTitle:"http://192.168.0.103:8080/",  //大潘
-      urlTitle:"http://www.myjrq.cn/app/",//域名
-      // urlTitle:"http://132.232.44.112:80/app/", //服务器
+      // urlTitle:"http://www.myjrq.cn/app/",//域名
+      urlTitle:"http://132.232.44.112:80/app/", //服务器
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 
       allLoaded: false,
@@ -216,8 +217,7 @@ export default {
 
     this.accountId = localStorage.getItem('accountId');
     this.userId = localStorage.getItem('userId');
-    console.log(this.accountId)
-    console.log(this.userId)
+
     
       //储存域名端口
       localStorage.setItem('urlTitle', this.urlTitle);
