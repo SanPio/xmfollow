@@ -112,7 +112,7 @@
                 </dl>
                 <dl>
                   <dt> 跟随人数 </dt>
-                  <dd v-if="item.optionId == 9 "> {{item.followerNumber}} </dd>
+                  <!-- <dd v-if="item.optionId == 9 "> {{item.followerNumber}} </dd> -->
                   <dd v-if="item.optionId == 8 "> {{item.followerNumber + 100}} </dd>
                   <dd v-if="item.optionId == 1 "> {{item.followerNumber + 70}} </dd>
                   <dd v-if="item.optionId == 2 "> {{item.followerNumber + 10}} </dd>
@@ -120,6 +120,7 @@
                   <dd v-if="item.optionId == 5 "> {{item.followerNumber + 67}} </dd>
                   <dd v-if="item.optionId == 6 "> {{item.followerNumber + 20}} </dd>
                   <dd v-if="item.optionId == 7 "> {{item.followerNumber + 31}} </dd>
+                  <dd v-if="item.optionId != 1 && item.optionId != 2 && item.optionId != 3&& item.optionId != 5 && item.optionId != 6 && item.optionId != 7&& item.optionId != 8 " >{{ item.followerNumber }} </dd>
                 </dl>
               </div>
             </div>
@@ -194,10 +195,9 @@ export default {
       len: 10,
       // urlTitle:"http://192.168.0.197:8080/",//丹峰
       // urlTitle:"http://192.168.0.103:8080/",  //大潘
-      // urlTitle:"http://www.myjrq.cn/app/",//域名
-      urlTitle:"http://132.232.44.112:80/app/", //服务器
+      urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
-      // urlTitle:"http://www.myjrq.cn:8080/app/",//测试公众号 
+      // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
       allLoaded: false,
       setFollowType:8,
       // 购买弹框
