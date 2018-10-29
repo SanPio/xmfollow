@@ -465,6 +465,7 @@ export default {
                 optionId:this.optionId
             }   
         }).then((res) => { 
+
             this.historyArr = res.data.data
             if(res.data.code<= 10){
                 this.infoAllLoaded = true;
@@ -480,6 +481,7 @@ export default {
         this.$http.post(this.urlTitle+'wx/index/'+ this.optionId +'/info',{    
          
         }).then((res) => {
+            console.log(res)
             this.info = res.data.data;
             //主要信息
             this.mianInfo.push(res.data.data.experience);

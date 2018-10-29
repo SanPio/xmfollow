@@ -104,11 +104,11 @@
                 </dl>
                 <dl class="balance">
                   <dt> 余额 </dt>
-                  <dd> {{item.money | plus}} </dd>
+                  <dd> ${{item.money | plus}} </dd>
                 </dl>
                 <dl>
                   <dt> 起始资金 </dt>
-                  <dd> {{item.initFunds | plus}} </dd>
+                  <dd> ${{ item.initFunds | plus}} </dd>
                 </dl>
                 <dl>
                   <dt> 跟随人数 </dt>
@@ -194,7 +194,7 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.0.197:8080/",//丹峰
-      // urlTitle:"http://192.168.0.103:8080/",  //大潘
+      // urlTitle:"http://192.168.0.100:8080/",  //大潘
       urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
