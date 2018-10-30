@@ -6,8 +6,8 @@
             <div class="head-left">
                 <div>
                     <!-- 点击编辑个人信息功能1.0不上线 -->
-                    <!-- <img :src="userImgSrc" alt="" @click="toPersonInfo"> -->
-                    <img :src="userImgSrc" alt="" >
+                    <img :src="userImgSrc" alt="" @click="toPersonInfo">
+                    <!-- <img :src="userImgSrc" alt="" > -->
                 </div>
                 <dl>
                     <dt style="text-align: left;"> 

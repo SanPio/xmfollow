@@ -7,7 +7,8 @@ import axios from 'axios'
 import { DatetimePicker } from 'mint-ui'
 import { Actionsheet } from 'mint-ui'
 import { Toast } from 'mint-ui'
-
+import qs from 'qs'
+Vue.prototype.$qs = qs
 Vue.component(Actionsheet.name, Actionsheet);
 Vue.component(DatetimePicker.name, DatetimePicker)
 Vue.prototype.$http = axios
