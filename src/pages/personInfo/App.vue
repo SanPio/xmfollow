@@ -220,8 +220,18 @@ export default {
             }
         }
     },
-    mounted(){
 
+    watch: {
+        brief( val ){
+            if ( val.length > 15 ){
+                this.brief = val.substr( 0, 12 )
+            }
+        },
+        nickName( val ){
+            if ( val.length > 15 ){
+                this.nickName = val.substr( 0, 12 )
+            }
+        },
     },
     methods: {
 
