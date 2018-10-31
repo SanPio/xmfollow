@@ -2,11 +2,11 @@
     <div id="box">
         <header class="clearfix">
             <p class="left">
-                <img :src="userImgSrc" >
-                <span> {{ invitCode }} </span>
+                <img :src="userImgSrc?userImgSrc:userDefImg" >
+                <span> 邀请码： {{ invitCode }}&nbsp;</span>
             </p>
             <p class="right">
-                <button>保存</button>
+                <button @click="preservation">保存</button>
                 
             </p>
         </header>
@@ -48,13 +48,13 @@
             <li class="clearfix">
                 <p class="left">
                     <span>
-                        最高收益
+                        最高收益/单
                     </span>
                 </p>
                 <p class="right">
                    <span>
                        <!-- filter  -->
-                      ${{ 1000 }}
+                      ${{ maxProfit }}
                    </span>
                 </p>
             </li>
@@ -66,8 +66,8 @@
                         性别
                     </span>
                 </p>
-                <p class="right">
-                    <span :class="{'grayColor':sex==''}" @click="sheetVisible = !sheetVisible">
+                <p class="right" @click="sheetVisible = !sheetVisible" style="width:5rem;text-align:right">
+                    <span :class="{'grayColor':sex==''}" >
                         {{ sex }}
                     </span>
                 </p>
@@ -78,8 +78,8 @@
                         生日
                     </span>
                 </p>
-                <p class="right">
-                    <span  :class="{'grayColor':birthday==''}" @click="openPicker">
+                <p class="right" @click="openPicker" style="width:5rem;text-align:right">
+                    <span  :class="{'grayColor':birthday==''}" >
                         {{ birthday }}
                     </span>
                 </p>
@@ -92,7 +92,7 @@
                 </p>
                 <p class="right">
                     <span>
-                        无
+                        {{ referrer }}
                     </span>
                 </p>
             </li>
@@ -104,11 +104,7 @@
         :actions="actions"
         v-model="sheetVisible">
         </mt-actionsheet>
-        
-<!-- birthdayYear : 1990,
-            birthdayYear : 1,
-            birthdayMonth : 1, -->
-        <!-- 生日选择组件 -->
+
         <mt-datetime-picker
             ref="picker"
             type="date"
@@ -124,6 +120,7 @@
 </template>
 <script>
 import { Toast } from 'mint-ui'
+import { MessageBox } from 'mint-ui'
 export default {
     name: 'App', 
     data(){
@@ -131,10 +128,11 @@ export default {
             userId: '',
             urlTitle: '',
             riImg : require('./assets/Personalinformation-icon@2x.png'),
+            userDefImg : require('./assets/img2.jpg'),
             userImgSrc: '',
             invitCode : '',
-           
-            nickName :'信息员001号',
+            maxProfit: '',
+            nickName :'',
             phone :'',
             brief :'',
             sheetVisible:false,
@@ -146,20 +144,15 @@ export default {
                 {
                     'name' : "男",
                     'method' : this.showMan
-                
                 },
                 {
                     'name' : "女",
                     'method' : this.showWoman
-                
                 },
             ],
-            sex : "男",
-            birthday:'1990-05-06',
-        
-            recommendMe : '无',
-      
-          
+            sex : "",
+            birthday:'',     
+            referrer : '无',
             birthdayYear : 1990,
             birthdayYear : 1,
             birthdayMonth : 1,
@@ -183,6 +176,8 @@ export default {
             console.log( res.data.data )
             let data = res.data.data;       
             this.userImgSrc =  data.wxHeadImg // 头像
+            this.nickName = data.wxNickname // 昵称
+            this.maxProfit = data.maxProfit // 最高收益
             this.invitCode = data.invitationCode // 邀请码
             this.phone = data.phone // 手机号
             if( data.introduce ){// 个人简介
@@ -190,8 +185,9 @@ export default {
             }else{
                 this.brief = '我自潇洒任鱼来'
             }
-            
-             
+            if( data.inviterName ){// 引荐人
+                this.referrer = data.inviterName 
+            }
             if( data.sex ) { // 性别
                 this.sex = data.sex
             }else{
@@ -202,11 +198,7 @@ export default {
             }else{
                 this.birthday = '1980-01-01'
             }
-            if( data.constellation ){
-                this.constellation = data.constellation
-            }else{
-                this.constellation = '白羊座'
-            }
+            
         }).catch( req => {
             console.log( req )
 
@@ -234,7 +226,12 @@ export default {
         },
     },
     methods: {
-
+        showMan(){
+            this.sex ="男";
+        },
+        showWoman(){
+            this.sex ="女";
+        },
         //选择生日
         openPicker() {
             this.$refs.picker.open();
@@ -247,14 +244,40 @@ export default {
             
 
         },
-      
-        
+        // 保存
+        preservation(){
+            let postData = this.$qs.stringify({
+                wx_nickname: this.nickName, 
+                introduce: this.brief, 
+                sex: this.sex, 
+                birthday: this.birthday, 
+                userId : this.userId,        
+            });
+            this.$http({
+                method: 'post',
+                url: this.urlTitle +'/wx/member/updateUserInfo',
+                data:postData
+            }).then( res => {
+
+                let msg = res.data.message
+                if( res.data.code ==1 ){ 
+                    MessageBox.alert(msg).then(action => {
+                        window.location.href="mine.html";
+                    });
+                }else{
+                    MessageBox('提示', msg);
+                }         
+            }).catch( req => {
+                console.log( req )
+            })
+        }
     }
 }
 </script>
 <style lang="scss" scoped>
 
     #box{
+        background-color: #f9f9f9;
         header{
             padding: 0 .22rem;
             height: 1.2rem;
@@ -265,7 +288,7 @@ export default {
                 border: 1px solid #d7d7d7;
                 border-radius: 50%;
                 vertical-align: middle;
-                line-height: 1.2rem;
+                margin: .15rem 0;
             }
             span{
                 margin-left: .2rem;
@@ -286,7 +309,7 @@ export default {
         }
         .top,.bot{
             margin-top: .2rem;
-            
+            background-color: #fff;
             li{
                 padding: 0 .22rem;
                 height: .86rem;
@@ -307,9 +330,6 @@ export default {
             .right{
                 color: #999;
             }
-        }
-        .bot{
-            margin-top: .4rem;
         }
        
     }
