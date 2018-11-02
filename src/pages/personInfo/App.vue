@@ -98,7 +98,9 @@
             </li>
         </ul>
 
-        
+        <div>
+            <button @click="toCard">到卡包 </button>
+        </div>
         <!-- 性别选择控件 -->
         <mt-actionsheet
         :actions="actions"
@@ -116,6 +118,7 @@
             :endDate="endDate"
             @confirm="handleConfirm">
         </mt-datetime-picker>
+        
     </div>
 </template>
 <script>
@@ -226,6 +229,10 @@ export default {
         },
     },
     methods: {
+        // 到卡包页面
+        toCard() {
+            window.location.href="cardBag.html";
+        },
         showMan(){
             this.sex ="男";
         },
