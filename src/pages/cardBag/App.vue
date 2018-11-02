@@ -10,7 +10,7 @@
             <mt-tab-container-item id="not_use">
                 <div style="height: .9rem;background:#fff"></div>
                 <div class="header">
-                    优惠券不可叠加，每次只能使用一张。。。。。
+                    优惠券不可叠加，每次只能使用一张
                 </div>
                 <div class="contant">
                     <p class="nav">
