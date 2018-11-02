@@ -194,7 +194,7 @@ export default {
       accountId:'',
       len: 10,
       urlTitle:"http://192.168.1.12:8080/",//丹峰
-      // urlTitle:"http://192.168.0.100:8080/",  //大潘
+      // urlTitle:"http://192.168.1.19:8080/",  //大潘
       // urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 

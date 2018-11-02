@@ -4,13 +4,19 @@ import Vue from 'vue'
 import App from './App'
 // import router from './router'
 import axios from 'axios'
-import { DatetimePicker } from 'mint-ui'
-import { Actionsheet } from 'mint-ui'
-import { Toast } from 'mint-ui'
+import { Navbar, TabItem } from 'mint-ui'
+import { TabContainer, TabContainerItem } from 'mint-ui'
+import { Loadmore } from 'mint-ui'
+import { MessageBox } from 'mint-ui';
 import qs from 'qs'
 Vue.prototype.$qs = qs
-Vue.component(Actionsheet.name, Actionsheet);
-Vue.component(DatetimePicker.name, DatetimePicker)
+Vue.component(Loadmore.name, Loadmore)
+Vue.component(TabContainer.name, TabContainer)
+Vue.component(TabContainerItem.name, TabContainerItem)
+
+Vue.component(Navbar.name, Navbar)
+Vue.component(TabItem.name, TabItem)
+
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 

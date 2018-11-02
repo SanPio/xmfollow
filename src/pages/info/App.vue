@@ -232,7 +232,7 @@
                                 <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
                                     <div class="infotop clearfix" @click="hisBotOnOff(ind)">
                                         <div class="left">
-                                            <p>
+                                            <p v-if="item.type != 6">
                                                 <span>
                                                     {{ item.symbol }}
                                                 </span>
@@ -258,7 +258,7 @@
                                                     卖
                                                 </button >
                                             </p>
-                                            <p>
+                                            <p v-if="item.type != 6">
                                                 <span>
                                                     {{ item.symbolTypeString }}
                                                 </span>
@@ -271,6 +271,19 @@
                                                 <span>
                                                     {{ item.closePrice }}
                                                 </span> 
+                                            </p>
+                                            <p v-if="item.type == 6">
+                                                <span style="font-size:.28rem;line-height:.28rem;color:#000;font-weight:bold;">
+                                                    资金变动
+                                                </span>
+                                            </p>
+                                            <p v-if="item.type == 6">
+                                                <span v-if="item.orderProfit < 0">
+                                                    出金
+                                                </span>
+                                                <span v-if="item.orderProfit >= 0">
+                                                    入金
+                                                </span>
                                             </p>
                                         </div>
                                         <div class="right clearfix">

@@ -2,20 +2,20 @@
     <div>
         <div id="header">
             <div class="head-left fl">
-                <div class="fl">
+                <div class="fl" @click="toPersonInfo">
                     <div class="img"><img :src="userImgSrc" alt="" v-if="userImgSrc"></div>
                     <img src="./assets/img2.jpg" alt="" v-if="!userImgSrc">
                 </div>
-                <div v-if="uservip" class="uservip">
+                <div v-if="uservip" class="uservip" @click="toPersonInfo">
                     <div class="img"><img src="./assets/title@2x.png" alt=""></div>                   
                     <p>已认证</p>
                 </div>
-                <div v-if="authentication" class="uservip">
+                <div v-if="authentication" class="uservip" @click="toPersonInfo">
                     <div class="img"></div>  
                     <p>已认证</p>
                 </div>
                 <dl class="fl">
-                    <dt>{{info.nickName}}</dt>
+                    <dt @click="toPersonInfo">{{info.nickName}}</dt>
                     <dd>邀请码 : {{info.invitCode}}</dd>
                 </dl>
             </div>
@@ -58,9 +58,9 @@
                 </dl>
                 <dl>
                     <dt>
-                        <img :src="cardImgSrc" alt="">
+                        <img :src="cardImgSrc" alt="" @click="toCardBag">
                     </dt>
-                    <dd>我的卡包</dd>                
+                    <dd @click="toCardBag">我的卡包</dd>                
                 </dl>
             </div>
         </div>
@@ -327,6 +327,13 @@ export default {
             this.isActive=index;
             
         },
+        // 跳转到个人信息页
+        toPersonInfo(){
+            window.location.href=`personInfo.html`
+        },
+        toCardBag(){
+            window.location.href=`cardBag.html`
+        },
         // 跳转到首页
         toIndex(){
             window.location.href=`index.html`;
@@ -341,7 +348,7 @@ export default {
         },
         // 跳转到跟随管理
         toFollowmangeIs(ind){
-            window.location.href=`followmange.html?accountId=${this.accInfo}`
+            window.location.href=`followmange.html`
         },
         // 会员中心续费
         toBuyVip(){
