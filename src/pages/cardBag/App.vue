@@ -3,7 +3,7 @@
      
         <mt-navbar v-model="selected" :fixed='fixed'>
             <mt-tab-item id="not_use">未使用（{{ notUse }}）</mt-tab-item>
-            <mt-tab-item id="already_use">历史记录（{{ alreadyUse }}）</mt-tab-item>
+            <mt-tab-item id="already_use">已使用（{{ alreadyUse }}）</mt-tab-item>
         </mt-navbar>
          <mt-tab-container v-model="selected">
              <!-- 未使用 -->
@@ -24,7 +24,7 @@
                             <div class="card">
                                 <img :src="disWill" alt="">
                                 <p class="card_left">
-                                    <span class="discount_num"> 
+                                    <span class="discount_num" id="aaa"> 
                                         8.5
                                     </span>
                                     <span class="discount_text"> 
@@ -147,7 +147,7 @@
                                     </p>
                                     <p class="use_card">
                                         <button>
-                                            去使用
+                                            很遗憾
                                         </button>
                                     </p>
                                 </div>
@@ -176,7 +176,7 @@
                                     </p>
                                     <p class="full_use_card">
                                         <button>
-                                            去使用
+                                            很遗憾
                                         </button>
                                     </p>
                                 </div>
@@ -341,7 +341,7 @@ export default {
 <style lang="scss" scoped>
     #box{
         font-size: .26rem;
-        background-color: #f9f9f9;
+        // background-color: #f9f9f9;
         .header{
             font-size: .26rem;
             color: #666;
@@ -390,10 +390,11 @@ export default {
                         top: .56rem;
                         left: .56rem;
                         .discount_num{
-                            font-size: .96rem;
-                            line-height: .96rem;
+                            font-size: .88rem;
+                            line-height: .88rem;
                             color: #fff;
                             font-weight: 100;
+                            font-family: 'ping';
                         }
                         .discount_text{
                             font-size: .46rem;
