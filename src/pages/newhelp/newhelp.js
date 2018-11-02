@@ -11,9 +11,6 @@ Vue.prototype.$qs = qs
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-import touch from 'vue-directive-touch';
-Vue.use(touch);
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
