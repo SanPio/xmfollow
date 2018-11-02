@@ -1,312 +1,223 @@
 <template>
     <div>
-        <!-- Header 部分 -->
-        <div :id="headerOnOff ? headerOn : headerOff">
-            <!-- 账号名称 -->
-            <div class="head-left">
-                <div>
-                    <!-- 点击编辑个人信息功能1.0不上线 -->
-                    <img :src="userImgSrc" alt="" @click="toPersonInfo">
-                    <!-- <img :src="userImgSrc" alt="" > -->
+        <div id="header">
+            <div class="head-left fl">
+                <div class="fl" @click="toPersonInfo">
+                    <div class="img"><img :src="userImgSrc" alt="" v-if="userImgSrc"></div>
+                    <img src="./assets/img2.jpg" alt="" v-if="!userImgSrc">
                 </div>
-                <dl>
-                    <dt style="text-align: left;"> 
-                        <!-- 点击编辑个人信息功能1.0不上线 -->
-                        <!-- <span @click="toPersonInfo"> {{info.name}}</span> -->
-                        <span > {{info.name}}</span>
-                    </dt>
-                    <dd style="text-align:left">
-                        <span v-if="info.meeber==1">认证会员</span>
-                        <span v-if="info.meeber==2">VIP会员</span>
-                        <span v-if="info.meeber==0"> 非会员</span>
-                        <span v-if="info.meeber==1 || info.meeber==2">（剩余{{day}}天）</span>
-                    </dd>
+                <div v-if="uservip" class="uservip" @click="toPersonInfo">
+                    <div class="img"><img src="./assets/title@2x.png" alt=""></div>                   
+                    <p>已认证</p>
+                </div>
+                <div v-if="authentication" class="uservip" @click="toPersonInfo">
+                    <div class="img"></div>  
+                    <p>已认证</p>
+                </div>
+                <dl class="fl">
+                    <dt @click="toPersonInfo">{{info.nickName}}</dt>
+                    <dd>邀请码 : {{info.invitCode}}</dd>
                 </dl>
             </div>
-            <!-- 会员设置，邀请好友 -->
-            <div class="head-right">
+            <div class="head-right fr">
+                <div class="fl">做任务领积分</div>
+                <img src="./assets/zzz1@2x.png" alt="" class="fl">
+            </div>
+            <div class="info">
+                <dl>
+                    <dt>{{info.percentUser | numPuls}}</dt>
+                    <dd>收益率</dd>
+                </dl>
+                <dl>
+                    <dt>${{info.sumUserprofit | numPuls}}</dt>
+                    <dd>历史收益</dd>
+                </dl>
+                <dl>
+                    <dt>${{info.balance | numPuls}}</dt>
+                    <dd>当前余额</dd>
+                </dl>
+            </div>
+            <div class="title">
                 <dl>
                     <dt>
-                        <img :src="invitImgSrc" alt="" style="visibility:hidden">
+                        <img :src="numberImgSrc" alt="" @click="toAccount">
                     </dt>
-                    
+                    <dd @click="toAccount">账号管理</dd>
                 </dl>
                 <dl>
                     <dt>
-                        <img :src="setImgSrc" alt="" style="visibility:hidden">
+                        <img :src="orderImgSrc" alt="" @click="toOrder">
                     </dt>
-                    
+                    <dd @click="toOrder">订单管理</dd>
                 </dl>
                 <dl>
-                    <dt @click="toVip">
-                        <img :src="acth?memberImgSrcYellow:memberImgSrc " alt="" >
+                    <dt>
+                        <img :src="followImgSrc" alt="" @click="toFollowmangeIs">
                     </dt>
-                    <dd @click="toVip">
-                        <span v-if="!acth">充值</span>
-                        <span style="color:#ffc484" v-if="acth">续费</span>
-                    </dd>
+                    <dd  @click="toFollowmangeIs">跟随管理</dd>                
                 </dl>
-                
-               
-                
-                
+                <dl>
+                    <dt>
+                        <img :src="cardImgSrc" alt="" @click="toCardBag">
+                    </dt>
+                    <dd @click="toCardBag">我的卡包</dd>                
+                </dl>
             </div>
         </div>
-        <!-- Title部分，收益总览 -->
-        <div id="title" v-if="headerOnOff">
-            <dl v-for="(item,ind) in titleArr" :key="item">
-                <dt>{{item}}</dt>
-                <dd v-if="ind==0&&titleInfo.length" >{{ '$' +titleInfo[0]}}</dd>
-                <dd v-if="ind==1&&titleInfo.length"  >{{titleInfo[1]}}</dd>
-                <dd v-if="ind==2&&titleInfo.length"  >{{ '$' + titleInfo[2]}}</dd>
-            </dl>
-        </div>
-        <!--Center 跳转部分 -->
         <div id="center">
-            <dl >
-                <dt>
-                    <img :src="numberImgSrc" alt="" @click="toAccount">
-                </dt>
-                <dd @click="toAccount">账号管理</dd>
-            </dl>
-             <dl style="border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;">
-                <dt>
-                    <img :src="orderImgSrc" alt="" @click="toOrder">
-                </dt>
-                <dd @click="toOrder">订单管理</dd>
-            </dl>
-             <dl>
-                <dt>
-                    <img :src="followImgSrc" alt="" @click="toFollowmangeIs">
-                </dt>
-                <dd  @click="toFollowmangeIs">跟随管理</dd>
-                
-            </dl>
-        </div>
-        
-        <!-- Content各账号详细内容 -->
-        <ul id="content" v-if="contentShow" >
-            <li v-for="(item,ind) in accInfo" :key="ind" v-if="item.isSimulated!=2">
-                <!-- 账号标题 -->
-                <div class="con-tit"  @click="conboxOpenClose(ind)">
-                    <p class="con-tit-left"> 
-                   <span>{{ item.accountName}}</span>
-                    </p>
-                    <p class="con-tit-right">
-                        <img :src="accNumArr[ind] ? upSrc : downSrc" alt="">
-                    </p>
+            <!-- 我的特权 -->
+            <div class="privilege" v-if="privilege">
+                <div>
+                    <p class="privilegeLeft fl">我的特权</p>
+                    <p class="privilegeRight fr">特权明细>></p>
                 </div>
-                <!-- 详细内容 -->
-                <ul v-if="accNumArr[ind]" class="con-box">
-                    <!-- 账号资产 -->
-                    <li class="con-box-account">
-                        <p class="con-box-head" >账号资产</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>历史收益</dt>
-                                <dd>${{ item.bigDecimal | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>收益率</dt>
-                                <dd>{{ item.percent }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>当前余额</dt>
-                                <dd>${{ item.bigDecimalyu | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>已用保证金</dt>
-                                <dd>${{ item.margin | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>可用保证金</dt>
-                                <dd>${{ item.free_margin | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toHistory">账号历程&nbsp;>></dt>    
+                <ul>
+                    <li><img src="./assets/tequan.png" alt=""></li>
+                    <li><img src="./assets/tequan.png" alt=""></li>
+                    <li><img src="./assets/tequan.png" alt=""></li>
+                    <li><img src="./assets/tequan.png" alt=""></li>
+                </ul>
+            </div>
+            <!-- 会员中心 -->
+            <div class="memberCenter">
+                <div>
+                    <p class="fl">会员中心</p>
+                </div>
+                <div ref='remove'>
+                    <ul ref='btnImg' class="btn-move"  
+                        @touchstart='touchStart' 
+                        @touchmove='touchMove' 
+                        @touchend='touchEnd' 
+                        :style="slideEffect">
+                        <li>
+                            <div class="memberCenterTop" @click="toBuyVip">
+                                <p class="fr">续费>></p>
+                                <div class="date fl">
+                                    <span>{{info.vipOverDatetime}}</span>
+                                </div>
+                                <div class="fl">
+                                    <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>VIP会员</span></p>
+                                </div>
+                            </div>
+                            <div class="memberCenterBottom">
+                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                            </div>
+                        </li>
+                        <li v-if="authentication">
+                            <div class="memberCenterTop" @click="toBuyVip">
+                                <p class="fr">续费>></p>
+                                <div class="date fl">
+                                    <span>{{info.authenticationOverDatetime}}</span>
+                                </div>
+                                <div class="fl">
+                                    <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>V认证</span></p>
+                                </div>
+                            </div>
+                            <div class="memberCenterBottom">
+                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 福利 -->
+            <div class="welfare">
+                <div>
+                    <p class="fl">福利</p>
+                </div>
+                <!-- <mt-swipe :show-indicators="false" :auto="8000">
+                    <mt-swipe-item>
+                        <ul>
+                            <li @click="changeStyle(index)" v-for="(item,index) in list" :key="index" :class="{active:index==isActive}">
+                                <b>新</b>
+                                <p style="color:#666666;font-size:0.24rem;margin-top: 0.2rem;">{{item.title}}</p>
+                                <p style="color:#333333;font-size:0.3rem;">{{item.content}}</p>
+                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.48rem;">{{item.originalPrice | numPuls }}</span></P>
+                                <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.presentPrice | numPuls}}</span></P>
+                            </li>
+                        </ul>
+                    </mt-swipe-item>
+                </mt-swipe> -->
+                <!-- <mt-swipe :show-indicators="false" :auto="8000">
+                    <mt-swipe-item> -->
+                    <div class="btns" ref='removes'>
+                        <ul ref='btnImgs' class="btn-moves"  
+                        @touchstart='touchStarts' 
+                        @touchmove='touchMoves' 
+                        @touchend='touchEnds' 
+                        :style="slideEffects">
+                            <li @click="changeStyle(index)" v-for="(item,index) in list" :key="index" :class="{active:index==isActive}">
+                                <b v-if="index==0">新</b>
+                                <p style="color:#666666;font-size:0.24rem;margin-top: 0.2rem;">{{item.title}}</p>
+                                <p style="color:#333333;font-size:0.3rem;">{{item.content}}</p>
+                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.48rem;">{{item.originalPrice | numPuls }}</span></P>
+                                <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.presentPrice | numPuls}}</span></P>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- </mt-swipe-item>
+                </mt-swipe>                      -->
+                <button @click="toVipWelfare">立即获得</button>
+            </div>
+            <!-- 任务 -->
+            <div class="task" v-if="task">
+                <div>
+                    <p class="fl">任务</p>
+                </div>
+                <ul>
+                    <li>
+                        <div class="taskLeft fl">日常</div>
+                        <div class="taskCenter fl">
+                            <img src="./assets/1414@2x.png" alt="" class="fl">
+                            <dl class="fl">
+                                <dt>签到领积分</dt>
+                                <dd>积分+80</dd>
                             </dl>
                         </div>
+                        <div class="taskRight fr">去完成</div>
                     </li>
-                    <!-- 订单信息 -->
-                    <li class="con-box-order">
-                        <p class="con-box-head">订单信息</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>持仓单量</dt>
-                                <dd>{{ item.countOrderid }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>持仓手数</dt>
-                                <dd>{{ item.sumlots }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>持仓浮亏</dt>
-                                <dd>${{ item.sumprofitli | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>上周获利点数</dt> 
-                                <dd>{{ item.zhousymbol | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>上月获利点数</dt>
-                                <dd>{{ item.yuesymbol | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toOrder">订单管理&nbsp;>></dt>    
+                    <li><div class="taskLeft fl">成就</div>
+                        <div class="taskCenter fl">
+                            <img src="./assets/141712@2x.png" alt="" class="fl">
+                            <dl class="fl">
+                                <dt>绑定真实账号</dt>
+                                <dd>积分+80</dd>
                             </dl>
                         </div>
-                    </li>
-                    <!-- 跟随播报 -->
-                    <li class="con-box-follow">
-                        <p class="con-box-head">跟随播报</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>累计跟随</dt>
-                                <dd>{{ item.countoption | numPuls}}</dd>
-                            </dl>
-                            <dl>
-                                <dt>盈利单数</dt>
-                                <dd>{{ item.countorder | numPuls}}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toFollowmange(ind)">跟随管理&nbsp;>></dt>    
-                            </dl>
-                        </div>
+                        <div class="taskRight fr">去完成</div>
                     </li>
                 </ul>
-            </li>
-        </ul>
-
-        <!-- ******************* -->
-         <!-- ******************* -->
-          <!-- ******************* -->
-
-        <!-- 模拟状态 -->
-        <ul id="isscontent" v-if="iss">
-            <li v-for="(item,ind) in issAccInfo" :key="ind">
-                <!-- 账号标题 -->
-                <div class="con-tit"  @click="issConboxOpenClose">
-                    <p class="con-tit-left"> 
-                        <span>{{ item.accountName}}</span>
-                        <span>（距离到期还有{{item.endTime}}）</span>
-                    </p>
-                    <p class="con-tit-right">
-                        <img :src="issaccNumArr ? upSrc : downSrc" alt="">
-                    </p>
-                </div>
-                <!-- 详细内容 -->
-                <ul v-if="issaccNumArr" class="con-box">
-                    <!-- 账号资产 -->
-                    <li class="con-box-account">
-                        <p class="con-box-head" >账号资产</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>历史收益</dt>
-                                <dd>${{ item.bigDecimal | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>收益率</dt>
-                                <dd>{{ item.percent }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>当前余额</dt>
-                                <dd>${{ item.bigDecimalyu | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>已用保证金</dt>
-                                <dd>${{ item.margin | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>可用保证金</dt>
-                                <dd>${{ item.free_margin | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toHistory">账号历程&nbsp;>></dt>    
-                            </dl>
-                        </div>
+                <button>更多</button>
+            </div>
+            <!-- 关于我们 -->
+            <div class="about">
+                <ul>
+                    <li @click="toAbout">
+                        <img src="./assets/about.jpg" alt="" class="fl">
+                        <span class="fl">关于我们</span>
                     </li>
-                    <!-- 订单信息 -->
-                    <li class="con-box-order">
-                        <p class="con-box-head">订单信息</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>持仓单量</dt>
-                                <dd>{{ item.countOrderid | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>持仓手数</dt>
-                                <dd>{{ item.sumlots | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>持仓浮亏</dt>
-                                <dd>${{ item.sumprofitli | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>上周获利点数</dt> 
-                                <dd>{{ item.zhousymbol | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt>上月获利点数</dt>
-                                <dd>{{ item.yuesymbol | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toOrder">订单管理&nbsp;>></dt>    
-                            </dl>
-                        </div>
+                    <li @click="toNewHelp">
+                        <img src="./assets/help.jpg" alt="" class="fl">
+                        <span class="fl">新手帮助</span>
                     </li>
-                    <!-- 跟随播报 -->
-                    <li class="con-box-follow">
-                        <p class="con-box-head">跟随播报</p>
-                        <div class="con-box-bot clearfix">
-                            <dl>
-                                <dt>累计跟随</dt>
-                                <dd>{{ item.countoption | numPuls}}</dd>
-                            </dl>
-                            <dl>
-                                <dt>盈利单数</dt>
-                                <dd>{{ item.countorder | numPuls }}</dd>
-                            </dl>
-                            <dl>
-                                <dt class="con-box-bot-btn" @click="toFollowmangeIss">跟随管理&nbsp;>></dt>    
-                            </dl>
-                        </div>
+                    <li v-if="contact">
+                        <img src="./assets/contact.jpg" alt="" class="fl">
+                        <span class="fl">联系客服(客服微信：xiangming201806)</span>
                     </li>
                 </ul>
-            </li>
-        </ul>
-        <div class="switch clearfix"  @click="swiChange">
-                <p class="left sw-le" v-if="swi" :class="{'bgcblue':swi}">
-                    <span class="">
-                        当前状态：
-                    </span>
-                    <span >
-                        模拟账号
-                    </span>
-                </p>
-                <p class="left sw-cen" :class="{'bgcblue':!swi}" >
-                    <span  >
-                        点击切换
-                    </span>
-                </p>
-                <p class="left sw-ri" v-if="!swi">
-                    <span>
-                        当前状态：
-                    </span>
-                    <span >
-                        真实账号
-                    </span>
-                </p>
-        </div>
-        <!-- Footer组件 底部返回按钮 -->
+            </div>
+        </div>         
         <ul class="footer">
-                <li class="foot-left">
-                    <dl @click="toIndex">
-                        <dt>
-                            <img :src="leftBtnSrc" alt="">
-                        </dt>
-                        <dd >投资领航</dd>
-                    </dl>
-                </li>
+            <li class="foot-left">
+                <dl @click="toIndex">
+                    <dt>
+                        <img :src="leftBtnSrc" alt="">
+                    </dt>
+                    <dd >投资领航</dd>
+                </dl>
+            </li>
             <li class="foot-right">
                 <dl>
                     <dt>
@@ -316,125 +227,87 @@
                 </dl>
             </li>
         </ul>
-        <!-- 次div为空，做占位用，返回按钮占56px高度 -->
-        <div style="height:2rem"></div>
     </div>
 </template>
 <script>
-import { MessageBox } from 'mint-ui';
-import { Toast } from 'mint-ui';
+
+import {Swipe, SwipeItem} from 'mint-ui'
+
 export default {
-    name: 'App', 
+    // name: 'App', 
     data(){
         return {
-            invitImgSrc : require('./assets/Invitation.jpg'),
-            userImgSrc : '',
-            memberImgSrc : require('./assets/My-home-page-icon1.jpg') ,
-            memberImgSrcYellow : require('./assets/Myhomepage-icon1@2x.png') ,
-            setImgSrc :　require('./assets/Set-up.jpg'),
-            numberImgSrc : require('./assets/Accountnumber@2x.png') ,
-            orderImgSrc :　require('./assets/Order@2x.png'),
-            followImgSrc : require('./assets/follow@2x.png') ,
-            leftBtnSrc : require('./assets/Navigate-Unclicked.jpg') ,
-            rightBtnSrc : require('./assets/Myhomepage-clicked@2x.png') ,
-            //header滚动
-            headerOnOff :true,
-            acth:false,
-            headerOn : "header",
-            headerOff : "header-scroll",
-            //上下按钮图标
-            upSrc : require('../../assets/Myhomepage-Arrow@2x.png'),
-            downSrc :  require('../../assets/transaction-Arrow@2x.png'),
-            titleArr : ['历史收益','收益率','当前余额'],
-            titleInfo : [],
-            //content区域
-            contentShow : true,
-            iss: false,
-            urlTitle:"",
-            userId : '',
-            //box循环测试
-            accNumArr : [true],
-            info:{},
-            accInfo:[],
-            issAccInfo: [],
-            day : 0,
-            accountId: '',
-            swi: false,
-            issaccNumArr: true,
+            userImgSrc : "",
+            followImgSrc : require('./assets/follow@2x12.png') ,
+            orderImgSrc :　require('./assets/14@2x.png'),
+            numberImgSrc : require('./assets/@2x.png') ,
+            cardImgSrc : require('./assets/cart.png') ,
+            leftBtnSrc: require('./assets/Navigate-Unclicked.jpg'),
+            rightBtnSrc: require('./assets/Myhomepage-clicked@2x.png'),
+            info:[],
+            accInfo:'',
+            userId:'',
+            ind:'',
+            // active: true,
+            isActive : -1,
+            // 联系客服
+            contact: false,
+            // 我的特权
+            privilege: false,
+            // 任务
+            task: false,
+            // vip
+            uservip: true,
+            // 认证会员
+            authentication: false,
+            // 福利
+            welfareId:'',
+            list:[],
+            name:"kaishi",
+            startX:0,
+            moveX:0,
+            endX:0,
+            disX:0,
+            slideEffect:'',
+            startW:0,
+            moveW:0,
+            endW:0,
+            disW:0,
+            slideEffects:'',
+            scroll:''
+
         }
+    },
+    
+    components:{
+        'mt-swipe': Swipe,
+        'mt-swipe-item': SwipeItem
     },
     created(){
         this.urlTitle = localStorage.getItem('urlTitle');
         this.userId = localStorage.getItem('userId');
-        // this.accountId = localStorage.getItem('accountId');
-         let haveiss = sessionStorage.getItem('iss');
-        if(haveiss == 1){
-            this.contentShow = false;
-            this.iss = true;
-            this.swi = true;
-        }else{
-            this.contentShow = true;
-            this.iss = false;
-            this.swi = false;
-        }
-        //初始化数据请求
+        // 初始化数据
         let postData = this.$qs.stringify({
             userid:  this.userId
         });
         console.log(postData)
         this.$http({
-            method: 'post',
+            method: "post",
             url: this.urlTitle +'wx/member/manager',
-            data:postData
+            data: postData
         }).then((res)=>{
             console.log(res)
-            this.info = res.data.data;
-            this.accInfo = res.data.data.account;
-            this.issAccInfo = res.data.data.accountsmoni;
-            console.log(this.accInfo)
-            this.userImgSrc = res.data.data.image;
-            // if(sessionStorage.getItem('iss') == 1){
-            //     localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-            //     this.accountid = this.issAccInfo[0].accountid
-            // }else{
-            //     localStorage.setItem('accountId', this.accInfo[0].accountid);
-            //     this.accountid = this.accInfo[0].accountid
-            // }
+            this.info = res.data.data
+            console.log(this.info)
+            this.userImgSrc = res.data.data.headImg
+            this.uservip = res.data.data.vip
+            this.authentication = res.data.data.authentication
+            this.list = res.data.data.list
+            this.accInfo = localStorage.getItem('accountId')
+            this.userId = localStorage.getItem('userId')
+            // console.log(localStorage.getItem('accountId'))
+            
 
-
-            if(res.data.data.meeber==1 ||res.data.data.meeber==2 ){
-                this.dateMinus(res.data.data.overDatetime)
-                this.acth = true;
-            }
-         
-            if ( res.data.data.sumUserprofit > 1000 || res.data.data.sumUserprofit <= -1000 ) {
-                this.titleInfo.push( parseInt( res.data.data.sumUserprofit/10 )/100 + 'K')
-            }else {
-                this.titleInfo.push(res.data.data.sumUserprofit);
-            }
-            this.titleInfo.push(res.data.data.percentUser);
-            if ( res.data.data.sumUserprofitYu > 1000 || res.data.data.sumUserprofitYu <= -1000 ) {
-                this.titleInfo.push( parseInt( res.data.data.sumUserprofitYu/10 )/100 + 'K' )
-            }else {
-                this.titleInfo.push(res.data.data.sumUserprofitYu);
-            }
-            for(let i = 0; i < res.data.data.account.length-1; i++){
-                this.accNumArr.push(false)
-                // this.$set(this.accNumArr,i,false)
-            }
-
-
-
-            if(sessionStorage.getItem('iss') == 1){
-                localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-                this.accountid = this.issAccInfo[0].accountid
-            }else{
-                localStorage.setItem('accountId', this.accInfo[0].accountid);
-                this.accountid = this.accInfo[0].accountid
-            }
-            // console.log(this.accNumArr)
-        }).catch((err) => {
-            console.log(err)
         })
     },
     filters: {
@@ -448,339 +321,186 @@ export default {
             }    
         }
     },
-    mounted(){
-    //     //Header组件缩放
-    //     var _this =this; //改变指针，将Vue实例传到闭包
-    //     window.addEventListener('scroll',function(){
-    //         var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//监听滚动高度
-    //         if(scrollTop>14){
-    //             _this.headerOnOff = false; //Header收缩
-    //         }else{
-    //             _this.headerOnOff = true; //Header展开
-    //         }
-    //    })       
-    },
-    methods: {
-        msss(){
-            MessageBox('提示', '建设中');
-        },
-       
-        toVip(){
-           
-                window.location.href=`vip.html`;
+    methods:{
+        changeStyle(index){ 
+            // console.log(index)
+            this.isActive=index;
             
         },
-        //账号列表内容展开收缩控制
-        conboxOpenClose(ind){
-            // this.accNumArr[ind] = !this.accNumArr[ind];
-            this.$set(this.accNumArr,ind,!this.accNumArr[ind])
-        },
-        issConboxOpenClose(){
-            this.issaccNumArr = !this.issaccNumArr
-        },
-        //返回到index主页（交易领航）
-        toIndex(){
-            let haveiss = sessionStorage.getItem('iss');
-            if( haveiss == 1){
-                window.location.href=`index.html`;
-            }else{
-                window.location.href=`index.html`; 
-            }
-        },
-        //跳转到个人信息页
+        // 跳转到个人信息页
         toPersonInfo(){
-            window.location.href="personInfo.html";
+            window.location.href=`personInfo.html`
         },
-        //跳转到账号管理
-        toAccount(){  
-               window.location.href="accountmanage.html";         
+        toCardBag(){
+            window.location.href=`cardBag.html`
+        },
+        // 跳转到首页
+        toIndex(){
+            window.location.href=`index.html`;
+        },
+        // 跳转到账号管理
+        toAccount(){
+            window.location.href = `accountmanage.html`;
+        },
+        // 跳转到订单管理
+        toOrder(ind){
+            window.location.href = `order.html`
+        },
+        // 跳转到跟随管理
+        toFollowmangeIs(ind){
+            window.location.href=`followmange.html`
+        },
+        // 会员中心续费
+        toBuyVip(){
+            window.location.href = `vip.html`
+        },
+        // 通过福利跳转到vip购买页面
+        toVipWelfare(){
+            // console.log(this.isActive)
+            this.welfareId = this.list[this.isActive].id
+            console.log(this.welfareId)
+            window.location.href = `vip.html?userId=${this.userId}&id=${this.welfareId}`
+        },
+        // 跳转到购买记录
+        toBuyRecord(){
+            window.location.href = `buyRecord.html`
+        },
+        // 跳转到关于我们
+        toAbout(){
+            window.location.href = `about.html`
+        },
+        // 跳转到新手帮助
+        toNewHelp(){
+            window.location.href = `newhelp.html`
         },
 
-        toFollowmangeIs(){
-           let haveiss = sessionStorage.getItem('iss');
-            if( haveiss == 1){
-                window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
-            }else if(this.accInfo[0].isSimulated != 2){
-                window.location.href=`followmange.html?accountsid=${this.accInfo[0].accountid}`; 
+
+        // 滑动事件
+        //会员中心
+        touchStart:function(ev) {
+            ev = ev || event;
+            // ev.preventDefault();
+            // console.log(ev.targetTouches);
+            // console.log(ev.changedTouches);
+            if(ev.touches.length == 1) {    
+                this.startX = ev.touches[0].clientX; 
             }
         },
-        //跳转到跟随管理
-        toFollowmange(ind){
-            window.location.href=`followmange.html?accountsid=${this.accInfo[ind].accountid}`;
-        },
-        toFollowmangeIss(){
-             window.location.href=`followmange.html?accountsid=${this.issAccInfo[0].accountid}`;
-        },
-        //跳转到订单管理
-        toOrder(ind){   
-            window.location.href="order.html";
-        },
-        // 跳转到账号历程
-        toHistory(ind){   
-            window.location.href="accounthistory.html";
-        },
-        //计算会员到期时间   
-        dateMinus(sDate){
-            var sdate = new Date(sDate.replace(/-/g, "/"));
-            var now = new Date();
-            var days = sdate.getTime() - now.getTime();
-            var day = parseInt(days / (1000 * 60 * 60 * 24));
-            this.day = day + 1;
-        },
-        //切换状态
-        swiChange(){
-            if(sessionStorage.getItem('iss') != 1 && this.issAccInfo[0].endStatus != 0){
-                Toast(`您的模拟账号还有${this.issAccInfo[0].endTime}到期`)
+        touchMove:function(ev) {
+            ev = ev || event;
+            // console.log(ev)
+            // ev.preventDefault();
+            let btnWidth = this.$refs.remove.offsetWidth;  
+            let btnImg = this.$refs.btnImg.offsetWidth;
+
+            // console.log(ev.targetTouches);
+            // console.log(ev.changedTouches);
+            if(ev.touches.length == 1) {
+                
+                this.moveX = ev.touches[0].clientX;
+
+                
+                this.disX = this.moveX-this.startX;
+                if(this.disX<0 || this.disX == 0) {
+                    this.slideEffect = 'transform:translateX('+this.disX+'px)';
+
+                }else if(this.disX>0){
+                    this.slideEffect = 'transform:translateX(0px)';
+
+                    if(this.disX>=btnWidth) {
+                        this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)+'px)';
+                    }
+                }
+                // console.log(this.slideEffect)
             }
-            if ( sessionStorage.getItem('iss') != 1 && this.issAccInfo[0].endStatus == 0) {
-                MessageBox('提示', '您的模拟账号已到期');
-            }else {
-                this.swi = !this.swi;
-                if(this.swi == true){
-                    sessionStorage.setItem('iss', 1);
-                    this.contentShow = false;
-                    this.iss = true;
-                    localStorage.setItem('accountId', this.issAccInfo[0].accountid);
-                    this.accountid = this.issAccInfo[0].accountid
-                } 
-                if( this.swi == false ){
-                    sessionStorage.removeItem('iss');
-                    this.contentShow = true;
-                    this.iss = false;
-                    localStorage.setItem('accountId', this.accInfo[0].accountid);
-                    this.accountid = this.accInfo[0].accountid
+        },
+        touchEnd:function(ev){
+            ev = ev || event;
+            // ev.preventDefault();
+            let btnWidth = this.$refs.remove.offsetWidth;
+            let btnImg = this.$refs.btnImg.offsetWidth;
+//          console.log(ev.changedTouches);
+            if(ev.changedTouches.length == 1) {
+                let endX = ev.changedTouches[0].clientX;
+                this.disX = endX-this.startX;
+                // console.log(this.disX,'this.disX')
+                // console.log((btnWidth/2),'btnWidth/2');
+                if(this.disX < (btnWidth/2)) {
+                    this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)+ "px)';
+                }else {
+                    this.slideEffect = "transform:translateX(0px)";
+                }
+            }
+        },
+        // 福利
+        touchStarts:function(ev) {
+            ev = ev || event;
+            // ev.preventDefault();
+
+            if(ev.touches.length == 1) {    
+                this.startW = ev.touches[0].clientX; 
+            }
+        },
+        touchMoves:function(ev) {
+            ev = ev || event;
+            // ev.preventDefault();
+            let btnWidths = this.$refs.removes.offsetWidth;  
+            let btnImgs = this.$refs.btnImgs.offsetWidth;
+
+            if(ev.touches.length == 1) {
+                
+                this.moveW = ev.touches[0].clientX;
+
+                
+                this.disW = this.moveW-this.startW;
+                if(this.disW<0 || this.disW == 0) {
+                    this.slideEffects = 'transform:translateX('+this.disW+'px)';
+
+                }else if(this.disW>0){
+                    this.slideEffects = 'transform:translateX(0px)';
+
+                    if(this.disW>=btnWidths) {
+                        this.slideEffects = 'transform:translateX('+(btnWidths-btnImgs)+'px)';
+                    }
+                }
+            }
+        },
+        touchEnds:function(ev){
+            ev = ev || event;
+            // ev.preventDefault();
+            let btnWidths = this.$refs.removes.offsetWidth;
+            let btnImgs = this.$refs.btnImgs.offsetWidth;
+            if(ev.changedTouches.length == 1) {
+                let endW = ev.changedTouches[0].clientX;
+                this.disW = endW-this.startW;
+
+                if(this.disW < (btnWidths/2)) {
+                    this.slideEffects = 'transform:translateX("+(btnWidths-btnImgs)+ "px)';
+                }else {
+                    this.slideEffects = "transform:translateX(0px)";
                 }
             }
         }
-    }       
+        // 滑动事件结束
+    }
+ 
 }
 </script>
 <style lang="scss" scoped>
-    //Header上拉后效果
-    // #header-scroll{
-        
-    //     position: fixed;
-    //     top:0;
-    //     width: 7.1rem;
-    //     font-size: .26rem;
-    //     height: .88rem;
-    //     background-color: #4fa2fe;
-    //     color: #ffffff;
-    //     padding: 0 .22rem;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     .head-left{
-    //         display: flex;
-    //         img{
-    //             width: .72rem;
-    //             height: .72rem;
-    //             border-radius: 50%;
-    //             margin: .08rem .2rem 0 0;
-    //         }
-    //         dt{
-    //             font-weight: 900;
-    //             font-size: .28rem;
-    //             line-height: .48rem;
-    //         }
-    //         dd{
-    //             font-size: .2rem;
-    //             line-height: .2rem;
-    //         }
-    //     }
-    //     .head-right{
-    //         width: 2rem;
-    //         display: flex;
-    //         justify-content: space-between;
-    //         img{
-    //             margin-top: .24rem;
-    //             width: .36rem;
-    //             height: .36rem;
-    //         }
-    //     } 
-    // }
-    //Header上拉前效果
-    #header{
-        font-size: .26rem;
-        height: 1.56rem;
-        background-color: #4fa2fe;
-        color: #ffffff;
-        padding: 0 .22rem;
-        display: flex;
-        justify-content: space-between;
-        .head-left{
-            display: flex;
-            img{
-                width: 1.2rem;
-                height: 1.2rem;
-                border-radius: 50%;
-                margin: .26rem .24rem 0 0;
-            }
-            dt{
-                font-weight: 900;
-                font-size: .3rem;
-                margin-top: .48rem;
-                margin-bottom: .08rem;
-            }
-            dd{
-                font-size: .24rem;
-                // line-height: 10px;
-            }
-        }
-        .head-right{
-            width: 2.12rem;
-            display: flex;
-            justify-content: space-between;
-            img{
-                margin-top: .24rem;
-                width: .44rem;
-                height: .44rem;
-            }
-        } 
-    }
-    // 收益总览
-    #title{
-        padding: 0 .22rem;
-        display: flex;
-        justify-content: space-between;
-        height: 1.56rem;
-        background-color: #4fa2fe;
-        color : #ffffff;
-        text-align: center;
-        dt{
-            font-size: .24rem;
-            line-height: .24rem;
-            margin-top: .32rem;
-            margin-bottom: .18rem;
-        }
-        dd{
-            font-size: .4rem;
-            line-height: .36rem;
-        }
-    }
-    //导航按钮
-    #center{
-        font-size: .24rem;
-        display: flex;
-        padding: .24rem 0 .48rem 0;
-        dl{
-            width: 33%;
-            height: .88rem;
-            text-align: center;
-            img{
-                width: .66rem;
-                height: .66rem;
-            }
-            dd{
-                margin-top: .14rem;
-                color: #666666;
-            }
-        }
-    }
-    //账号信息展示
-    #content,#isscontent{
-        margin-top: .56rem;
-        padding: 0 .22rem;
-        color: #ffffff;
-        li{
-            //账号标题
-            .con-tit{
-                height: .68rem;
-                line-height: .68rem;
-                // background-color: pink;
-                font-size: .24rem;
-                color: #666666;
-                border-bottom: 1px solid #c9c9c9;
-                display: flex;
-                justify-content: space-between;
-                img{
-                    width: .26rem;
-                }
-            }
-            //账号内容 展示
-            .con-box{
-                font-size: .26rem;
-                text-align: center;
-                padding: 0 .2rem;
-                .con-box-account{
-                    background-color: #4fa2fe;
-                }
-                .con-box-order{
-                    background-color: #ffa544;
-                }
-                .con-box-follow{
-                    background-color: #ff884e;
-                    margin-bottom: .4rem;
-                }
-                li{
-                    border-radius: .2rem; 
-                    margin-top: .28rem;
-                    padding-bottom: .28rem;
-                    .con-box-head{
-                        font-size: .32rem;
-                        line-height: .8rem;
-                        font-weight: 900;
-                        height: .8rem;
-                    }
-                    .con-box-bot{
-                        dl{
-                            float: left;
-                            width: 33%;
-                            .con-box-bot-btn{
-                                font-size: .28rem;
-                                line-height: .8rem;
-                                font-weight: 900;
-                            }
-                            dt{
-                                font-size: .22rem;
-                                line-height: .4rem;
-                                height: .4rem;
-                            }
-                            dd{
-                                font-size: .28rem;
-                                font-weight: 900;
-                                line-height: .6rem;
-                                height: .6rem;
-                            }
-                        }
-                    }
-                }
-                
-            }
-        }
-    }
-
-    //状态切换
-
-    .switch{
-        width: 100%;
-        height: .98rem;
+    *{
+        margin: 0;
         padding: 0;
-        position: fixed;
-        bottom: 1.12rem;
-        border-top: 1px solid #c9c9c9;
-        border-bottom: 1px solid #c9c9c9;
-        line-height: .98rem;
-        color: #4fa2fe;
-        font-size: .3rem;
-        font-weight: bold;
-        background-color: #fff;
-        .sw-le{
-            width: 4.8rem;
-            border-right: .01rem solid #c9c9c9;
-        }
-        .sw-cen{
-            width: 2.66rem;
-        }
-        .sw-ri{
-            width: 4.8rem;
-            border-left: .01rem solid #c9c9c9;
-        }
-        .bgcblue{
-            background-color: #4fa2fe;
-            color: #fff;
-        }
+        font-family: "微软雅黑"; 
     }
-    //底部导航按钮
+    .fl{
+        float: left;
+    }
+    .fr{
+        float: right;
+    }
+    body{
+        background-color: pink;
+    }
     .footer{
         width: 100%;
         height: 1rem;
@@ -805,6 +525,400 @@ export default {
             margin-bottom: .04rem;
         }
     }
+    .title{
+        width: 6rem;
+        // height: 1.64rem;
+        background-color: white;
+        margin: 0.2rem auto;
+        font-size: .24rem;
+        display: flex;
+        padding: .33rem 0 .48rem 0;
+        border-radius: 0.08rem; 
+        dl{
+            width: 33%;
+            height: .88rem;
+            text-align: center;
+            img{
+                width: .66rem;
+                height: .66rem;
+            }
+            dd{
+                margin-top: .14rem;
+                color: #666666;
+            }
+        }
+    }
+    #header{
+        height: 5.1rem;
+        background: url("./assets/mine.jpg");
+        background-size: 100% 100%;
+        overflow: hidden;
+        .head-left{
+            overflow: hidden;
+            padding: 0.5rem 0 0 0.24rem;
+            color: white;
+            position: relative;
+            div{
+                img{
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    display: block;
+                    border-radius: 50%;
+                }
+            }
+            dl{
+                margin: 0.3rem 0 0 0.2rem;
+                text-align: left;
+                dt{
+                    font-size: 0.32rem;
+                }
+                dd{
+                    font-size: 0.24rem;
+                }
+            }
+            
+            .uservip{
+                    position: absolute;
+                    left: 0.28rem;
+                    top: 0.2rem;
+                    width: 1.2rem;
+                    border-bottom-right-radius: 0.6rem;
+                    border-bottom-left-radius: 0.6rem;
+                    overflow: hidden;
+                    margin-left: -0.04rem;
+                .img{
+                    width: 0.5rem;
+                    height: 0.44rem;
+                    img{
+                        display: block;
+                        width: 0.5rem;
+                        height: 0.44rem;
+                    }
+                }               
+                p{
+                    width: 1.1rem;
+                    height: 0.36rem;
+                    line-height: 0.35rem;
+                    color: white;
+                    background-color: #ffa300;
+                    margin: 0.7rem 0 0 0.04rem;
+                    font-size: 0.22rem;
+                }
+                
+            }
+        } 
+        .head-right{
+            overflow: hidden;
+            margin: 0.85rem 0.2rem 0 0;
+            div{
+                width: 1.74rem;
+                height: 0.5rem;
+                border: 1px solid #fff;
+                border-radius: 0.25rem;
+                color: white;
+                line-height: 0.5rem;
+                margin-right: 0.36rem;
+                letter-spacing: 0.02rem;
+                font-size: 0.2rem;
+            }
+            img{
+                display: block;
+                width: 0.5rem;
+                height: 0.5rem;
+            }
+        }
+        .info{
+            width: 84%;
+            height: 1.4rem;
+            margin: 1.7rem auto 0;
+            dl{
+                margin-top: 0.4rem;
+                float: left;
+                width: 33.33%;
+                color: white;
+                dt{
+                    font-size: 0.36rem;
+                }
+                dd{
+                    font-size: 0.16rem;
+                    margin-top: 0.08rem;
+                }
+
+            }
+        }
+    }
+    #center{
+        width: 100%;
+        min-height: 4rem;
+        background-color: #f4f4f4;
+        overflow: hidden;
+        .privilege{
+            width: 100%;
+            background-color: white;
+            margin-top: 0.3rem;
+            >div:nth-of-type(1){
+                width: 7.02rem;
+                height: 0.7rem;
+                margin: 0 auto;
+                line-height: 0.7rem;
+                .privilegeLeft{
+                    font-size: 0.28rem;
+                    color: #333333;
+                }
+                .privilegeRight{
+                    font-size: 0.24rem;
+                    color: #5fa9fe;
+                }
+            }
+            ul{
+                overflow: hidden;
+                margin-left: 0.04rem;
+                li{
+                    float: left;
+                    padding: 0.21rem 0 0.28rem 0.6rem;
+                    img{
+                        width: 0.66rem;
+                        height: 0.64rem;
+                        display: block;
+                    }
+                }
+            }
+        }
+        .memberCenter{
+            width: 100%;
+            background-color: white;
+            margin-top: 0.2rem;
+            padding: 0 0 0.4rem 0;
+            >div:nth-of-type(1){
+                font-size: 0.28rem;
+                width: 7.02rem;
+                height: 0.7rem;
+                margin: 0 auto;
+                line-height: 0.7rem;
+            }
+            ul{
+                color: white;
+                margin-left: 0.64rem;
+                overflow: hidden;
+                width: 10rem;
+                li{
+                    width: 3.9rem;
+                    height: 1.8rem;
+                    float: left;
+                    background-color: #4fa2fe;
+                    border-radius: 0.08rem;
+                    margin-right: 1rem;
+                    .memberCenterTop{
+                        width: 3.52rem;
+                        height: 1.16rem;
+                        margin: 0 auto;
+                        box-sizing: border-box;
+                        >p{
+                            width: 100%;
+                            line-height: 0.36rem;
+                            font-size: 0.22rem;
+                            text-align: right;
+                        }
+                        >div{
+                            width: 50%;
+                            box-sizing: border-box;
+                            font-size: 0.24rem;
+                            img{
+                                width: 0.64rem;
+                                height: 0.50rem;
+                                padding: 0.2rem 0 0 0.1rem;
+                                
+                            }
+                        }
+                        .date{
+                            border-right: 1px solid white;
+                            padding: 0.1rem 0 0 0;
+                            span{
+                                font-size: 0.5rem;
+                            }
+                        }
+                    }
+                    .memberCenterBottom{
+                        margin-top: 0.1rem;
+                        span{
+                            padding: 0.3rem;
+                        }
+                    }
+                }
+            }
+            .mint-swipe {
+                height: 1.8rem;
+            }
+        }
+        .welfare{
+            width: 100%;
+            background-color: white;
+            margin-top: 0.2rem;
+            >div:nth-of-type(1){
+                font-size: 0.28rem;
+                width: 7.02rem;
+                height: 0.7rem;
+                margin: 0 auto;
+                line-height: 0.7rem;
+            }
+            ul{
+                width: 100rem;
+                overflow: hidden;
+                padding: 0.2rem 0 0 0;
+                li{
+                    float: left;
+                    width: 1.8rem;
+                    height: 2.4rem;
+                    border: 1px solid #d3d3d3;
+                    border-radius: 0.06rem;
+                    margin-left: 0.5rem;
+                    position: relative;
+                    b{
+                        position: absolute;
+                        top: -0.15rem;
+                        right: -0.15rem;
+                        line-height: 0.3rem;
+                        width: 0.3rem;
+                        background-color: #ff852b;
+                        color: white;
+                        font-size: 0.22rem;
+                        border-radius: 0.04rem;
+                    }
+                }
+                .active{
+                    float: left;
+                    width: 1.8rem;
+                    height: 2.4rem;
+                    border: 1px solid #ff852b;
+                    background-color: #ffeee1;
+                    border-radius: 0.06rem;
+                    margin-left: 0.5rem;
+                    position: relative;
+                    b{
+                        position: absolute;
+                        top: -0.15rem;
+                        right: -0.15rem;
+                        line-height: 0.3rem;
+                        width: 0.3rem;
+                        background-color: #ff852b;
+                        color: white;
+                        font-size: 0.22rem;
+                    }
+                }
+                
+            }
+            button{
+                width: 3rem;
+                height: 0.56rem;
+                line-height: 0.56rem;
+                background-color: #4fa2fe;
+                color: white;
+                border: none;
+                font-size: 0.28rem;
+                margin: 0.4rem auto;
+                border-radius: 0.08rem;
+            }
+            .mint-swipe {
+                height: 2.7rem;
+            }
+            
+        }
+        .task{
+            width: 100%;
+            background-color: white;
+            margin-top: 0.2rem; 
+            >div{
+                font-size: 0.28rem;
+                width: 7.02rem;
+                height: 0.7rem;
+                margin: 0 auto;
+                line-height: 0.7rem;
+            }
+            ul{
+                width: 7.02rem;
+                margin: 0 auto;
+                li{
+                    overflow: hidden;
+                    margin-top: 0.1rem;
+                    .taskLeft{
+                        color: #555555;
+                        font-size: 0.24rem;
+                        margin-top: 0.05rem;
+                    }
+                    .taskCenter{
+                        margin-left: 0.6rem;
+                        overflow: hidden;
+                        img{
+                            width: 0.44rem;
+                            height: 0.44rem;
+                            display: block;
+                        }
+                        dl{
+                            margin: 0.05rem 0 0 0.2rem;
+                            dt{
+                                font-size: 0.24rem;
+                                color: #666666;
+                            }
+                            dd{
+                                font-size: 0.22rem;
+                                color: #999999;
+                                text-align: left;
+                            }
+                        }
+                    }
+                    .taskRight{
+                        width: 1.2rem;
+                        height: 0.4rem;
+                        line-height: 0.4rem;
+                        border: 1px solid #4fa2fe;
+                        border-radius: 0.2rem;
+                        color:  #4fa2fe;
+                        font-size: 0.22rem;
+                    }
+                }
+            }
+            button{
+                width: 3rem;
+                height: 0.56rem;
+                line-height: 0.56rem;
+                background-color: #4fa2fe;
+                color: white;
+                border: none;
+                font-size: 0.28rem;
+                margin: 0.4rem auto;
+                border-radius: 0.08rem;
+            }
+        }
+        .about{
+            width: 100%;           
+            margin-top: 0.2rem;
+            margin-bottom: 1.5rem;
+            ul{
+                overflow: hidden;
+                background-color: white;
+                li{
+                    width: 7.02rem;
+                    height: 0.75rem;
+                    line-height: 0.75rem;
+                    margin: 0.01rem auto 0;
+                    overflow: hidden;
+                    border-bottom: 1px solid #d6d6d6;
+                    font-size: 0.22rem;
+                    color: #696969;
+                    img{
+                        width: 0.45rem;
+                        height: 0.45rem;
+                        line-height: 0.75rem;
+                        padding: 0.16rem 0.2rem 0 0;
+                    }
+                }
+            }
+        }
+    }
+    #container{
+        width: 100rem;
+    }
+    
 </style>
 
 
