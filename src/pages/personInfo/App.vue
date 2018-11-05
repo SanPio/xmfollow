@@ -52,9 +52,9 @@
                     </span>
                 </p>
                 <p class="right">
-                   <span>
+                   <span v-if="maxProfit">
                        <!-- filter  -->
-                      ${{ maxProfit }}
+                      ${{ maxProfit | plus}}
                    </span>
                 </p>
             </li>
@@ -98,9 +98,7 @@
             </li>
         </ul>
 
-        <div>
-            <button @click="toCard">到卡包 </button>
-        </div>
+        
         <!-- 性别选择控件 -->
         <mt-actionsheet
         :actions="actions"
@@ -213,6 +211,13 @@ export default {
                 val += ''
                 return val.substr(0,4) + '****' + val.substr(7,4)
             }
+        },
+        plus(val){
+           if(val >= 1000 || val <= -1000){
+             return parseInt(val/10)/100 + "K"
+           }else{
+             return parseInt(val * 100 )/100
+           }
         }
     },
 
@@ -229,10 +234,7 @@ export default {
         },
     },
     methods: {
-        // 到卡包页面
-        toCard() {
-            window.location.href="cardBag.html";
-        },
+        
         showMan(){
             this.sex ="男";
         },

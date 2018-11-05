@@ -12,20 +12,21 @@
                 <div class="header">
                     优惠券不可叠加，每次只能使用一张
                 </div>
-                <div class="contant">
-                    <p class="nav">
+                <div class="contant" style="padding-top:0">
+                    <!-- <p class="nav">
                         <input type="number" v-model="invitCode">
                         <button>
                             兑换
                         </button>
-                    </p>
-                    <ul class="card_box">
-                        <li>
-                            <div class="card">
+                    </p> -->
+                    <ul class="card_box" v-if="notUseList.length">
+                        <li v-for="(item, index) in notUseList" :key="index">
+                                <!-- 打折即将失效 -->
+                            <div class="card" v-if="item.type == 2 && item.status == 4 ">
                                 <img :src="disWill" alt="">
                                 <p class="card_left">
-                                    <span class="discount_num" id="aaa"> 
-                                        8.5
+                                    <span class="discount_num" > 
+                                        {{ item.value * 10 }}
                                     </span>
                                     <span class="discount_text"> 
                                         折 
@@ -36,25 +37,24 @@
                                         VIP折扣券
                                     </p>
                                     <p class="use_card">
-                                        <button>
+                                        <button @click="toVip">
                                             去使用
                                         </button>
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div>  
+                                <!-- 满减即将失效 --> 
+                            <div class="card" v-if="item.type == 1 && item.status == 4 ">
                                 <img :src="fullWill" alt="">
                                 <p class="card_left">
                                     <span class="discount_text"> 
                                         ￥
                                     </span>
                                     <span class="discount_num"> 
-                                        500
+                                        {{ item.value }}
                                     </span>   
                                 </p>
                                 <div class="full_card_right">
@@ -62,25 +62,24 @@
                                         VIP满减券
                                     </p>
                                     <p class="full_card_num">
-                                        满 10000 元使用
+                                        满 {{ item.minMoneyLimit }} 元使用
                                     </p>
                                     <p class="full_use_card">
-                                        <button>
+                                        <button @click="toVip">
                                             去使用
                                         </button>
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div> 
+                                <!-- 打折未使用 -->   
+                            <div class="card" v-if="item.type == 2 && item.status == 1 ">
                                 <img :src="discountNotUse" alt="">
                                 <p class="card_left">
                                     <span class="discount_num"> 
-                                        8.5
+                                        {{ item.value * 10 }}
                                     </span>
                                     <span class="discount_text"> 
                                         折 
@@ -91,25 +90,24 @@
                                         VIP折扣券
                                     </p>
                                     <p class="use_card">
-                                        <button>
+                                        <button @click="toVip">
                                             去使用
                                         </button>
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div>   
+                                <!-- 满减未使用--> 
+                            <div class="card" v-if="item.type == 1 && item.status == 1 ">
                                 <img :src="fullNotUse" alt="">
                                 <p class="card_left">
                                     <span class="discount_text"> 
                                         ￥
                                     </span>
                                     <span class="discount_num"> 
-                                        500
+                                        {{ item.value }}
                                     </span>   
                                 </p>
                                 <div class="full_card_right">
@@ -117,25 +115,24 @@
                                         VIP满减券
                                     </p>
                                     <p class="full_card_num">
-                                        满 10000 元使用
+                                        满 {{ item.minMoneyLimit }} 元使用
                                     </p>
                                     <p class="full_use_card">
-                                        <button>
+                                        <button @click="toVip">
                                             去使用
                                         </button>
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div>   
+                            <!-- 打折已过期 -->  
+                            <div class="card" v-if="item.type == 2 && item.status == 3 ">
                                 <img :src="expired" alt="">
                                 <p class="card_left">
                                     <span class="discount_num"> 
-                                        8.5
+                                        {{ item.value * 10 }}
                                     </span>
                                     <span class="discount_text"> 
                                         折 
@@ -152,19 +149,18 @@
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div>  
+                            <!-- 满减已过期 -->   
+                            <div class="card" v-if="item.type == 1 && item.status == 3 ">
                                 <img :src="expired" alt="">
                                 <p class="card_left">
                                     <span class="discount_text"> 
                                         ￥
                                     </span>
                                     <span class="discount_num"> 
-                                        500
+                                        {{ item.value }}
                                     </span>   
                                 </p>
                                 <div class="full_card_right">
@@ -172,7 +168,7 @@
                                         VIP满减券
                                     </p>
                                     <p class="full_card_num">
-                                        满 10000 元使用
+                                        满 {{ item.minMoneyLimit }} 元使用
                                     </p>
                                     <p class="full_use_card">
                                         <button>
@@ -181,38 +177,32 @@
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
                             </div>    
                         </li>
                     </ul>
-                </div>
-                
-
-
-
-
-
-
-
-                
+                </div>      
             </mt-tab-container-item>
-
+            
+            <!-- 已经使用 -->
             <mt-tab-container-item id="already_use">
-
+                    <!-- 占位 -->
                 <div style="height: .9rem;background:#fff"></div>
+                    <!-- 标题 -->
                 <div class="header">
                     优惠券每次只能使用一张，不与其他优惠方式相同
                 </div>
-                <div class="contant" style="padding-top:0">
                     
-                    <ul class="card_box">
-                        <li>
-                            <div class="card">
+                <div class="contant" style="padding-top:0">     
+                    <ul class="card_box" v-if="alreadyList.length">
+                        <li v-for="(item, index) in alreadyList" :key="index" >
+                            <!-- 打折已使用 --> 
+                            <div class="card" v-if="item.type == 2">
                                 <img :src="discountAlready" alt="">
                                 <p class="card_left">
                                     <span class="discount_num"> 
-                                        8.5
+                                        {{ item.value * 10 }}
                                     </span>
                                     <span class="discount_text"> 
                                         折 
@@ -229,19 +219,18 @@
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
-                            </div>    
-                        </li>
-                        <li>
-                            <div class="card">
+                            </div>  
+                            <!-- 满减已使用 -->   
+                            <div class="card" v-if="item.type == 1">
                                 <img :src="fullAlready" alt="">
                                 <p class="card_left">
                                     <span class="discount_text"> 
                                         ￥
                                     </span>
                                     <span class="discount_num"> 
-                                        500
+                                        {{ item.value }}
                                     </span>   
                                 </p>
                                 <div class="full_card_right">
@@ -249,7 +238,7 @@
                                         VIP满减券
                                     </p>
                                     <p class="full_card_num">
-                                        满 10000 元使用
+                                        满 {{ item.minMoneyLimit }} 元使用
                                     </p>
                                     <p class="full_use_card">
                                         <button>
@@ -258,7 +247,7 @@
                                     </p>
                                 </div>
                                 <p class="card_foot">
-                                    有效期至：2018-12-31
+                                    有效期至：{{ item.endTime }}
                                 </p>
                             </div>    
                         </li>
@@ -287,20 +276,22 @@ export default {
             fullAlready: require('./assets/fullAlready.png'),
             selected: 'not_use',
             fixed: true,
-            notUse: 2,
-            alreadyUse: 3,
+            notUse: '',
+            alreadyUse: '',
             code: 123456,
             invitCode: '564564',
-          
+            userId: '',
+            urlTitle: '',
+            notUseList: [],
+            alreadyList: []
         }
     },
     created(){
-      
+        this.urlTitle = localStorage.getItem('urlTitle');
+        this.userId = localStorage.getItem('userId');
+        this.request()
     },
     
-    watch : {
-      
-    },
     filters: {
         numAll(val){
             if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
@@ -313,27 +304,33 @@ export default {
         }
     },
     methods: {
-        
 
-        request(ind,type){
+        // 数据请求
+        request() {
             
-            // let postData = this.$qs.stringify({
-            //     accountsId: this.accountId,
-            //     orderId: this.infoArr[ind].orderId,
-            //     type : type,
-            //     userId: this.userId
-            // });
-            // this.$http({
-            //     method: 'post',
-            //     url: this.urlTitle+'wx/order/member/holdOrderSetting',
-            //     data:postData
-            // }).then((res)=>{
-              
-            // }).catch((err) => {
-            //     console.log(err)
-            // })
+            let postData = this.$qs.stringify({   
+                userId: this.userId,
+            });
+            this.$http({
+                method: 'post',
+                url: this.urlTitle +'wx/member/cardBag',
+                data:postData
+            }).then( res => {
+                    let data = res.data.data.data
+                    console.log( data )
+                    this.notUse = data.notUsedTotal // 未使用总数
+                    this.alreadyUse = data.alreadyUsedTotal // 已使用总数
+                    this.notUseList = data.notUsed // 未使用卡片
+                    this.alreadyList = data.alreadyUsed// 已使用卡片
+            }).catch( err => {
+                console.log(err)
+            })
         },
-      
+
+         // 跳转VIP购买
+        toVip() {
+            window.location.href = `vip.html`
+        }
      
     }
 }
@@ -465,11 +462,5 @@ export default {
             }
         }
     }
-   
-       
 
-    
-
-
-  
 </style>
