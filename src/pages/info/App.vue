@@ -533,20 +533,25 @@ export default {
             if(  res.data.data.followerNumber ){
                 var followNum = parseInt( res.data.data.followerNumber ) 
                 if(res.data.data.optionId == 8){
-                    followNum += 100
+                    followNum += 298
                 }else if(res.data.data.optionId == 1){
-                    followNum += 70
+                    followNum += 206
                 }else if(res.data.data.optionId == 2){
-                    followNum += 10
+                    followNum += 147
                 }else if(res.data.data.optionId == 3){
                     followNum += 60
                 }else if(res.data.data.optionId == 5){
-                    followNum += 67
+                    followNum += 258
                 }else if(res.data.data.optionId == 6){
-                    followNum += 20
+                    followNum += 251
                 }else if(res.data.data.optionId == 7){
-                    followNum += 31
+                    followNum += 176
+                }else if(res.data.data.optionId == 9){
+                    followNum += 36
+                }else if(res.data.data.optionId == 10){
+                    followNum += 20
                 }
+                
 
 
                 if( followNum >= 1000){

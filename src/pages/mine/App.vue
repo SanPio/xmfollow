@@ -7,7 +7,7 @@
                     <img src="./assets/img2.jpg" alt="" v-if="!userImgSrc">
                 </div>
                 <div v-if="uservip" class="uservip" @click="toPersonInfo">
-                    <div class="img"><img src="./assets/title@2x.png" alt=""></div>                   
+                    <div class="imgs"></div>                   
                     <p>已认证</p>
                 </div>
                 <div v-if="authentication" class="uservip" @click="toPersonInfo">
@@ -69,7 +69,7 @@
             <div class="privilege" v-if="privilege">
                 <div>
                     <p class="privilegeLeft fl">我的特权</p>
-                    <p class="privilegeRight fr">特权明细>></p>
+                    <p class="privilegeRight fr" @click="privileges">特权明细>></p>
                 </div>
                 <ul>
                     <li><img src="./assets/tequan.png" alt=""></li>
@@ -93,7 +93,9 @@
                             <div class="memberCenterTop" @click="toBuyVip">
                                 <p class="fr">续费>></p>
                                 <div class="date fl">
-                                    <span>{{info.vipOverDatetime}}</span>
+                                    <span v-if="uservip==true">{{info.vipOverDatetime}}</span><span v-if="uservip==true" style="font-size: 0.3rem;padding:0 0 0 0.05rem;">天</span>
+                                    <span v-if="uservip==false">{{info.vipOverDatetime}}</span>
+                                    <span v-if="uservip==null || !success">未获得</span>
                                 </div>
                                 <div class="fl">
                                     <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
@@ -108,7 +110,7 @@
                             <div class="memberCenterTop" @click="toBuyVip">
                                 <p class="fr">续费>></p>
                                 <div class="date fl">
-                                    <span>{{info.authenticationOverDatetime}}</span>
+                                    <span>{{info.authenticationOverDatetime}}</span><span style="font-size: 0.3rem;padding:0 0 0 0.05rem;">天</span>
                                 </div>
                                 <div class="fl">
                                     <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
@@ -127,21 +129,6 @@
                 <div>
                     <p class="fl">福利</p>
                 </div>
-                <!-- <mt-swipe :show-indicators="false" :auto="8000">
-                    <mt-swipe-item>
-                        <ul>
-                            <li @click="changeStyle(index)" v-for="(item,index) in list" :key="index" :class="{active:index==isActive}">
-                                <b>新</b>
-                                <p style="color:#666666;font-size:0.24rem;margin-top: 0.2rem;">{{item.title}}</p>
-                                <p style="color:#333333;font-size:0.3rem;">{{item.content}}</p>
-                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.48rem;">{{item.originalPrice | numPuls }}</span></P>
-                                <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.presentPrice | numPuls}}</span></P>
-                            </li>
-                        </ul>
-                    </mt-swipe-item>
-                </mt-swipe> -->
-                <!-- <mt-swipe :show-indicators="false" :auto="8000">
-                    <mt-swipe-item> -->
                     <div class="btns" ref='removes'>
                         <ul ref='btnImgs' class="btn-moves"  
                         @touchstart='touchStarts' 
@@ -152,13 +139,11 @@
                                 <b v-if="index==0">新</b>
                                 <p style="color:#666666;font-size:0.24rem;margin-top: 0.2rem;">{{item.title}}</p>
                                 <p style="color:#333333;font-size:0.3rem;">{{item.content}}</p>
-                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.48rem;">{{item.originalPrice | numPuls }}</span></P>
+                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.36rem;">{{item.originalPrice | numPuls }}</span></P>
                                 <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.presentPrice | numPuls}}</span></P>
                             </li>
                         </ul>
                     </div>
-                    <!-- </mt-swipe-item>
-                </mt-swipe>                      -->
                 <button @click="toVipWelfare">立即获得</button>
             </div>
             <!-- 任务 -->
@@ -198,7 +183,7 @@
                         <img src="./assets/about.jpg" alt="" class="fl">
                         <span class="fl">关于我们</span>
                     </li>
-                    <li @click="toNewHelp">
+                    <li @click="toNewHelp" style="border-bottom: none;">
                         <img src="./assets/help.jpg" alt="" class="fl">
                         <span class="fl">新手帮助</span>
                     </li>
@@ -257,9 +242,11 @@ export default {
             // 任务
             task: false,
             // vip
-            uservip: true,
+            uservip: false,
+            vipTime:'',
             // 认证会员
             authentication: false,
+            success: false,
             // 福利
             welfareId:'',
             list:[],
@@ -298,7 +285,8 @@ export default {
         }).then((res)=>{
             console.log(res)
             this.info = res.data.data
-            console.log(this.info)
+            this.success = res.data.success
+            // console.log(this.success)
             this.userImgSrc = res.data.data.headImg
             this.uservip = res.data.data.vip
             this.authentication = res.data.data.authentication
@@ -373,6 +361,10 @@ export default {
         toNewHelp(){
             window.location.href = `newhelp.html`
         },
+        // 跳转到特权明细
+        privileges(){
+            window.location.href = `privileges.html`
+        },
 
 
         // 滑动事件
@@ -380,10 +372,11 @@ export default {
         touchStart:function(ev) {
             ev = ev || event;
             // ev.preventDefault();
-            // console.log(ev.targetTouches);
+            // console.log(ev);
             // console.log(ev.changedTouches);
             if(ev.touches.length == 1) {    
                 this.startX = ev.touches[0].clientX; 
+                // console.log(this.startX)
             }
         },
         touchMove:function(ev) {
@@ -402,13 +395,13 @@ export default {
                 
                 this.disX = this.moveX-this.startX;
                 if(this.disX<0 || this.disX == 0) {
-                    this.slideEffect = 'transform:translateX('+this.disX+'px)';
+                    this.slideEffect = 'transform:translateX('+(this.disX)/100+'rem)';
 
                 }else if(this.disX>0){
-                    this.slideEffect = 'transform:translateX(0px)';
+                    this.slideEffect = 'transform:translateX(0rem)';
 
                     if(this.disX>=btnWidth) {
-                        this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)+'px)';
+                        this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)/100+'rem)';
                     }
                 }
                 // console.log(this.slideEffect)
@@ -426,9 +419,9 @@ export default {
                 // console.log(this.disX,'this.disX')
                 // console.log((btnWidth/2),'btnWidth/2');
                 if(this.disX < (btnWidth/2)) {
-                    this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)+ "px)';
+                    this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)/100+ "rem)';
                 }else {
-                    this.slideEffect = "transform:translateX(0px)";
+                    this.slideEffect = "transform:translateX(0rem)";
                 }
             }
         },
@@ -454,13 +447,13 @@ export default {
                 
                 this.disW = this.moveW-this.startW;
                 if(this.disW<0 || this.disW == 0) {
-                    this.slideEffects = 'transform:translateX('+this.disW+'px)';
+                    this.slideEffects = 'transform:translateX('+(this.disW)/100+'rem)';
 
                 }else if(this.disW>0){
-                    this.slideEffects = 'transform:translateX(0px)';
+                    this.slideEffects = 'transform:translateX(0rem)';
 
                     if(this.disW>=btnWidths) {
-                        this.slideEffects = 'transform:translateX('+(btnWidths-btnImgs)+'px)';
+                        this.slideEffects = 'transform:translateX('+(btnWidths-btnImgs)/100+'rem)';
                     }
                 }
             }
@@ -475,9 +468,9 @@ export default {
                 this.disW = endW-this.startW;
 
                 if(this.disW < (btnWidths/2)) {
-                    this.slideEffects = 'transform:translateX("+(btnWidths-btnImgs)+ "px)';
+                    this.slideEffects = "transform:translateX('+(btnWidths-btnImgs)/100+ 'rem)";
                 }else {
-                    this.slideEffects = "transform:translateX(0px)";
+                    this.slideEffects = "transform:translateX(0rem)";
                 }
             }
         }
@@ -571,6 +564,10 @@ export default {
                 text-align: left;
                 dt{
                     font-size: 0.32rem;
+                    width: 3rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
                 dd{
                     font-size: 0.24rem;
@@ -589,12 +586,20 @@ export default {
                 .img{
                     width: 0.5rem;
                     height: 0.44rem;
+                    // background: url("./assets/title@2x.png");
+                    // background-size: 100%;
                     img{
                         display: block;
                         width: 0.5rem;
                         height: 0.44rem;
                     }
-                }               
+                }
+                .imgs{
+                    width: 0.5rem;
+                    height: 0.44rem;
+                    background: url("./assets/title@2x.png");
+                    background-size: 100%;
+                }              
                 p{
                     width: 1.1rem;
                     height: 0.36rem;
@@ -700,17 +705,16 @@ export default {
                 color: white;
                 margin-left: 0.64rem;
                 overflow: hidden;
-                width: 10rem;
+                width: 100rem;
                 li{
-                    width: 3.9rem;
-                    height: 1.8rem;
+                    width: 4rem;
                     float: left;
                     background-color: #4fa2fe;
                     border-radius: 0.08rem;
-                    margin-right: 1rem;
+                    margin-right: 0.64rem;
                     .memberCenterTop{
-                        width: 3.52rem;
-                        height: 1.16rem;
+                        width: 100%;
+                        overflow: hidden;
                         margin: 0 auto;
                         box-sizing: border-box;
                         >p{
@@ -718,6 +722,8 @@ export default {
                             line-height: 0.36rem;
                             font-size: 0.22rem;
                             text-align: right;
+                            margin: 0.1rem 0 0 0;
+                            padding: 0 0.2rem 0 0;
                         }
                         >div{
                             width: 50%;
@@ -732,16 +738,19 @@ export default {
                         }
                         .date{
                             border-right: 1px solid white;
-                            padding: 0.1rem 0 0 0;
+                            padding: 0.1rem 0 0.1rem 0;
                             span{
                                 font-size: 0.5rem;
                             }
                         }
                     }
                     .memberCenterBottom{
-                        margin-top: 0.1rem;
+                        margin: 0.14rem 0;
+                        overflow: hidden;
                         span{
-                            padding: 0.3rem;
+                            display: block;
+                            width: 50%;
+                            float: left;
                         }
                     }
                 }
@@ -779,6 +788,7 @@ export default {
                         right: -0.15rem;
                         line-height: 0.3rem;
                         width: 0.3rem;
+                        height: 0.3rem;
                         background-color: #ff852b;
                         color: white;
                         font-size: 0.22rem;
@@ -915,10 +925,6 @@ export default {
             }
         }
     }
-    #container{
-        width: 100rem;
-    }
-    
 </style>
 
 

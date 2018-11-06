@@ -113,14 +113,16 @@
                 <dl>
                   <dt> 跟随人数 </dt>
                   <!-- <dd v-if="item.optionId == 9 "> {{item.followerNumber}} </dd> -->
-                  <dd v-if="item.optionId == 8 "> {{item.followerNumber + 100}} </dd>
-                  <dd v-if="item.optionId == 1 "> {{item.followerNumber + 70}} </dd>
-                  <dd v-if="item.optionId == 2 "> {{item.followerNumber + 10}} </dd>
+                  <dd v-if="item.optionId == 8 "> {{item.followerNumber + 100 + 198}} </dd>
+                  <dd v-if="item.optionId == 1 "> {{item.followerNumber + 70 + 136}} </dd>
+                  <dd v-if="item.optionId == 2 "> {{item.followerNumber + 10 + 137}} </dd>
                   <dd v-if="item.optionId == 3 "> {{item.followerNumber + 60}} </dd>
-                  <dd v-if="item.optionId == 5 "> {{item.followerNumber + 67}} </dd>
-                  <dd v-if="item.optionId == 6 "> {{item.followerNumber + 20}} </dd>
-                  <dd v-if="item.optionId == 7 "> {{item.followerNumber + 31}} </dd>
-                  <dd v-if="item.optionId != 1 && item.optionId != 2 && item.optionId != 3&& item.optionId != 5 && item.optionId != 6 && item.optionId != 7&& item.optionId != 8 " >{{ item.followerNumber }} </dd>
+                  <dd v-if="item.optionId == 5 "> {{item.followerNumber + 67 + 191}} </dd>
+                  <dd v-if="item.optionId == 6 "> {{item.followerNumber + 20 + 231}} </dd>
+                  <dd v-if="item.optionId == 7 "> {{item.followerNumber + 31 + 145}} </dd>
+                  <dd v-if="item.optionId == 9 "> {{item.followerNumber + 36}} </dd>
+                  <dd v-if="item.optionId == 10 "> {{item.followerNumber + 20}} </dd>
+                  <dd v-if="item.optionId != 1 && item.optionId != 2 && item.optionId != 3&& item.optionId != 5 && item.optionId != 6 && item.optionId != 7&& item.optionId != 8&& item.optionId != 9&& item.optionId != 10 " >{{ item.followerNumber }} </dd>
                 </dl>
               </div>
             </div>
