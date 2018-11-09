@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="boxShow">
         <h1 id="header">
             购买V认证
         </h1>
@@ -54,6 +54,7 @@ export default {
     name: 'App', 
     data(){
         return {
+            boxShow:false,
             urlTitle: '',
             userId: '',
             befSrc: require('./assets/Wrong@2x.png'),
@@ -90,6 +91,7 @@ export default {
                 }else{
                     this.dis = true;
                 }
+                this.boxShow=true
               
         }).catch((err) => {
             console.log(err)

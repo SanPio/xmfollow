@@ -1,5 +1,5 @@
 <template>
-    <div id="box">
+    <div id="box" v-if="boxShow">
         <div id="header">
             <div class="h-title">
                 <div class="h-left">
@@ -289,7 +289,8 @@
                                         <div class="right clearfix">
                                             <div class="left">
                                                 <p :class="item.orderProfit >= 0 ? 'bulecolor' : 'redcolor' " >
-                                                {{'$'+ item.orderProfit}}
+                                                    <a v-if="item.type!=2 && item.type!=3&& item.type!=4&& item.type!=5">{{'$'+ item.orderProfit}}</a>
+                                                    <a v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5" style="color:#666666;">取消</a>
                                                 </p>                                        
                                             </div>     
                                         </div>
@@ -370,6 +371,7 @@ export default {
     name: 'App',
     data(){
         return {
+            boxShow:false,
             optionId:1,
             userId : 1,
             accountId: 1,
@@ -582,6 +584,8 @@ export default {
             this.principle.push(res.data.data.signalExpects);
             this.principle.push(res.data.data.signalDrawDown);
             this.principle.push(res.data.data.signalSpread);
+
+            this.boxShow = true
         }).catch((err) => {
             console.log(err)
         });

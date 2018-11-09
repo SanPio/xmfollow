@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="boxShow">
         <div class="accHistory">
             <div class="left fl">
                 <div class="left-icon" v-if="info">${{info.orderprofits | numPuls }}</div>
@@ -30,6 +30,7 @@
 export default {
     data(){
         return {
+            boxShow:false,
             urlTitle:'',
             opthionId:'',
             accountid:'',
@@ -71,6 +72,7 @@ export default {
             this.info = res.data.data
             // this.info = res.data.data.accountHistoryReponse
             // this.infos = res.data.data.userOrderDetailsReponse
+            this.boxShow = true
             
         }).catch((err)=>{
             console.log(err)

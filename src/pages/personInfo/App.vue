@@ -1,5 +1,5 @@
 <template>
-    <div id="box">
+    <div id="box" v-if="boxShow">
         <header class="clearfix">
             <p class="left">
                 <img :src="userImgSrc?userImgSrc:userDefImg" >
@@ -126,6 +126,7 @@ export default {
     name: 'App', 
     data(){
         return {
+            boxShow:false,
             userId: '',
             urlTitle: '',
             riImg : require('./assets/Personalinformation-icon@2x.png'),
@@ -199,7 +200,7 @@ export default {
             }else{
                 this.birthday = '1980-01-01'
             }
-            
+            this.boxShow = true
         }).catch( req => {
             console.log( req )
 

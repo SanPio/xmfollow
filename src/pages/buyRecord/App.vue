@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="boxShow">
         <div class="buy">
             <div class="nav">
                 
@@ -36,6 +36,7 @@ export default {
     name: 'App', 
     data(){
         return {
+            boxShow:false,
             nav:["购买时间","优惠","购买时长","原价","实付"],
             infoAllLoaded: false,
             userId : '',
@@ -65,7 +66,10 @@ export default {
             if( res.data.data.data.total <= 20 ){
                 this.infoAllLoaded = true
             }
-        })
+            this.boxShow = true
+        }).catch((err) => {
+            console.log(err)                
+        });
     },
     methods:{
         loadBottom(){

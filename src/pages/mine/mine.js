@@ -11,6 +11,9 @@ Vue.prototype.$qs = qs
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+import { MessageBox } from 'mint-ui';
+import { Toast } from 'mint-ui';
+
 import touch from 'vue-directive-touch';
 Vue.use(touch);
 

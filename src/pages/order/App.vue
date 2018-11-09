@@ -218,7 +218,9 @@
                                     <div class="right clearfix">
                                         <div class="left">
                                             <p :class="item.profit >= 0 ? 'bulecolor' : 'redcolor' " style="line-height:.6rem">
-                                               ${{item.profit}}
+                                               
+                                                <a v-if="item.type!=2 && item.type!=3&& item.type!=4&& item.type!=5">${{item.profit}}</a>
+                                                <a v-if="item.type==2 || item.type==3|| item.type==4|| item.type==5" style="color:#666666;">取消</a>
                                             </p>
                                             
                                       

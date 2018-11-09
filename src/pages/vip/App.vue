@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="boxShow">
         <h1 id="header">
             购买会员
         </h1>
@@ -82,6 +82,7 @@ export default {
     name: 'App', 
     data(){
         return {
+            boxShow:false,
             urlTitle: '',
             userId: '',
             accountId: '',
@@ -176,7 +177,7 @@ export default {
                         
                     }  
                 }
-        
+            this.boxShow = true
             
         }).catch((err) => {
             console.log(err)

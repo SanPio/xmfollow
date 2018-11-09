@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="boxShow">
         <div id="header">
             <div class="head-left fl">
                 <div class="fl" @click="toPersonInfo">
@@ -215,7 +215,8 @@
 <script>
 
 import {Swipe, SwipeItem} from 'mint-ui'
-
+import { MessageBox } from 'mint-ui';
+import { Toast } from 'mint-ui';
 export default {
     // name: 'App', 
     data(){
@@ -260,7 +261,8 @@ export default {
             endW:0,
             disW:0,
             slideEffects:'',
-            scroll:''
+            scroll:'',
+            boxShow: false
 
         }
     },
@@ -293,6 +295,7 @@ export default {
             this.accInfo = localStorage.getItem('accountId');
             this.userId = localStorage.getItem('userId');
             // console.log(localStorage.getItem('accountId'));
+            this.boxShow=true
         })
     },
     filters: {
@@ -341,10 +344,22 @@ export default {
         },
         // 通过福利跳转到vip购买页面
         toVipWelfare(){
-            // console.log(this.isActive)
             this.welfareId = this.list[this.isActive].id
-            // console.log(this.welfareId)
-            // window.location.href = `vip.html?userId=${this.userId}&id=${this.welfareId}`
+            console.log(this.welfareId)
+            if (typeof WeixinJSBridge == "undefined"){
+                if( document.addEventListener ){
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                }else if (document.attachEvent){  
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);                 
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);             
+                }
+            }else{
+                //暂不使用   微信功能 ，后期开放
+                this.onBridgeReady();
+            }     
+        },
+        onBridgeReady(){
+            
             this.$http.get(this.urlTitle+'wechat/unifiedOrder',{ 
                 params : { 
                     userId : this.userId,  
@@ -374,8 +389,7 @@ export default {
                 );  
             }).catch((err) => {
                 console.log(err)
-            });
-            
+            });    
         },
         // 跳转到购买记录
         toBuyRecord(){
@@ -579,10 +593,13 @@ export default {
                     width: 0.5rem;
                     height: 0.44rem;
                     background: url("./assets/title@2x.png");
-                    background-size: 100%;
+                    background-size: 94%;
+                    background-position-x: 0.04rem;
+                    background-position-y: 0.03rem;
+                    background-repeat: no-repeat;
                 }              
                 p{
-                    width: 1.1rem;
+                    width: 1.11rem;
                     height: 0.36rem;
                     line-height: 0.35rem;
                     color: white;
@@ -770,7 +787,7 @@ export default {
                 line-height: 0.7rem;
             }
             ul{
-                width: 40rem;
+                width: 12rem;
                 overflow: hidden;
                 padding: 0.2rem 0 0 0;
                 margin-left: 0.24rem;
@@ -928,14 +945,15 @@ export default {
     }
     .remove{
         overflow-x:scroll;
-        overflow-y:hidden;
-        backface-visibility:hidden;
-        perspective:1000;
+        // overflow-y:hidden;
+        // backface-visibility:hidden;
+        // perspective:1000;
         // overflow-scrolling:none;
         // text-align:justify;
-        white-space:nowrap;
+        // white-space:nowrap;
         // width: 100rem;
     }
+    // 去除滚动条
     .remove::-webkit-scrollbar,.btns::-webkit-scrollbar{
         width: 0;
         height: 0;
@@ -948,7 +966,6 @@ export default {
         // overflow-scrolling:none;
         // text-align:justify;
         white-space:nowrap;
-        // width: 100rem;
     }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-    <div id="box" ref="box">
+    <div id="box" ref="box" v-if="boxShow">
         <!-- 头部 -->
         <div id="header" class="padding clearfix">
             <div class="left clearfix">
@@ -308,6 +308,7 @@ export default {
     name: 'App', 
     data(){
         return {
+            boxShow:false,
             optionId:1,
             userId: 1,
             accountId: 1,
@@ -633,6 +634,7 @@ export default {
             }else if(myData.broundoff == 1){
                 this.abandonShow = false;
             }
+            this.boxShow = true
         }).catch((err) => {console.log(err) })
        
     },
