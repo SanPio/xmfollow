@@ -5,10 +5,10 @@
                 <img :src="userImgSrc?userImgSrc:userDefImg" >
                 <span> 邀请码： {{ invitCode }}&nbsp;</span>
             </p>
-            <p class="right">
+            <!-- <p class="right">
                 <button @click="preservation">保存</button>
                 
-            </p>
+            </p> -->
         </header>
         <ul class="top">
             <li class="clearfix">
@@ -97,7 +97,7 @@
                 </p>
             </li>
         </ul>
-
+        <button @click="preservation">保存</button>
         
         <!-- 性别选择控件 -->
         <mt-actionsheet
@@ -284,7 +284,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+    body{
+        background-color: #f9f9f9;
+    }
     #box{
         background-color: #f9f9f9;
         header{
@@ -340,7 +342,16 @@ export default {
                 color: #999;
             }
         }
-       
+        button{
+            width: 6.50rem;
+            height: 1rem;
+            border: none;
+            background-color: #4fa2fe;
+            border-radius: 0.1rem;
+            color: white;
+            font-size: 0.46rem;
+            margin-top: 0.4rem;
+        }
     }
 
 </style>

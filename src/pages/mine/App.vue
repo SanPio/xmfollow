@@ -19,7 +19,7 @@
                     <dd>邀请码 : {{info.invitCode}}</dd>
                 </dl>
             </div>
-            <div class="head-right fr">
+            <div class="head-right fr" v-if="share">
                 <div class="fl">做任务领积分</div>
                 <img src="./assets/zzz1@2x.png" alt="" class="fl">
             </div>
@@ -83,12 +83,14 @@
                 <div>
                     <p class="fl">会员中心</p>
                 </div>
-                <div ref='remove'>
-                    <ul ref='btnImg' class="btn-move"  
+                <div ref='remove' class="remove">
+                    <!-- 滑动事件 -->
+                     <!-- ref='btnImg' class="btn-move"  
                         @touchstart='touchStart' 
                         @touchmove='touchMove' 
                         @touchend='touchEnd' 
-                        :style="slideEffect">
+                        :style="slideEffect" -->
+                    <ul>
                         <li>
                             <div class="memberCenterTop" @click="toBuyVip">
                                 <p class="fr">续费>></p>
@@ -98,8 +100,8 @@
                                     <span v-if="uservip==null || !success">未获得</span>
                                 </div>
                                 <div class="fl">
-                                    <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
-                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>VIP会员</span></p>
+                                    <img src="./assets/My-home-page-icon1.png" alt="" class="fl">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>VIP 会员</span></p>
                                 </div>
                             </div>
                             <div class="memberCenterBottom">
@@ -113,8 +115,8 @@
                                     <span>{{info.authenticationOverDatetime}}</span><span style="font-size: 0.3rem;padding:0 0 0 0.05rem;">天</span>
                                 </div>
                                 <div class="fl">
-                                    <img src="./assets/My-home-page-icon1.jpg" alt="" class="fl">
-                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>V认证</span></p>
+                                    <img src="./assets/renzheng@2x.png" alt="" class="fl">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>V 认证</span></p>
                                 </div>
                             </div>
                             <div class="memberCenterBottom">
@@ -130,17 +132,13 @@
                     <p class="fl">福利</p>
                 </div>
                     <div class="btns" ref='removes'>
-                        <ul ref='btnImgs' class="btn-moves"  
-                        @touchstart='touchStarts' 
-                        @touchmove='touchMoves' 
-                        @touchend='touchEnds' 
-                        :style="slideEffects">
+                        <ul>
                             <li @click="changeStyle(index)" v-for="(item,index) in list" :key="index" :class="{active:index==isActive}">
-                                <b v-if="index==0">新</b>
+                                <b v-if="item.isNew==1">新</b>
                                 <p style="color:#666666;font-size:0.24rem;margin-top: 0.2rem;">{{item.title}}</p>
                                 <p style="color:#333333;font-size:0.3rem;">{{item.content}}</p>
-                                <P style="color:#ff852b;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#ff852b;font-size:0.36rem;">{{item.originalPrice | numPuls }}</span></P>
-                                <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.presentPrice | numPuls}}</span></P>
+                                <P style="color:#7091ff;font-size:0.24rem;margin-top: 0.2rem;">￥<span style="color:#7091ff;font-size:0.36rem;">{{item.presentPrice | numPuls }}</span></P>
+                                <P style="color:#999999;font-size:0.24rem;text-decoration:line-through;">￥<span>{{item.originalPrice | numPuls}}</span></P>
                             </li>
                         </ul>
                     </div>
@@ -234,6 +232,8 @@ export default {
             userId:'',
             ind:'',
             // active: true,
+            // 分享
+            share : false,
             isActive : -1,
             // 联系客服
             contact: false,
@@ -250,7 +250,6 @@ export default {
             // 福利
             welfareId:'',
             list:[],
-            name:"kaishi",
             startX:0,
             moveX:0,
             endX:0,
@@ -287,15 +286,13 @@ export default {
             this.info = res.data.data
             this.success = res.data.success
             // console.log(this.success)
-            this.userImgSrc = res.data.data.headImg
-            this.uservip = res.data.data.vip
-            this.authentication = res.data.data.authentication
-            this.list = res.data.data.list
-            this.accInfo = localStorage.getItem('accountId')
-            this.userId = localStorage.getItem('userId')
-            // console.log(localStorage.getItem('accountId'))
-            
-
+            this.userImgSrc = res.data.data.headImg;
+            this.uservip = res.data.data.vip;
+            this.authentication = res.data.data.authentication;
+            this.list = res.data.data.list;
+            this.accInfo = localStorage.getItem('accountId');
+            this.userId = localStorage.getItem('userId');
+            // console.log(localStorage.getItem('accountId'));
         })
     },
     filters: {
@@ -346,8 +343,39 @@ export default {
         toVipWelfare(){
             // console.log(this.isActive)
             this.welfareId = this.list[this.isActive].id
-            console.log(this.welfareId)
-            window.location.href = `vip.html?userId=${this.userId}&id=${this.welfareId}`
+            // console.log(this.welfareId)
+            // window.location.href = `vip.html?userId=${this.userId}&id=${this.welfareId}`
+            this.$http.get(this.urlTitle+'wechat/unifiedOrder',{ 
+                params : { 
+                    userId : this.userId,  
+                    welfareId: this.welfareId
+                }
+            }).then((res) => { 
+                console.log(res)
+                WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest', {
+                        "appId" : res.data.data.appId,
+                        "timeStamp": res.data.data.timeStamp,
+                        "nonceStr" : res.data.data.nonceStr,
+                        "package" : res.data.data.package,
+                        "signType" :  res.data.data.signType,
+                        "paySign" : res.data.data.paySign,
+                    },function(res){
+                        console.log(res.err_msg)
+                        if(res.err_msg == "get_brand_wcpay_request:ok"){
+                                window.location.href=`index.html`;
+                            	// location.href="weixinPayResult.html";//支付成功跳转到指定页面
+                        }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+                            Toast("支付取消")
+                        }else{
+                            Toast("支付失败")
+                        }
+                    }
+                );  
+            }).catch((err) => {
+                console.log(err)
+            });
+            
         },
         // 跳转到购买记录
         toBuyRecord(){
@@ -369,111 +397,64 @@ export default {
 
         // 滑动事件
         //会员中心
-        touchStart:function(ev) {
-            ev = ev || event;
-            // ev.preventDefault();
-            // console.log(ev);
-            // console.log(ev.changedTouches);
-            if(ev.touches.length == 1) {    
-                this.startX = ev.touches[0].clientX; 
-                // console.log(this.startX)
-            }
-        },
-        touchMove:function(ev) {
-            ev = ev || event;
-            // console.log(ev)
-            // ev.preventDefault();
-            let btnWidth = this.$refs.remove.offsetWidth;  
-            let btnImg = this.$refs.btnImg.offsetWidth;
+//         touchStart:function(ev) {
+//             ev = ev || event;
+//             // ev.preventDefault();
+//             console.log(ev);
+//             // console.log(ev.changedTouches);
+//             if(ev.touches.length == 1) {    
+//                 this.startX = ev.touches[0].clientX; 
+//                 // console.log(this.startX)
+//             }
+//         },
+//         touchMove:function(ev) {
+//             ev = ev || event;
+//             // console.log(ev)
+//             // ev.preventDefault();
+//             let btnWidth = this.$refs.remove.offsetWidth;  
+//             let btnImg = this.$refs.btnImg.offsetWidth;
 
-            // console.log(ev.targetTouches);
-            // console.log(ev.changedTouches);
-            if(ev.touches.length == 1) {
+//             // console.log(ev.targetTouches);
+//             // console.log(ev.changedTouches);
+//             if(ev.touches.length == 1) {
                 
-                this.moveX = ev.touches[0].clientX;
-
-                
-                this.disX = this.moveX-this.startX;
-                if(this.disX<0 || this.disX == 0) {
-                    this.slideEffect = 'transform:translateX('+(this.disX)/100+'rem)';
-
-                }else if(this.disX>0){
-                    this.slideEffect = 'transform:translateX(0rem)';
-
-                    if(this.disX>=btnWidth) {
-                        this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)/100+'rem)';
-                    }
-                }
-                // console.log(this.slideEffect)
-            }
-        },
-        touchEnd:function(ev){
-            ev = ev || event;
-            // ev.preventDefault();
-            let btnWidth = this.$refs.remove.offsetWidth;
-            let btnImg = this.$refs.btnImg.offsetWidth;
-//          console.log(ev.changedTouches);
-            if(ev.changedTouches.length == 1) {
-                let endX = ev.changedTouches[0].clientX;
-                this.disX = endX-this.startX;
-                // console.log(this.disX,'this.disX')
-                // console.log((btnWidth/2),'btnWidth/2');
-                if(this.disX < (btnWidth/2)) {
-                    this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)/100+ "rem)';
-                }else {
-                    this.slideEffect = "transform:translateX(0rem)";
-                }
-            }
-        },
-        // 福利
-        touchStarts:function(ev) {
-            ev = ev || event;
-            // ev.preventDefault();
-
-            if(ev.touches.length == 1) {    
-                this.startW = ev.touches[0].clientX; 
-            }
-        },
-        touchMoves:function(ev) {
-            ev = ev || event;
-            // ev.preventDefault();
-            let btnWidths = this.$refs.removes.offsetWidth;  
-            let btnImgs = this.$refs.btnImgs.offsetWidth;
-
-            if(ev.touches.length == 1) {
-                
-                this.moveW = ev.touches[0].clientX;
+//                 this.moveX = ev.touches[0].clientX;
 
                 
-                this.disW = this.moveW-this.startW;
-                if(this.disW<0 || this.disW == 0) {
-                    this.slideEffects = 'transform:translateX('+(this.disW)/100+'rem)';
-
-                }else if(this.disW>0){
-                    this.slideEffects = 'transform:translateX(0rem)';
-
-                    if(this.disW>=btnWidths) {
-                        this.slideEffects = 'transform:translateX('+(btnWidths-btnImgs)/100+'rem)';
-                    }
-                }
-            }
-        },
-        touchEnds:function(ev){
-            ev = ev || event;
-            // ev.preventDefault();
-            let btnWidths = this.$refs.removes.offsetWidth;
-            let btnImgs = this.$refs.btnImgs.offsetWidth;
-            if(ev.changedTouches.length == 1) {
-                let endW = ev.changedTouches[0].clientX;
-                this.disW = endW-this.startW;
-
-                if(this.disW < (btnWidths/2)) {
-                    this.slideEffects = "transform:translateX('+(btnWidths-btnImgs)/100+ 'rem)";
-                }else {
-                    this.slideEffects = "transform:translateX(0rem)";
-                }
-            }
-        }
+//                 this.disX = this.moveX-this.startX;
+//                 // console.log(this.disX)
+//                 if(this.disX<0 || this.disX == 0) {
+//                     this.slideEffect = 'transform:translateX('+(this.disX)/100+'rem)';
+//                     // console.log(this.slideEffect)
+//                 }else if(this.disX>0){
+//                     this.slideEffect = 'transform:translateX(0rem)';
+//                     console.log(this.slideEffect)
+//                     // this.slideEffect = 'transform:translateX('-(this.disX)/100+'rem)';
+//                     if(this.disX>=btnWidth) {
+//                         this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)/100+'rem)';
+//                         // console.log(this.slideEffect)
+//                     }
+//                 }
+//             }
+//         },
+//         touchEnd:function(ev){
+//             ev = ev || event;
+//             // ev.preventDefault();
+//             let btnWidth = this.$refs.remove.offsetWidth;
+//             let btnImg = this.$refs.btnImg.offsetWidth;
+// //          console.log(ev.changedTouches);
+//             if(ev.changedTouches.length == 1) {
+//                 let endX = ev.changedTouches[0].clientX;
+//                 this.disX = endX-this.startX;
+//                 // console.log(this.disX,'this.disX')
+//                 // console.log((btnWidth/2),'btnWidth/2');
+//                 if(this.disX < (btnWidth/2)) {
+//                     this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)/100+ "rem)';
+//                 }else {
+//                     this.slideEffect = "transform:translateX(0rem)";
+//                 }
+//             }
+//         },
         // 滑动事件结束
     }
  
@@ -519,7 +500,7 @@ export default {
         }
     }
     .title{
-        width: 6rem;
+        width: 6.4rem;
         // height: 1.64rem;
         background-color: white;
         margin: 0.2rem auto;
@@ -563,7 +544,7 @@ export default {
                 margin: 0.3rem 0 0 0.2rem;
                 text-align: left;
                 dt{
-                    font-size: 0.32rem;
+                    font-size: 0.3rem;
                     width: 3rem;
                     white-space: nowrap;
                     overflow: hidden;
@@ -703,15 +684,16 @@ export default {
             }
             ul{
                 color: white;
-                margin-left: 0.64rem;
+                margin-left: 0.36rem;
                 overflow: hidden;
-                width: 100rem;
+                width: 9rem;
+
+                
                 li{
                     width: 4rem;
                     float: left;
-                    background-color: #4fa2fe;
                     border-radius: 0.08rem;
-                    margin-right: 0.64rem;
+                    margin-right: 0.36rem;
                     .memberCenterTop{
                         width: 100%;
                         overflow: hidden;
@@ -723,18 +705,13 @@ export default {
                             font-size: 0.22rem;
                             text-align: right;
                             margin: 0.1rem 0 0 0;
-                            padding: 0 0.2rem 0 0;
+                            padding: 0 0.3rem 0 0;
                         }
                         >div{
                             width: 50%;
                             box-sizing: border-box;
                             font-size: 0.24rem;
-                            img{
-                                width: 0.64rem;
-                                height: 0.50rem;
-                                padding: 0.2rem 0 0 0.1rem;
-                                
-                            }
+                            
                         }
                         .date{
                             border-right: 1px solid white;
@@ -751,10 +728,32 @@ export default {
                             display: block;
                             width: 50%;
                             float: left;
+                            font-size: 0.24rem;
                         }
                     }
                 }
+                li:nth-of-type(1){
+                    background: url("./assets/3083@2x.png");
+                    background-size: 105% 110%;
+                    background-position: -0.1rem -0.1rem;
+                    img{
+                        width: 0.61rem;
+                        height: 0.49rem;
+                        padding: 0.2rem 0 0 0.1rem;                               
+                    }
+                }
+                li:nth-of-type(2){
+                    background: url("./assets/30831@2x.png");
+                    background-size: 105% 110%;
+                    background-position: -0.1rem -0.1rem;
+                    img{
+                        width: 0.54rem;
+                        height: 0.64rem;
+                        padding: 0.1rem 0.16rem 0 0.2rem;                               
+                    }
+                }
             }
+
             .mint-swipe {
                 height: 1.8rem;
             }
@@ -771,16 +770,17 @@ export default {
                 line-height: 0.7rem;
             }
             ul{
-                width: 100rem;
+                width: 40rem;
                 overflow: hidden;
                 padding: 0.2rem 0 0 0;
+                margin-left: 0.24rem;
                 li{
                     float: left;
                     width: 1.8rem;
                     height: 2.4rem;
                     border: 1px solid #d3d3d3;
                     border-radius: 0.06rem;
-                    margin-left: 0.5rem;
+                    margin-right: 0.4rem;
                     position: relative;
                     b{
                         position: absolute;
@@ -789,20 +789,21 @@ export default {
                         line-height: 0.3rem;
                         width: 0.3rem;
                         height: 0.3rem;
-                        background-color: #ff852b;
+                        background-color: #7091ff;
                         color: white;
                         font-size: 0.22rem;
                         border-radius: 0.04rem;
                     }
                 }
+
                 .active{
                     float: left;
                     width: 1.8rem;
                     height: 2.4rem;
-                    border: 1px solid #ff852b;
-                    background-color: #ffeee1;
+                    border: 1px solid #7091ff;
+                    background-color: #eef2ff;
                     border-radius: 0.06rem;
-                    margin-left: 0.5rem;
+                    margin-right: 0.4rem;
                     position: relative;
                     b{
                         position: absolute;
@@ -810,7 +811,7 @@ export default {
                         right: -0.15rem;
                         line-height: 0.3rem;
                         width: 0.3rem;
-                        background-color: #ff852b;
+                        background-color: #7091ff;
                         color: white;
                         font-size: 0.22rem;
                     }
@@ -924,6 +925,30 @@ export default {
                 }
             }
         }
+    }
+    .remove{
+        overflow-x:scroll;
+        overflow-y:hidden;
+        backface-visibility:hidden;
+        perspective:1000;
+        // overflow-scrolling:none;
+        // text-align:justify;
+        white-space:nowrap;
+        // width: 100rem;
+    }
+    .remove::-webkit-scrollbar,.btns::-webkit-scrollbar{
+        width: 0;
+        height: 0;
+    }
+    .btns{
+        overflow-x:scroll;
+        overflow-y:hidden;
+        backface-visibility:hidden;
+        perspective:1000;
+        // overflow-scrolling:none;
+        // text-align:justify;
+        white-space:nowrap;
+        // width: 100rem;
     }
 </style>
 
