@@ -7,7 +7,8 @@
                     <img :src="userImgSrc" alt="">
                 </div>
                 <dl class="right">
-                    <dt> {{ followInfo.signalName }} </dt>
+                    <dt v-if="followInfo.qubie == 1" style="line-height:.7rem"> {{ followInfo.signalName }}  </dt>
+                    <dt v-if="followInfo.qubie != 1"> {{ followInfo.signalName }} </dt>
                     <dd v-if="followInfo.qubie != 1">
                         <span> {{ followInfo.lotsTypeStr }}&nbsp;{{followInfo.lots}}</span>
                         <span v-if="followInfo.lotsTypeStr=='按比例'">倍</span>
