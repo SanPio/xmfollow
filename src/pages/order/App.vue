@@ -169,7 +169,6 @@
                                 <p class="fl">累计总收益<span class="fr">${{ lishiTotalProfit | numAll }}</span></p>
                             </div>
                             <div class="infolist" v-for="(item, ind) in historyArr" :key="ind">
-                                
                                 <div class="infotop clearfix" @click="hisBotOnOff(ind)">
                                     <div class="left">
                                         <p>
@@ -486,6 +485,9 @@ export default {
             }   
         }).then((res) => { 
             console.log(res)
+            if(!res.data.data){
+                this.infoAllLoaded = true;
+            }
             this.freeMargin = res.data.data.freeMargin
             this.freeMargin = parseFloat(this.freeMargin).toFixed(2)
             if(res.data.data.zongshu <= 10){
@@ -516,6 +518,9 @@ export default {
             }   
         }).then((res) => { 
             console.log(res)
+            if(!res.data.data){
+                this.hisAllLoaded = true;
+            }
             this.lishiTotalProfit = res.data.data.lishiTotalProfit
             if(res.data.data.zongshu <= 10){
                 this.hisAllLoaded = true;
@@ -713,6 +718,7 @@ export default {
             }   
         }).then((res) => { 
                 console.log(res)
+                
                 this.totalProfit = res.data.data.totalProfit
                 this.totalProfit = parseFloat(this.totalProfit).toFixed(2)
                 this.$refs.loadmores.onBottomLoaded();
@@ -723,6 +729,8 @@ export default {
                     this.infoArr.push( res.data.data.orderRespDtoList[i]  )
                     this.infoBotShow.push(false);
                 }
+                
+                
             }).catch((err) => {
                 console.log(err)
             })
