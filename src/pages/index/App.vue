@@ -196,10 +196,10 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.1.12:8080/",//丹峰
-      // urlTitle:"http://192.168.1.19:8080/",  //大潘
+      urlTitle:"http://192.168.1.19:8080/",  //大潘
       // urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
-      urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
+      // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
       allLoaded: false,
       setFollowType:8,
       // 购买弹框
@@ -278,11 +278,12 @@ export default {
           
           for(let i = 0; i < res.data.data.list.length; i++){
             
-            var arr = [];
-            for(let j = 0; j < res.data.data.list[i].profit.length; j++){
-              arr.push(res.data.data.list[i].profit[j].profitNo)
-            }
-            this.echartArr.push(arr)
+            // var arr = [];
+            // for(let j = 0; j < res.data.data.list[i].profit.length; j++){
+            //   arr.push(res.data.data.list[i].profit[j].profitNo)
+            // }
+            // this.echartArr.push(arr)
+            this.echartArr.push(res.data.data.list[i].monthHistoryProfitReponse.historyPoint)
             
           }
        
@@ -296,10 +297,18 @@ export default {
                 myChart.setOption({
                   animation: false,
                   xAxis: {
-                      type: 'category',
-                      show:false
-                      // boundaryGap: false,
-                      // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    type : 'category',
+              　　　　data: ['', '', '', '', '', '', '','', '', ''],
+              　　　　axisTick: {
+              　　　　alignWithLabel: true
+              　　　　},
+              　　　　axisLabel:{
+              　　　　interval:0 
+              　　　　}
+                      // type: 'value',
+                      // show:false,
+                      // // boundaryGap: false,
+                      // data: ['', '', '', '', '', '', '','', '', '']
                   },
                   yAxis: {  
                       show:false
@@ -355,12 +364,13 @@ export default {
           for(let i = 0; i < res.data.data.list.length; i++){
             
             this.optionId.push(res.data.data.list[i].optionId)
-            var arr = [];
-            for(let j = 0; j < res.data.data.list[i].profit.length; j++){
-              arr.push(res.data.data.list[i].profit[j].profitNo)
-            }
-            // this.echartArr.push(arr)
-            this.$set(this.echartArr,i,arr)
+            // var arr = [];
+            // for(let j = 0; j < res.data.data.list[i].profit.length; j++){
+            //   arr.push(res.data.data.list[i].profit[j].profitNo)
+            // }
+            // // this.echartArr.push(arr)
+            // this.$set(this.echartArr,i,arr)
+            this.echartArr.push(res.data.data.list[i].monthHistoryProfitReponse.historyPoint)
           
           }
           this.$nextTick(()=> { //init 你的echarts  
@@ -374,26 +384,43 @@ export default {
                       animation: false,
                       xAxis: {
                           type: 'category',
-                          show:false
+                          // show:false
                           // boundaryGap: false,
-                          // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                          data: ['', '', '', '', '', '', '','', '', ''],
+                          axisLabel:{
+                  　　　　  interval:0 
+                  　　　　}
                       },
                       yAxis: {  
-                          show:false,
-                          scale:true,
+                          // show:false,
+                          type: 'value',
+                          max: function(value) {
+                              return value.max + 20;
+                          },
+                          min: function(value) {
+                              return value.min - 20;
+                          }
+                          // scale:true,
                       },
                       grid : {
-                        left:0,
-                        right:0,
-                        top : 0,
-                        bottom : 0
+                        left:2,
+                        right:2,
+                        top : 2,
+                        bottom : 2
                       },
                       series: [{
                           data: this.echartArr[i],
+                        //  data: [820, 932, 901, 934, 1290, 1330, 1320],
                           type: 'line',
-                          areaStyle: {},
-                          symbol:'none',  //这句就是去掉点的    
+                          
+                          // symbol:'none',  //这句就是去掉点的    
                           smooth:true,  //这句就是让曲线变平滑的 
+                          markPoint: {
+                              data: [
+                                  {type: 'max', name: '最大值'},
+                                  {type: 'min', name: '最小值'}
+                              ]
+                          },
                       }]
                     });
                 }
