@@ -1,7 +1,7 @@
 <template>
     <div id="box">
         <!-- <img :src="updataimg"> -->
-        <mt-navbar v-model="selected" :fixed='fixed'>
+        <mt-navbar v-model="selected" :fixed='fixed' style="height:0.92rem;">
             <mt-tab-item id="info">订单信息</mt-tab-item>
             <mt-tab-item id="history">历史记录</mt-tab-item>
         </mt-navbar>

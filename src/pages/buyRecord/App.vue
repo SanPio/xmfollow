@@ -1,6 +1,7 @@
 <template>
-    <div v-if="boxShow">
-        <div class="buy">
+    <div v-if="boxShow" class="box">
+        <div class="buy" style="border: 1px solid #f3f3f3;box-shadow: 0 0 0.08rem #f3f3f3;-webkit-box-shadow: 0 0 0.08rem #f3f3f3;">
+            <div class="top"></div>
             <div class="nav">
                 
                 <ul>
@@ -12,7 +13,7 @@
                     :bottom-method="loadBottom" 
                     :bottom-all-loaded="infoAllLoaded"
                     :autoFill="false" ref="loadmores">
-                    <ul>
+                    <ul class="ul">
                         <li v-for="(item,index) in list" :key="index">
                             <p>{{ item.modifyTime }}</p>
 
@@ -28,6 +29,7 @@
                     </ul>
                 </mt-loadmore>
             </div>
+            <div class="foot"></div>
         </div>
     </div>
 </template>
@@ -114,29 +116,57 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    body{
+        background-color: #fff;
+    }
+    .top{
+        width: 100%;
+        height: 0.2rem;
+        // background: url("./assets/1@2x_01.jpg");
+        // background-size: 100%;
+    }
+    .foot{
+        width: 100%;
+        height: 0.2rem;
+        // background: url("./assets/1@2x_05.jpg");
+        // background-size: 100%;
+    }
     .buy{
-        width: 7.02rem;
+        width: 7.04rem;
         margin:  0.3rem auto;
-        box-shadow: 0 0 8px #f3f3f3;
+        min-height: 7rem;
+        border: 1px solid #f3f3f3;
+        box-shadow: 0 0 0.08rem #f3f3f3;
+        -webkit-box-shadow: 0 0 0.08rem #f3f3f3;
         .nav{
-            border-bottom: 1px solid #c9c9c9;
-            ul{
+            
+            // background: url("./assets/1@2x_03.jpg");
+            // background-repeat: repeat-y;  
+            // background-size: 100%;
+            >ul{
                 overflow: hidden;
                 height: 0.63rem;
                 line-height: 0.63rem;
-                
+                border-bottom: 1px solid #c9c9c9;
+                width: 6.8rem;
+                margin: 0 auto;
                 li{
                     float: left;
-                    width: 1.4rem;
+                    width: 1.36rem;
                     text-align: center;
                     color: #4fa2fe;
                     font-size: 0.26rem;
                 }
             }
         }
-        ul{
+        .ul{
             overflow: hidden;
-            margin-top: 0.24rem;
+            padding: 0.24rem 0 0 0;
+            // background: url("./assets/1@2x_03.jpg");
+            // background-repeat: repeat-y;  
+            // background-size: 100%;
+            width: 7.04rem;
+            margin: 0 auto;
             li{
                 overflow: hidden;
                 p{
