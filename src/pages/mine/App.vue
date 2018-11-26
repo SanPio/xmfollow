@@ -21,7 +21,7 @@
             </div>
             <div class="head-right fr" v-if="share">
                 <div class="fl">做任务领积分</div>
-                <img src="./assets/zzz1@2x.png" alt="" class="fl">
+                <img src="./assets/zzz1@2x.png" alt="" class="fl" @click="toShare">
             </div>
             <div class="info">
                 <dl>
@@ -72,10 +72,14 @@
                     <p class="privilegeRight fr" @click="privileges">特权明细>></p>
                 </div>
                 <ul>
-                    <li><img src="./assets/tequan.png" alt=""></li>
-                    <li><img src="./assets/tequan.png" alt=""></li>
-                    <li><img src="./assets/tequan.png" alt=""></li>
-                    <li><img src="./assets/tequan.png" alt=""></li>
+                    <li v-if="isblind"><img src="./assets/per.png" alt=""></li>
+                    <li v-if="!isblind"><img src="./assets/per2.png" alt=""></li>
+                    <li v-if="authentication"><img src="./assets/three.png" alt=""></li>
+                    <li v-if="!authentication"><img src="./assets/three2.png" alt=""></li>
+                    <li v-if="uservip"><img src="./assets/v.png" alt=""></li>
+                    <li v-if="!uservip"><img src="./assets/v2.png" alt=""></li>
+                    <li v-if="fiveStar"><img src="./assets/concat.png" alt=""></li>
+                    <li v-if="!fiveStar"><img src="./assets/concat2.png" alt=""></li>
                 </ul>
             </div>
             <!-- 会员中心 -->
@@ -85,11 +89,6 @@
                 </div>
                 <div ref='remove' class="remove">
                     <!-- 滑动事件 -->
-                     <!-- ref='btnImg' class="btn-move"  
-                        @touchstart='touchStart' 
-                        @touchmove='touchMove' 
-                        @touchend='touchEnd' 
-                        :style="slideEffect" -->
                     <ul>
                         <li>
                             <div class="memberCenterTop" @click="toBuyVip">
@@ -124,6 +123,48 @@
                             </div>
                         </li>
                     </ul>
+                    
+                    <!-- <ul>
+                        <mt-swipe :auto="10000" :show-indicators="false">
+                        <mt-swipe-item>
+                        <li style="">
+                            <div class="memberCenterTop" @click="toBuyVip">
+                                <p class="fr">续费>></p>
+                                <div class="date fl">
+                                    <span v-if="uservip==true">{{info.vipOverDatetime}}</span><span v-if="uservip==true" style="font-size: 0.3rem;padding:0 0 0 0.05rem;">天</span>
+                                    <span v-if="uservip==false">{{info.vipOverDatetime}}</span>
+                                    <span v-if="uservip==null || !success">未获得</span>
+                                </div>
+                                <div class="fl">
+                                    <img src="./assets/My-home-page-icon1.png" alt="" class="fl" style="width: 0.61rem;height: 0.49rem;padding: 0.2rem 0 0 0.1rem;">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>VIP 会员</span></p>
+                                </div>
+                            </div>
+                            <div class="memberCenterBottom">
+                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                            </div>
+                        </li>
+                        </mt-swipe-item>
+                        <mt-swipe-item>
+                        <li v-if="authentication">
+                            <div class="memberCenterTop" @click="toBuyVip">
+                                <p class="fr">续费>></p>
+                                <div class="date fl">
+                                    <span>{{info.authenticationOverDatetime}}</span><span style="font-size: 0.3rem;padding:0 0 0 0.05rem;">天</span>
+                                </div>
+                                <div class="fl">
+                                    <img src="./assets/renzheng@2x.png" alt="" class="fl" style="width: 0.54rem;height: 0.64rem;padding: 0.1rem 0.16rem 0 0.2rem;">
+                                    <p class="fl" style="margin: 0.26rem 0 0 0.1rem;"><span>V 认证</span></p>
+                                </div>
+                            </div>
+                            <div class="memberCenterBottom">
+                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                            </div>
+                        </li>
+                        </mt-swipe-item>
+                        </mt-swipe>
+                    </ul> -->
+                    
                 </div>
             </div>
             <!-- 福利 -->
@@ -234,12 +275,12 @@ export default {
             ind:'',
             // active: true,
             // 分享
-            share : false,
+            share : true,
             isActive : -1,
             // 联系客服
             contact: false,
             // 我的特权
-            privilege: false,
+            privilege: true,
             // 任务
             task: false,
             // vip
@@ -262,7 +303,10 @@ export default {
             disW:0,
             slideEffects:'',
             scroll:'',
-            boxShow: false
+            boxShow: false,
+            // 五星
+            fiveStar:false,
+            isblind:true
 
         }
     },
@@ -291,6 +335,7 @@ export default {
             this.userImgSrc = res.data.data.headImg;
             this.uservip = res.data.data.vip;
             this.authentication = res.data.data.authentication;
+            // this.isblind = res.data.data.isBind
             this.list = res.data.data.list;
             this.accInfo = localStorage.getItem('accountId');
             this.userId = localStorage.getItem('userId');
@@ -341,6 +386,10 @@ export default {
         // 会员中心续费
         toBuyVip(){
             window.location.href = `vip.html`
+        },
+        // 跳转到分享页面
+        toShare(){
+            window.location.href = `share.html?userId=${this.userId}`
         },
         // 通过福利跳转到vip购买页面
         toVipWelfare(){
@@ -408,68 +457,6 @@ export default {
             window.location.href = `privileges.html`
         },
 
-
-        // 滑动事件
-        //会员中心
-//         touchStart:function(ev) {
-//             ev = ev || event;
-//             // ev.preventDefault();
-//             console.log(ev);
-//             // console.log(ev.changedTouches);
-//             if(ev.touches.length == 1) {    
-//                 this.startX = ev.touches[0].clientX; 
-//                 // console.log(this.startX)
-//             }
-//         },
-//         touchMove:function(ev) {
-//             ev = ev || event;
-//             // console.log(ev)
-//             // ev.preventDefault();
-//             let btnWidth = this.$refs.remove.offsetWidth;  
-//             let btnImg = this.$refs.btnImg.offsetWidth;
-
-//             // console.log(ev.targetTouches);
-//             // console.log(ev.changedTouches);
-//             if(ev.touches.length == 1) {
-                
-//                 this.moveX = ev.touches[0].clientX;
-
-                
-//                 this.disX = this.moveX-this.startX;
-//                 // console.log(this.disX)
-//                 if(this.disX<0 || this.disX == 0) {
-//                     this.slideEffect = 'transform:translateX('+(this.disX)/100+'rem)';
-//                     // console.log(this.slideEffect)
-//                 }else if(this.disX>0){
-//                     this.slideEffect = 'transform:translateX(0rem)';
-//                     console.log(this.slideEffect)
-//                     // this.slideEffect = 'transform:translateX('-(this.disX)/100+'rem)';
-//                     if(this.disX>=btnWidth) {
-//                         this.slideEffect = 'transform:translateX('+(btnWidth-btnImg)/100+'rem)';
-//                         // console.log(this.slideEffect)
-//                     }
-//                 }
-//             }
-//         },
-//         touchEnd:function(ev){
-//             ev = ev || event;
-//             // ev.preventDefault();
-//             let btnWidth = this.$refs.remove.offsetWidth;
-//             let btnImg = this.$refs.btnImg.offsetWidth;
-// //          console.log(ev.changedTouches);
-//             if(ev.changedTouches.length == 1) {
-//                 let endX = ev.changedTouches[0].clientX;
-//                 this.disX = endX-this.startX;
-//                 // console.log(this.disX,'this.disX')
-//                 // console.log((btnWidth/2),'btnWidth/2');
-//                 if(this.disX < (btnWidth/2)) {
-//                     this.slideEffect = 'transform:translateX("+(btnWidth-btnImg)/100+ "rem)';
-//                 }else {
-//                     this.slideEffect = "transform:translateX(0rem)";
-//                 }
-//             }
-//         },
-        // 滑动事件结束
     }
  
 }
@@ -680,7 +667,7 @@ export default {
                     float: left;
                     padding: 0.21rem 0 0.28rem 0.6rem;
                     img{
-                        width: 0.66rem;
+                        // width: 0.66rem;
                         height: 0.64rem;
                         display: block;
                     }
@@ -704,13 +691,15 @@ export default {
                 margin-left: 0.36rem;
                 overflow: hidden;
                 width: 9rem;
-
-                
                 li{
                     width: 4rem;
                     float: left;
+                    // height: 1.92rem;
                     border-radius: 0.08rem;
                     margin-right: 0.36rem;
+                    // background: url("./assets/30831@2x.png");
+                    // box-sizing: border-box;
+                    // -webkit-box-sizing: border-box;
                     .memberCenterTop{
                         width: 100%;
                         overflow: hidden;
@@ -751,8 +740,8 @@ export default {
                 }
                 li:nth-of-type(1){
                     background: url("./assets/3083@2x.png");
-                    background-size: 105% 110%;
-                    background-position: -0.1rem -0.1rem;
+                    background-size: 100% 100%;
+                    background-repeat: no-repeat;
                     img{
                         width: 0.61rem;
                         height: 0.49rem;
@@ -761,8 +750,8 @@ export default {
                 }
                 li:nth-of-type(2){
                     background: url("./assets/30831@2x.png");
-                    background-size: 105% 110%;
-                    background-position: -0.1rem -0.1rem;
+                    background-size: 100% 100%;
+                    background-repeat: no-repeat;
                     img{
                         width: 0.54rem;
                         height: 0.64rem;
@@ -953,7 +942,7 @@ export default {
         // white-space:nowrap;
         // width: 100rem;
     }
-    // 去除滚动条
+    去除滚动条
     .remove::-webkit-scrollbar,.btns::-webkit-scrollbar{
         width: 0;
         height: 0;
@@ -967,6 +956,7 @@ export default {
         // text-align:justify;
         white-space:nowrap;
     }
+
 </style>
 
 
