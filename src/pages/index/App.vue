@@ -83,7 +83,21 @@
               </div>
             </div>
             <div class="content">
-              <div class="con-left" :id="ind" ></div>
+              <div>
+                <ul style="color:#999">
+                  <li style="font-size:8px;line-height:8px;text-align:left">
+                    <span >最高</span>
+                    <span> {{ item.monthHistoryProfitReponse.maxPoint}} </span>
+                  </li>
+                  <li style="font-size:8px;line-height:8px;text-align:left;margin-top:4px">
+                    <span >最低</span>
+                    <span>  {{ item.monthHistoryProfitReponse.minPoint}}  </span>
+                  </li>
+                </ul>
+                <div class="con-left" :id="ind" ></div>
+                <p>收益表</p>
+              </div>
+              
               <div class="con-right">
                
           
@@ -196,7 +210,7 @@ export default {
       accountId:'',
       len: 10,
       // urlTitle:"http://192.168.1.12:8080/",//丹峰
-      urlTitle:"http://192.168.1.4:8080/",  //大潘
+      urlTitle:"http://192.168.1.5:8080/",  //大潘
       // urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
