@@ -209,11 +209,11 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      urlTitle:"http://192.168.1.14:8080/",//丹峰
+      // urlTitle:"http://192.168.1.14:8080/",//丹峰
       // urlTitle:"http://192.168.1.4:8080/",  //大潘
       // urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
-      // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
+      urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
       allLoaded: false,
       setFollowType:8,
       // 购买弹框

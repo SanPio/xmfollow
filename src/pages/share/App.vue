@@ -9,7 +9,8 @@
             </div>
             <div class="boxs">
                 <div class="title">
-                    <div class="img fl"><img :src="headImg" alt=""></div>
+                    <div class="img fl" v-if="headImg"><img :src="headImg" alt=""></div>
+                    <div class="img fl" v-if="!headImg"><img src="./assets/logo.png" alt=""></div>
                     <div class="name fl">{{info.nickName}}</div>
                 </div>
                 <p>我在小铭跟单<span>{{info.date}},</span></p>
@@ -81,6 +82,11 @@
         padding: 0;
         font-family: "黑体";
     }
+    html{
+        background-color: green;
+        width: 100vw;
+        height: 100vh;
+    }
     .fl{
         float: left;
     }
@@ -89,9 +95,14 @@
     }
     #box{
         width: 100%;
+        -webkit-width: 100%;
         height: 100%;
+        -webkit-height: 100%;
         // background: url("./assets/share.jpg");
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         background-size: 100%;
+        -webkit-background-size: 100%;
         overflow: hidden;
         position: relative;
         .header{
@@ -212,9 +223,11 @@
         width: 100%;
         height: 100%;
         img{
-            width: 100%;
-            height: 100%;
+            // width: 100%;
+            // height: 100%;
             display: block;
+            height: 100vh;
+            width: 100vw;
         }
     }
 </style>

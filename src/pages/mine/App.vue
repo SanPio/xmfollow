@@ -837,13 +837,13 @@ export default {
                 
             }
             button{
-                width: 5.6rem;
-                height: 1.86em;
+                width: 4.8rem;
+                height: 0.70rem;
                 // line-height: 1.86rem;
                 background-color: #4fa2fe;
                 color: white;
                 border: none;
-                font-size: 0.46rem;
+                font-size: 0.36rem;
                 margin: 0.4rem auto;
                 border-radius: 0.08rem;
             }
@@ -952,7 +952,7 @@ export default {
         // overflow-scrolling:none;
         // text-align:justify;
         // white-space:nowrap;
-        // width: 100rem;
+        width: 100vw;
     }
     去除滚动条
     .remove::-webkit-scrollbar,.btns::-webkit-scrollbar{
@@ -980,6 +980,8 @@ export default {
         .buy{
             width: 4.2rem;
             height: 2.6rem;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
             position: fixed;
             left: 23%;
             top: 38%;
