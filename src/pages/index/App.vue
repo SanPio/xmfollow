@@ -95,7 +95,7 @@
                   </li>
                 </ul>
                 <div class="con-left" :id="ind" ></div>
-                <p>收益表</p>
+                <p style="font-size:8px;line-height:8px;color:#999;margin-top:4px">收益表</p>
               </div>
               
               <div class="con-right">
