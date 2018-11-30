@@ -20,7 +20,7 @@
                 </dl>
             </div>
             <div class="head-right fr" v-if="share">
-                <div class="fl">做任务领积分</div>
+                <!-- <div class="fl">做任务领积分</div> -->
                 <img src="./assets/zzz1@2x.png" alt="" class="fl" @click="toShare">
             </div>
             <div class="info">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="memberCenterBottom">
-                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                                <span @click="toBuyRecord">购买记录>></span><span @click="privileges">查看特权>></span>
                             </div>
                         </li>
                         <li v-if="authentication">
@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="memberCenterBottom">
-                                <span @click="toBuyRecord">购买记录>></span><span>查看特权>></span>
+                                <span @click="toBuyRecord">购买记录>></span><span @click="privileges">查看特权>></span>
                             </div>
                         </li>
                     </ul>
@@ -251,6 +251,13 @@
                 </dl>
             </li>
         </ul>
+        <div class="tequan" ref="back">
+          <div class="buy">
+              <h2>提示</h2>
+              <p>建设中</p>
+              <button @click="cancel">确定</button>
+          </div>
+      </div>
     </div>
 </template>
 <script>
@@ -306,7 +313,7 @@ export default {
             boxShow: false,
             // 五星
             fiveStar:false,
-            isblind:true
+            isblind: false
 
         }
     },
@@ -335,7 +342,7 @@ export default {
             this.userImgSrc = res.data.data.headImg;
             this.uservip = res.data.data.vip;
             this.authentication = res.data.data.authentication;
-            // this.isblind = res.data.data.isBind
+            this.isblind = res.data.data.isBind
             this.list = res.data.data.list;
             this.accInfo = localStorage.getItem('accountId');
             this.userId = localStorage.getItem('userId');
@@ -389,7 +396,7 @@ export default {
         },
         // 跳转到分享页面
         toShare(){
-            window.location.href = `share.html?userId=${this.userId}`
+            window.location.href = `share.html`
         },
         // 通过福利跳转到vip购买页面
         toVipWelfare(){
@@ -442,7 +449,11 @@ export default {
         },
         // 跳转到购买记录
         toBuyRecord(){
-            window.location.href = `buyRecord.html`
+            this.$refs.back.style.display='block';
+            // window.location.href = `buyRecord.html`
+        },
+        cancel(){
+        this.$refs.back.style.display="none";
         },
         // 跳转到关于我们
         toAbout(){
@@ -454,7 +465,8 @@ export default {
         },
         // 跳转到特权明细
         privileges(){
-            window.location.href = `privileges.html`
+            // window.location.href = `privileges.html`
+            this.$refs.back.style.display='block';
         },
 
     }
@@ -825,13 +837,13 @@ export default {
                 
             }
             button{
-                width: 3rem;
-                height: 0.56rem;
-                line-height: 0.56rem;
+                width: 5.6rem;
+                height: 1.86em;
+                // line-height: 1.86rem;
                 background-color: #4fa2fe;
                 color: white;
                 border: none;
-                font-size: 0.28rem;
+                font-size: 0.46rem;
                 margin: 0.4rem auto;
                 border-radius: 0.08rem;
             }
@@ -956,7 +968,43 @@ export default {
         // text-align:justify;
         white-space:nowrap;
     }
+    .tequan{
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.3);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        display:none;
+        .buy{
+            width: 4.2rem;
+            height: 2.6rem;
+            position: fixed;
+            left: 23%;
+            top: 38%;
+            background-color: white;
+            border-radius: 0.2rem; 
+            h2{
+                font-size: 0.32rem;
+                border-bottom: 1px solid #c9c9c9;
+                padding: 0.2rem 0 0.2rem 0;
+            }
+            p{
+                font-size: 0.28rem;
+                padding: 0.3rem 0;
+            }
+            button{
+                width: 1.6rem;
+                height: 0.6rem;
+                background-color: #4fa2fe;
+                color: white;
+                border: none;
+                border-radius: 0.1rem; 
+            }
+        }
 
+    }
 </style>
 
 

@@ -1,30 +1,33 @@
 
 <template>
     <div id="box">
-        <div class="header">
-            <h2>小铭跟单</h2>
-            <p>跟随交易大咖一起赚</p>
-        </div>
-        <div class="boxs">
-            <div class="title">
-                <div class="img fl"><img src="./assets/logo.png" alt=""></div>
-                <div class="name fl">小铭跟单</div>
+        <div class="img">
+            <img src="./assets/share.jpg" alt="">
+            <div class="header">
+                <h2>小铭跟单</h2>
+                <p>跟随交易大咖一起赚</p>
             </div>
-            <p>我在小铭跟单<span>129天，</span></p>
-            <p>历史累计收益<small>1291美金，</small></p>
-            <p>累计跟随<span>500单，</span></p>
-            <p>历史连续获利<span>50单，</span></p>
-            <p>单笔最大盈利<small>100美金，</small></p>
-            <p>——</p>
-            <p>简直没有比这更简单的收益了！</p>
-        </div>
-        <div class="share">
-            <div class="coin">
-                <img src="" alt="">
-                <span>注册送新手大礼包</span>
-                <span>(价值998元)</span>
+            <div class="boxs">
+                <div class="title">
+                    <div class="img fl"><img :src="headImg" alt=""></div>
+                    <div class="name fl">{{info.nickName}}</div>
+                </div>
+                <p>我在小铭跟单<span>{{info.date}},</span></p>
+                <p>历史累计收益<small>{{info.sumProfits | numPuls}}美金，</small></p>
+                <p>累计跟随<span>{{info.sumFollow | numPuls}}单，</span></p>
+                <!-- <p>历史连续获利<span>{{info.continuousProfit}}单，</span></p> -->
+                <p>单笔最大盈利<small>{{info.maxProfit | numPuls}}美金，</small></p>
+                <p>——</p>
+                <p>简直没有比这更简单的收益了！</p>
             </div>
-            <p>好东西就要懂得分享！</p>               
+            <div class="share">
+                <div class="coin">
+                    <img :src="invitQRCode" alt="">
+                    <span>注册送新手大礼包</span>
+                    <span>(价值998元)</span>
+                </div>
+                <p>好东西就要懂得分享！</p>               
+            </div>
         </div>
     </div>
 </template>
@@ -32,8 +35,43 @@
     export default {
         data () {
             return {
-                
+                invitQRCode : "",
+                headImg:'',
+                info:[]
             }
+        },
+        created(){
+            this.userId = localStorage.getItem('userId');
+            this.urlTitle = localStorage.getItem('urlTitle');
+            let postData = this.$qs.stringify({
+                userId : this.userId
+            })
+            this.$http({
+                method:'post',
+                url: this.urlTitle +'wx/userinfo/share',
+                data: postData 
+            }).then((res)=>{
+                console.log(res)
+                this.invitQRCode = res.data.data.data.invitQRCode;
+                this.headImg = res.data.data.data.headImg;
+                this.info = res.data.data.data
+            }).catch((err)=>{
+                console.log(err)
+            })
+        },
+        filters: {
+            numPuls(val){
+                if ( parseFloat( val ) >=1000000 || parseFloat( val ) <= -1000000 ){
+                    return parseInt( val / 10000 ) / 100 + 'M'
+                }else if ( parseFloat( val ) >=1000 || parseFloat( val ) <= -1000 ){
+                    return parseInt( val / 10 ) / 100 + 'K'
+                }else{
+                    return val
+                }    
+            }
+        },
+        method:{
+
         }
     }
 </script>
@@ -51,8 +89,8 @@
     }
     #box{
         width: 100%;
-        height: 13.32rem;
-        background: url("./assets/share.jpg");
+        height: 100%;
+        // background: url("./assets/share.jpg");
         background-size: 100%;
         overflow: hidden;
         position: relative;
@@ -123,12 +161,12 @@
                     padding:  0 0 0 0.15rem;
                 }
             }
-            >p:nth-of-type(6){
+            >p:nth-of-type(5){
                 font-size: 0.34rem;
                 font-family: "黑体";
                 font-weight: bold;
             }
-            >p:nth-of-type(7){
+            >p:nth-of-type(6){
                 font-size: 0.34rem;
                 font-family: "黑体";
                 font-weight: bold;
@@ -168,6 +206,15 @@
                 font-weight: bold;
                 letter-spacing: 0.06rem;
             }
+        }
+    }
+    .img{
+        width: 100%;
+        height: 100%;
+        img{
+            width: 100%;
+            height: 100%;
+            display: block;
         }
     }
 </style>
