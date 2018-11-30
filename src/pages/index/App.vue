@@ -37,7 +37,7 @@
           <div class="buy">
               <h2>提示</h2>
               <p v-if="stat == 1">您的跟随权限不够,将跳转到V认证购买页面</p>
-              <p v-if="stat == 2">您的跟随权限不够,将跳转到购买vip购买页面</p>
+              <p v-if="stat == 2">您的跟随权限不够,将跳转到vip购买页面</p>
               <p v-if="stat == 3">您的跟随权限不够，将跳转到五星购买页面</p>
               <p v-if="stat == 4">您还没有账号，将跳转到绑定账号页面</p>
               <p v-if="stat == 5">模拟账号不能跟随五星信号源</p>
@@ -195,8 +195,8 @@ export default {
       userId:'',
       accountId:'',
       len: 10,
-      // urlTitle:"http://192.168.1.12:8080/",//丹峰
-      urlTitle:"http://192.168.1.4:8080/",  //大潘
+      urlTitle:"http://192.168.1.14:8080/",//丹峰
+      // urlTitle:"http://192.168.1.4:8080/",  //大潘
       // urlTitle:"http://www.myjrq.cn/app/",//域名
       // urlTitle:"http://121.196.208.147:80/",//另一台
       // urlTitle:"http://wxtest.myjrq.cn/app/",//测试公众号 
