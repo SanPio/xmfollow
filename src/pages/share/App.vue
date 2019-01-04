@@ -3,6 +3,7 @@
     <div id="box">
         <div class="img">
             <img src="./assets/share.jpg" alt="">
+            
             <div class="header">
                 <h2>小铭跟单</h2>
                 <p>跟随交易大咖一起赚</p>
@@ -30,6 +31,7 @@
                 <p>好东西就要懂得分享！</p>               
             </div>
         </div>
+        <img src="./assets/sharep.png" alt="" class="shareTop" v-if="sharep" @click="shares">
     </div>
 </template>
 <script>
@@ -38,7 +40,8 @@
             return {
                 invitQRCode : "",
                 headImg:'',
-                info:[]
+                info:[],
+                sharep:true
             }
         },
         created(){
@@ -71,8 +74,11 @@
                 }    
             }
         },
-        method:{
-
+        methods:{
+            // 分享引导
+            shares(){
+                this.sharep = false
+            }
         }
     }
 </script>
@@ -83,7 +89,7 @@
         font-family: "黑体";
     }
     html{
-        background-color: green;
+        // background-color: green;
         width: 100vw;
         height: 100vh;
     }
@@ -105,6 +111,14 @@
         -webkit-background-size: 100%;
         overflow: hidden;
         position: relative;
+        .shareTop{
+            position: absolute;
+            top: 0;
+            z-index: 20;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
         .header{
             width: 5.9rem;
             margin: 0 auto;
@@ -139,12 +153,14 @@
                     background-color: blue;
                     border-radius: 50%;
                     margin-top: 0.4rem;
+                    z-index: 10;
                     overflow: hidden;
                     img{
                         display: block;
                         width: 100%;
                         height: 100%;
                     }
+                    
                 }
                 .name{
                     font-size: 0.3rem;
