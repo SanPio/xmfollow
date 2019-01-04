@@ -3,13 +3,15 @@
     <div id="box">
         <div class="img">
             <img src="./assets/share.jpg" alt="">
+            
             <div class="header">
                 <h2>小铭跟单</h2>
                 <p>跟随交易大咖一起赚</p>
             </div>
             <div class="boxs">
                 <div class="title">
-                    <div class="img fl"><img :src="headImg" alt=""></div>
+                    <div class="img fl" v-if="headImg"><img :src="headImg" alt=""></div>
+                    <div class="img fl" v-if="!headImg"><img src="./assets/logo.png" alt=""></div>
                     <div class="name fl">{{info.nickName}}</div>
                 </div>
                 <p>我在小铭跟单<span>{{info.date}},</span></p>
@@ -29,6 +31,7 @@
                 <p>好东西就要懂得分享！</p>               
             </div>
         </div>
+        <img src="./assets/sharep.png" alt="" class="shareTop" v-if="sharep" @click="shares">
     </div>
 </template>
 <script>
@@ -37,7 +40,8 @@
             return {
                 invitQRCode : "",
                 headImg:'',
-                info:[]
+                info:[],
+                sharep:true
             }
         },
         created(){
@@ -70,8 +74,11 @@
                 }    
             }
         },
-        method:{
-
+        methods:{
+            // 分享引导
+            shares(){
+                this.sharep = false
+            }
         }
     }
 </script>
@@ -81,6 +88,11 @@
         padding: 0;
         font-family: "黑体";
     }
+    html{
+        // background-color: green;
+        width: 100vw;
+        height: 100vh;
+    }
     .fl{
         float: left;
     }
@@ -89,11 +101,24 @@
     }
     #box{
         width: 100%;
+        -webkit-width: 100%;
         height: 100%;
+        -webkit-height: 100%;
         // background: url("./assets/share.jpg");
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         background-size: 100%;
+        -webkit-background-size: 100%;
         overflow: hidden;
         position: relative;
+        .shareTop{
+            position: absolute;
+            top: 0;
+            z-index: 20;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
         .header{
             width: 5.9rem;
             margin: 0 auto;
@@ -128,12 +153,14 @@
                     background-color: blue;
                     border-radius: 50%;
                     margin-top: 0.4rem;
+                    z-index: 10;
                     overflow: hidden;
                     img{
                         display: block;
                         width: 100%;
                         height: 100%;
                     }
+                    
                 }
                 .name{
                     font-size: 0.3rem;
@@ -212,9 +239,11 @@
         width: 100%;
         height: 100%;
         img{
-            width: 100%;
-            height: 100%;
+            // width: 100%;
+            // height: 100%;
             display: block;
+            height: 100vh;
+            width: 100vw;
         }
     }
 </style>

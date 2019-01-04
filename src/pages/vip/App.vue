@@ -40,6 +40,31 @@
                    
                 </button> 
             </div>
+            <div class="quan">
+                <ul>
+                    <li @click="changeStyle(index)" v-for="(item,index) in userDiscountList" :key="index" :class="{active:index==isActive}" v-if="time==1 && item.value==0.65">
+                        <h2>{{item.titile}}</h2>
+                        <p>{{item.content}}</p>
+                        <span>{{item.endTime}}</span>
+                    </li>
+                    <li @click="changeStyle(index)" v-for="(item,index) in userDiscountList" :key="index" :class="{active:index==isActive}" v-if="time==3 && item.value==0.5">
+                        <h2>{{item.titile}}</h2>
+                        <p>{{item.content}}</p>
+                        <span>{{item.endTime}}</span>
+                    </li>
+                    <li @click="changeStyle(index)" v-for="(item,index) in userDiscountList" :key="index" :class="{active:index==isActive}" v-if="time==6 && item.value==0.33">
+                        <h2>{{item.titile}}</h2>
+                        <p>{{item.content}}</p>
+                        <span>{{item.endTime}}</span>
+                    </li>
+                    <li @click="changeStyle(index)" v-for="(item,index) in userDiscountList" :key="index" :class="{active:index==isActive}" v-if="time==12 && item.value==0.1">
+                        <h2>{{item.titile}}</h2>
+                        <p>{{item.content}}</p>
+                        <span>{{item.endTime}}</span>
+                    </li>
+                </ul>
+                
+            </div>
             <p class="paytype">
                 <span>
                     付费方式
@@ -52,9 +77,10 @@
                 <span>
                     应付金额
                 </span>
-                <span>
-                    {{ payMoney }}
+                <span style="text-decoration:line-through;font-size:0.28rem;padding:0 0.1rem 0 0;color: #ff7c2b;" v-if="price!=payMoney">
+                    {{ price }}元
                 </span>
+                <span style="color: #ff7c2b;font-size:0.36rem;">{{ payMoney }}</span>
                 <span>
                     元
                 </span>
@@ -97,6 +123,7 @@ export default {
             full: '',
             reduce: '', 
             money: 598,
+            price:598,
             payMoney : 598,
             disOnoff: false,
             reduceOnoff: false,
@@ -118,7 +145,14 @@ export default {
             
             fullcard:[],
             fullChoose: -1,
-            fullCardShow: []
+            fullCardShow: [],
+
+            limite:[],
+            isActive:-1,
+
+            userDiscountList:[],
+            limitDiscount:'',
+            sixfiveDiscount:[]
         }
     },
     created(){
@@ -178,13 +212,11 @@ export default {
                     }  
                 }
             this.boxShow = true
-            
+            console.log(res.data.data.userDiscountList)  
+            this.userDiscountList = res.data.data.userDiscountList;  
         }).catch((err) => {
             console.log(err)
         })
-
-
-
 
     },
 
@@ -201,8 +233,10 @@ export default {
         }
     },
     methods: {
+        
         //时间选择
         choseTimd(ind){
+            
             this.timeColor = ind;
             // this.disOnoff = false;
             // this.reduceOnoff = false;
@@ -211,16 +245,33 @@ export default {
             this.msgbox = 1;
             if ( ind == 0) {
                 this.time = 1;
+                this.isActive = -1;
             }else if ( ind == 1) {
                 this.time = 3;
+                this.isActive = -1;
             }else if ( ind == 2) {
                 this.time = 6;
+                this.isActive = -1;
             }else if ( ind == 3) {
                 this.time = 12;
+                this.isActive = -1;
             }
             this.payMoney = this.time * 598;
             this.money = this.time * 598;
+            this.price = this.time * 598;
         },
+        changeStyle(index){  
+            this.isActive = index                   
+            this.limitDiscount = this.userDiscountList[index].value
+            if(this.time==1 && this.limitDiscount==0.65){
+                this.payMoney = this.time*598*0.65
+            }else if(this.time==3 && this.limitDiscount==0.5){
+                this.payMoney = this.time*598*0.5
+            }else{
+                this.payMoney = this.time*598
+            }
+        },
+        
         imgChange(){
             this.haveClick = !this.haveClick;
         },
@@ -463,6 +514,64 @@ export default {
             outline: none;
             border-radius: .16rem;
             border: none;
+        }
+    }
+    .quan{
+        width: 100%;
+        overflow-x:scroll;
+        border-bottom: 1px solid #c9c9c9;
+        backface-visibility:hidden;
+        perspective:1000;
+        white-space:nowrap;
+        ul{
+            overflow: hidden;
+            width: 17rem;
+            .active{
+                background-color: #4fa2fe;
+                width: 3.56rem;
+                height: 1.7rem;
+                box-sizing: border-box;
+                border-radius: 0.1rem;
+                margin: 0.2rem 0.2rem 0.2rem 0;
+                float: left;
+                color: white;
+                h2{
+                    font-size: 0.44rem;
+                    font-weight: normal;
+                    padding: 0.08rem 0 0 0;
+                }
+                p{
+                    font-size: 0.28rem;
+                }
+                span{
+                    font-size: 0.24rem;
+                    color: #fff;
+                }
+            }
+            li{
+                background-color: white;
+                width: 3.56rem;
+                height: 1.7rem;
+                box-sizing: border-box;
+                border-radius: 0.1rem;
+                margin: 0.2rem 0.2rem 0.2rem 0;
+                float: left;
+                color: #4fa2fe;
+                border: 1px solid #4fa2fe;
+                border-radius: 0.1rem;
+                h2{
+                    font-size: 0.44rem;
+                    font-weight: normal;
+                    padding: 0.08rem 0 0 0;
+                }
+                p{
+                    font-size: 0.28rem;
+                }
+                span{
+                    font-size: 0.24rem;
+                    color: #999999;
+                }
+            }
         }
     }
 </style>
